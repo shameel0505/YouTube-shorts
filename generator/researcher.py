@@ -1,14 +1,20 @@
+"""
+Research module — fetches trending content from Reddit, HackerNews,
+Google Trends, and Wikipedia for each of the three video formats.
+"""
 import requests
 import json
 import xml.etree.ElementTree as ET
 import time
 import re
 import google.generativeai as genai
+import quota_tracker
 from config import GEMINI_API_KEY, GEMINI_MODEL, NICHE
 
 genai.configure(api_key=GEMINI_API_KEY)
 _model = genai.GenerativeModel(GEMINI_MODEL)
 
+# ── Niche → subreddit mapping (Format 1) ─────────────────────────────────────
 NICHE_SUBREDDITS = {
     "AI":         ["artificial", "MachineLearning", "technology"],
     "technology": ["technology", "Futurology", "tech"],
@@ -19,6 +25,9 @@ NICHE_SUBREDDITS = {
     "finance":    ["economics", "personalfinance", "investing"],
     "default":    ["todayilearned", "interestingasfuck", "Damnthatsinteresting"],
 }
+
+
+# ── Shared HTTP helpers ───────────────────────────────────────────────────────
 
 def search_wikipedia(query: str, sentences: int = 5) -> str:
     query = query.replace(" ", "_")
@@ -36,6 +45,7 @@ def search_wikipedia(query: str, sentences: int = 5) -> str:
     except Exception:
         return ""
 
+
 def search_wikipedia_opensearch(query: str) -> list[str]:
     url = "https://en.wikipedia.org/w/api.php"
     params = {"action": "opensearch", "search": query, "limit": 5, "format": "json"}
@@ -49,52 +59,73 @@ def search_wikipedia_opensearch(query: str) -> list[str]:
     except Exception:
         return []
 
+
+def get_reddit_posts(
+    subreddits: list[str],
+    sort: str = "top",
+    time_filter: str = "week",
+    limit: int = 10,
+    min_score: int = 0,
+    min_comments: int = 0,
+) -> list[dict]:
+    """
+    Generic Reddit post fetcher. Returns posts meeting the score/comment thresholds.
+    """
+    results = []
+    headers = {"User-Agent": "ShortsBot/1.0 (content research)"}
+
+    for sub in subreddits[:3]:
+        url = f"https://www.reddit.com/r/{sub}/{sort}.json?t={time_filter}&limit={limit * 2}"
+        try:
+            resp = requests.get(url, headers=headers, timeout=10)
+            resp.raise_for_status()
+            posts = resp.json().get("data", {}).get("children", [])
+            for p in posts:
+                d = p.get("data", {})
+                score    = d.get("score", 0)
+                comments = d.get("num_comments", 0)
+                if d.get("is_video"):
+                    continue
+                if score < min_score or comments < min_comments:
+                    continue
+                results.append({
+                    "title":     d.get("title", ""),
+                    "selftext":  d.get("selftext", "")[:300],
+                    "url":       d.get("url", ""),
+                    "score":     score,
+                    "comments":  comments,
+                    "subreddit": sub,
+                })
+        except Exception:
+            pass
+        time.sleep(0.5)
+
+    results.sort(key=lambda x: x["score"], reverse=True)
+    return results[:limit]
+
+
+# Keep old name for Format 1 compatibility
 def get_reddit_trending(niche: str, limit: int = 10) -> list[dict]:
     target_subs = NICHE_SUBREDDITS["default"]
     for key, subs in NICHE_SUBREDDITS.items():
         if key.lower() in niche.lower():
             target_subs = subs
             break
-            
-    results = []
-    headers = {"User-Agent": "ShortsBot/1.0 (content research)"}
-    
-    for sub in target_subs[:2]:
-        url = f"https://www.reddit.com/r/{sub}/top.json?t=week&limit={limit}"
-        try:
-            resp = requests.get(url, headers=headers, timeout=10)
-            resp.raise_for_status()
-            data = resp.json()
-            posts = data.get("data", {}).get("children", [])
-            for p in posts:
-                post_data = p.get("data", {})
-                if not post_data.get("is_video", False) and post_data.get("score", 0) > 100:
-                    results.append({
-                        "title": post_data.get("title", ""),
-                        "url": post_data.get("url", ""),
-                        "score": post_data.get("score", 0),
-                        "subreddit": sub
-                    })
-        except Exception:
-            pass
-        time.sleep(0.5)
-        
-    results.sort(key=lambda x: x["score"], reverse=True)
-    return results[:limit]
+    return get_reddit_posts(target_subs, limit=limit, min_score=100)
+
 
 def get_trending_searches(region: str = "US") -> list[str]:
+    """Google Trends RSS — top 5 trending searches in the given region."""
     url = f"https://trends.google.com/trending/rss?geo={region}"
     try:
         resp = requests.get(url, timeout=10)
         resp.raise_for_status()
         root = ET.fromstring(resp.content)
-        titles = []
-        for item in root.findall(".//item/title"):
-            if item.text:
-                titles.append(item.text)
-        return titles[:20]
+        titles = [item.text for item in root.findall(".//item/title") if item.text]
+        return titles[:5]
     except Exception:
         return []
+
 
 def get_hackernews_top(limit: int = 10) -> list[dict]:
     url_top = "https://hacker-news.firebaseio.com/v0/topstories.json"
@@ -102,77 +133,112 @@ def get_hackernews_top(limit: int = 10) -> list[dict]:
         resp = requests.get(url_top, timeout=10)
         resp.raise_for_status()
         ids = resp.json()[:limit * 2]
-        
         results = []
         for item_id in ids[:limit]:
-            url_item = f"https://hacker-news.firebaseio.com/v0/item/{item_id}.json"
             try:
-                item_resp = requests.get(url_item, timeout=5)
+                item_resp = requests.get(
+                    f"https://hacker-news.firebaseio.com/v0/item/{item_id}.json", timeout=5
+                )
                 item_resp.raise_for_status()
                 story = item_resp.json()
                 if story and story.get("type") == "story":
                     results.append({
                         "title": story.get("title", ""),
-                        "url": story.get("url", ""),
-                        "score": story.get("score", 0)
+                        "url":   story.get("url", ""),
+                        "score": story.get("score", 0),
                     })
             except Exception:
                 pass
-        
         results.sort(key=lambda x: x["score"], reverse=True)
         return results
     except Exception:
         return []
 
+
+def _call_gemini(prompt: str) -> dict:
+    """Call Gemini, parse JSON response, track quota. Returns parsed dict or {}."""
+    for _ in range(3):
+        try:
+            quota_tracker.increment()
+            response = _model.generate_content(prompt)
+            text = response.text
+            text = re.sub(r"^```json\s*", "", text.strip(), flags=re.IGNORECASE)
+            text = re.sub(r"^```\s*", "", text)
+            text = re.sub(r"\s*```$", "", text)
+            return json.loads(text)
+        except Exception as e:
+            if "429" in str(e) or "quota" in str(e).lower() or "ResourceExhausted" in str(type(e)):
+                print("   ⏳ Rate limit hit! Sleeping for 60 seconds...")
+                time.sleep(60)
+            else:
+                time.sleep(1)
+    return {}
+
+
+# ── FORMAT 1: Mind-Blowing Facts ─────────────────────────────────────────────
+
 def research_topic(niche: str = None) -> dict:
+    from memory.content_log import is_topic_used, _load_log
     niche = niche or NICHE
-    print(f"🔍 Researching trending topics for: '{niche}'")
-    
+    print(f"🔍 [FORMAT 1] Researching trending topics for: '{niche}'")
+
     print("   📡 Fetching Reddit trending posts...")
     reddit_data = get_reddit_trending(niche, limit=8)
-    if reddit_data:
-        reddit_str = "\n".join([f"- [{p['score']} upvotes] {p['title']}" for p in reddit_data])
-    else:
-        reddit_str = "None found"
-        
-    print("   📈 Fetching Google Trends...")
+    reddit_str = (
+        "\n".join([f"- [{p['score']} upvotes] {p['title']}" for p in reddit_data])
+        if reddit_data else "None found"
+    )
+
+    print("   📈 Fetching Google Trends (top 5 US searches)...")
     trends_data = get_trending_searches()
-    if trends_data:
-        trending_str = "\n".join([f"- {t}" for t in trends_data[:10]])
-    else:
-        trending_str = "None found"
-        
-    hn_keywords = ["ai", "tech", "software", "computer", "digital"]
+    trends_str = (
+        "\n".join([f"- {t}" for t in trends_data])
+        if trends_data else "None found"
+    )
+
+    hn_keywords = ["ai", "tech", "software", "computer", "digital", "mind", "fact", "science", "space", "history"]
     if any(k in niche.lower() for k in hn_keywords):
         print("   💻 Fetching Hacker News top stories...")
         hn_data = get_hackernews_top(limit=5)
     else:
         hn_data = []
-        
-    if hn_data:
-        hn_str = "\n".join([f"- [{p['score']} points] {p['title']}" for p in hn_data])
-    else:
-        hn_str = "Not applicable for this niche"
-        
-    wiki_str = "No Wikipedia context found"
+    hn_str = (
+        "\n".join([f"- [{p['score']} points] {p['title']}" for p in hn_data])
+        if hn_data else "Not applicable"
+    )
+
+    wiki_str = "No Wikipedia context"
     if reddit_data:
-        title = reddit_data[0]["title"]
-        search_term = re.sub(r'[^a-zA-Z0-9\s]', '', title)
-        search_term = " ".join(search_term.split()[:4])
+        title       = reddit_data[0]["title"]
+        search_term = " ".join(re.sub(r'[^a-zA-Z0-9\s]', '', title).split()[:4])
         suggestions = search_wikipedia_opensearch(search_term)
         if suggestions:
             print(f"   📚 Fetching Wikipedia: '{suggestions[0]}'")
             wiki_str = search_wikipedia(suggestions[0], sentences=6)
             
-    prompt = f"""You are a research assistant for a viral YouTube Shorts channel about: {niche}
+    # Load already used topics globally
+    used_topics = [t["text"] for t in _load_log()["format1_topics"]]
+    used_str = "\n".join([f"- {t}" for t in used_topics]) if used_topics else "None"
 
-I've gathered the following raw data from trending sources:
+    base_prompt = f"""You are a research analyst for a viral YouTube Shorts channel about: {niche}
 
-TRENDING REDDIT POSTS:
+Goal: find the single most mind-blowing, counterintuitive, or little-known fact/story that
+would stop a finger from scrolling in the first 2 seconds.
+
+STRICT FILTER: Choose topics that produce awe, surprise, or shock.
+Do NOT pick purely informational, political, or news-cycle content.
+The ideal topic makes a viewer say "wait, WHAT?!" — not just "oh interesting."
+
+CRITICAL: DO NOT SELECT ANY OF THESE PREVIOUSLY USED TOPICS:
+{used_str}
+
+Raw data from trending sources:
+
+TRENDING REDDIT POSTS (sorted by engagement):
 {reddit_str}
 
-TRENDING SEARCHES:
-{trending_str}
+GOOGLE TRENDS — TOP US SEARCHES TODAY:
+{trends_str}
 
 HACKER NEWS / TECH BUZZ:
 {hn_str}
@@ -181,45 +247,162 @@ WIKIPEDIA CONTEXT:
 {wiki_str}
 
 Your task:
-1. Identify the SINGLE most interesting, surprising, or mind-blowing fact/topic from this data that would perform well as a 55-second YouTube Short
-2. Enrich it — add specific numbers, dates, names, or comparisons that make it vivid and concrete
-3. Every fact you include must be accurate and verifiable
+1. Pick the 5 MOST mind-blowing, counterintuitive topics likely to produce awe or shock.
+2. Return them ranked from 1 to 5, where 1 is the most viral.
 
-Respond ONLY in valid JSON with no markdown fences, no explanation, nothing else:
+Respond ONLY in valid JSON with no markdown:
+[
+  {{
+    "text": "The core fact or story (1-2 sentences)",
+    "source": "Where this comes from (e.g. Hacker News, Wikipedia, Reddit, or Original)"
+  }},
+  ... (4 more)
+]"""
+
+    prompt = base_prompt
+    for attempt in range(3):
+        data = _call_gemini(prompt)
+        if data and isinstance(data, list) and len(data) > 0:
+            print(f"   ✅ Found {len(data)} topics.")
+            return data
+        else:
+            prompt = base_prompt + "\n\nERROR: You must return a JSON array of 5 objects!"
+
+    # Fallback if loop fails or exhausts options
+    return [{"text": "interesting technology fact", "source": "original"}]
+
+
+# ── FORMAT 2: Serialized Thriller ─────────────────────────────────────────────
+
+def research_thriller() -> dict:
+    """
+    Fetch thriller/mystery premises from r/WritingPrompts and r/nosleep.
+    Returns a premise dict for use in generate_thriller().
+    """
+    print("🔍 [FORMAT 2] Researching thriller premise...")
+
+    print("   📡 Fetching r/WritingPrompts and r/nosleep top posts (week, 500+ upvotes)...")
+    posts = get_reddit_posts(
+        subreddits=["WritingPrompts", "nosleep"],
+        sort="top",
+        time_filter="week",
+        limit=10,
+        min_score=500,
+    )
+    posts_str = (
+        "\n".join([f"- [{p['score']} upvotes | r/{p['subreddit']}] {p['title']}" for p in posts])
+        if posts else "No high-engagement posts found — use your own premise."
+    )
+
+    prompt = f"""You are a creative director for a serialized YouTube Shorts thriller channel.
+
+Below are top posts from r/WritingPrompts and r/nosleep this week:
+
+{posts_str}
+
+Your task: identify or synthesize the single most tension-filled, mysterious, or suspenseful
+premise that could sustain a serialized story told in daily 30-40 second episodes.
+
+Choose something with:
+- A clear protagonist in immediate danger or conflict
+- An unresolved mystery that can escalate across multiple parts
+- Maximum emotional stakes (life, identity, betrayal, or survival)
+- A visual and vivid setting
+
+Respond ONLY in valid JSON with no markdown:
 {{
-  "chosen_topic": "3-6 word topic name",
-  "why_viral": "one sentence on why this hooks viewers",
-  "key_facts": [
-    "specific fact 1 with real numbers/data",
-    "specific fact 2 with real numbers/data",
-    "specific fact 3 with real numbers/data",
-    "a surprising twist or counterintuitive angle"
-  ],
-  "hook_angle": "the single most surprising sentence to open the video with",
-  "pexels_keyword": "2-3 words for visual background footage search",
-  "sources_used": ["list which of: reddit, wikipedia, hackernews, trending were useful"]
+  "premise": "2-3 sentence story premise",
+  "protagonist": "character name and one-line description",
+  "core_mystery": "the central unanswered question driving the story",
+  "setting": "vivid 1-sentence location/time description",
+  "genre_tags": ["thriller", "mystery", ...],
+  "reddit_source": "subreddit and post title if adapted, or 'original'"
 }}"""
 
-    for _ in range(3):
-        try:
-            response = _model.generate_content(prompt)
-            text = response.text
-            text = re.sub(r"^```json\s*", "", text.strip(), flags=re.IGNORECASE)
-            text = re.sub(r"^```\s*", "", text)
-            text = re.sub(r"\s*```$", "", text)
-            
-            data = json.loads(text)
-            print(f"   ✅ Research complete: '{data.get('chosen_topic', 'Unknown')}'")
-            print(f"   💡 Hook angle: {data.get('hook_angle', 'None')}")
-            return data
-        except Exception as e:
-            time.sleep(1)
-            
+    data = _call_gemini(prompt)
+    if data:
+        print(f"   ✅ Premise: {data.get('premise', '')[:80]}...")
+        return data
+
     return {
-        "chosen_topic": "interesting technology fact",
-        "why_viral": "broad appeal",
-        "key_facts": [],
-        "hook_angle": "",
-        "pexels_keyword": niche.split()[0],
-        "sources_used": [],
+        "premise": "A woman wakes in an unfamiliar room with no memory of the past 48 hours.",
+        "protagonist": "Maya Chen — a forensic analyst",
+        "core_mystery": "Who brought her here, and why does she recognise the handwriting on the wall?",
+        "setting": "An isolated farmhouse, winter, 3AM",
+        "genre_tags": ["thriller", "mystery", "suspense"],
+        "reddit_source": "original",
     }
+
+
+# ── FORMAT 3: Moral Dilemma ───────────────────────────────────────────────────
+
+def research_dilemma() -> dict:
+    from memory.content_log import is_topic_used, _load_log
+    print("🔍 [FORMAT 3] Researching moral dilemma...")
+
+    print("   📡 Fetching r/AmItheAsshole and r/AskReddit (week, 1000+ comments)...")
+    posts = get_reddit_posts(
+        subreddits=["AmItheAsshole", "AskReddit"],
+        sort="top",
+        time_filter="week",
+        limit=10,
+        min_comments=1000,
+    )
+    posts_str = (
+        "\n".join([f"- [{p['comments']} comments | r/{p['subreddit']}] {p['title']}" for p in posts])
+        if posts else "No high-debate posts found — use your own dilemma."
+    )
+    
+    # Load already used dilemmas globally
+    used_dilemmas = [t["text"] for t in _load_log()["format3_dilemmas"]]
+    used_str = "\n".join([f"- {t}" for t in used_dilemmas]) if used_dilemmas else "None"
+
+    base_prompt = f"""You are a content strategist for a moral dilemma YouTube Shorts channel.
+
+Below are top posts from r/AmItheAsshole and r/AskReddit this week, sorted by debate intensity:
+
+{posts_str}
+
+CRITICAL: DO NOT SELECT ANY OF THESE PREVIOUSLY USED DILEMMAS:
+{used_str}
+
+Your task: identify the top 5 most universal, emotionally charged ethical conflicts.
+The ideal dilemmas:
+- Have no clear "correct" answer
+- Involve values like: fairness vs loyalty, honesty vs protection
+- Are vivid and specific
+- Would genuinely divide viewers 50/50
+
+Respond ONLY in valid JSON with no markdown:
+[
+  {{
+    "dilemma_seed": "2-3 sentence description of the specific situation",
+    "value_a": "first value at stake",
+    "value_b": "second value at stake",
+    "option_a": "one plausible choice",
+    "option_b": "the other plausible choice",
+    "closing_question": "Exact on-screen question — 6 words max, ends with ?",
+    "reddit_source": "subreddit and post title if adapted, or 'original'"
+  }},
+  ... (4 more)
+]"""
+
+    prompt = base_prompt
+    for attempt in range(3):
+        data = _call_gemini(prompt)
+        if data and isinstance(data, list) and len(data) > 0:
+            print(f"   ✅ Found {len(data)} dilemmas.")
+            return data
+        else:
+            prompt = base_prompt + "\n\nERROR: You must return a JSON array of 5 objects!"
+
+    # Fallback if loop fails or exhausts options
+    return [{
+        "dilemma_seed": "Your best friend confesses they cheated on their partner and asks you to keep it secret. You've known their partner for years.",
+        "value_a": "loyalty",
+        "value_b": "honesty",
+        "option_a": "Keep the secret to protect your friendship.",
+        "option_b": "Tell the partner — they deserve the truth.",
+        "closing_question": "What would you do?",
+        "reddit_source": "original",
+    }]

@@ -1,0 +1,45 @@
+# ── Kokoro-FastAPI systemd service (GCP VM) ───────────────────────────────────
+#
+# SETUP (run once on your GCP VM):
+#
+#   1. Clone Kokoro-FastAPI:
+#      git clone https://github.com/remsky/Kokoro-FastAPI.git ~/Kokoro-FastAPI
+#      cd ~/Kokoro-FastAPI
+#      python -m venv venv
+#      source venv/bin/activate
+#      pip install -r requirements.txt
+#
+#   2. Edit this file — replace <YOUR_USER> with your Linux username:
+#      whoami   (to find your username)
+#
+#   3. Install and enable the service:
+#      sudo cp ~/youtube/kokoro.service /etc/systemd/system/kokoro.service
+#      sudo systemctl daemon-reload
+#      sudo systemctl enable kokoro
+#      sudo systemctl start kokoro
+#
+#   4. Check status:
+#      sudo systemctl status kokoro
+#      journalctl -u kokoro -f   (live logs)
+#
+# ─────────────────────────────────────────────────────────────────────────────
+
+[Unit]
+Description=Kokoro FastAPI TTS Server
+After=network.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=<YOUR_USER>
+WorkingDirectory=/home/<YOUR_USER>/Kokoro-FastAPI
+ExecStart=/home/<YOUR_USER>/Kokoro-FastAPI/venv/bin/python main.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

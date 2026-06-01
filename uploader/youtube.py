@@ -60,10 +60,10 @@ def upload_short(video_path: str, title: str, description: str, hashtags: list, 
         body["status"]["publishAt"] = publish_at
         
     media = MediaFileUpload(video_path, mimetype="video/mp4", resumable=True, chunksize=5*1024*1024)
-    
+    print("🚀 Initiating YouTube upload...")
     request = youtube.videos().insert(
-        part=",".join(body.keys()), 
-        body=body, 
+        part="snippet,status",
+        body=body,
         media_body=media
     )
     

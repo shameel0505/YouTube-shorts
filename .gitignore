@@ -2,3 +2,12 @@ output/
 temp/
 logs/
 .env
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+token.json
+client_secret_*.json
+*.mp4
+gameplay/
+assets/

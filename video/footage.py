@@ -1,88 +1,38 @@
 import os
 import random
-import requests
-from config import PEXELS_API_KEY, TEMP_DIR, VIDEO_WIDTH
+from config import GAMEPLAY_DIR
 
-PEXELS_VIDEO_URL = "https://api.pexels.com/videos/search"
-HEADERS = {"Authorization": PEXELS_API_KEY}
-
-def fetch_footage(keyword: str, duration_needed: float, max_clips: int = 5) -> list[str]:
-    print(f"🎬 Searching Pexels for: '{keyword}'")
-    clips = _search_pexels(keyword, per_page=15)
+def fetch_footage(keyword: str = None, duration_needed: float = 0.0, fmt: int = 1) -> list[str]:
+    print(f"🎬 Selecting background gameplay footage for format {fmt}...")
     
-    if not clips:
-        fallbacks = ["technology", "space", "abstract", "data", "futuristic"]
-        for fb in fallbacks:
-            print(f"   ↳ Trying fallback: '{fb}'")
-            clips = _search_pexels(fb, per_page=15)
-            if clips:
-                break
-                
-    if not clips:
-        print("⚠️  No Pexels footage found, will use generated background.")
+    if not os.path.exists(GAMEPLAY_DIR):
+        print("⚠️  Gameplay folder not found! Please run setup_gameplay.sh")
         return []
         
-    random.shuffle(clips)
+    subfolder_map = {
+        1: ["facts", "satisfying", "timelapse"],
+        2: ["thriller", "underwater"],
+        3: ["dilemma", "timelapse", "satisfying"]
+    }
     
-    downloaded_paths = []
-    total_duration = 0.0
+    allowed_subs = subfolder_map.get(fmt, [])
+    clips = []
     
-    for i, clip in enumerate(clips):
-        if total_duration >= duration_needed or len(downloaded_paths) >= max_clips:
-            break
+    # Gather clips from all existing/populated allowed subfolders
+    for sub in allowed_subs:
+        target_dir = os.path.join(GAMEPLAY_DIR, sub)
+        if os.path.exists(target_dir):
+            sub_clips = [os.path.join(target_dir, f) for f in os.listdir(target_dir) if f.endswith(".mp4")]
+            clips.extend(sub_clips)
             
-        url = _pick_best_video_file(clip)
-        if url:
-            filename = f"clip_{len(downloaded_paths)}.mp4"
-            path = _download_clip(url, filename)
-            if path:
-                downloaded_paths.append(path)
-                clip_dur = clip.get("duration", 10)
-                total_duration += clip_dur
-                print(f"   ✅ Downloaded clip {len(downloaded_paths)}: {clip_dur}s (total: {total_duration:.0f}s)")
-                
-    return downloaded_paths
-
-def _search_pexels(keyword: str, per_page: int = 15) -> list:
-    params = {"query": keyword, "per_page": per_page, "orientation": "portrait", "size": "medium"}
-    try:
-        resp = requests.get(PEXELS_VIDEO_URL, headers=HEADERS, params=params, timeout=10)
-        resp.raise_for_status()
-        return resp.json().get("videos", [])
-    except Exception:
+    # Fallback to root if all subfolders are empty/missing
+    if not clips:
+        clips = [os.path.join(GAMEPLAY_DIR, f) for f in os.listdir(GAMEPLAY_DIR) if f.endswith(".mp4")]
+    
+    if not clips:
+        print("⚠️  No MP4 files found in gameplay folders!")
         return []
-
-def _pick_best_video_file(clip: dict) -> str | None:
-    files = clip.get("video_files", [])
-    
-    # Filter portrait
-    vertical_files = [f for f in files if f.get("width", 0) < f.get("height", 0)]
-    
-    if not vertical_files:
-        vertical_files = files # Fallback if no explicit vertical
         
-    if not vertical_files:
-        return None
-        
-    # Prefer hd or sd
-    preferred = [f for f in vertical_files if f.get("quality") in ["hd", "sd"]]
-    if not preferred:
-        preferred = vertical_files
-        
-    # Sort by closest to 1080
-    preferred.sort(key=lambda x: abs(x.get("width", 0) - VIDEO_WIDTH))
-    
-    return preferred[0].get("link") if preferred else None
-
-def _download_clip(url: str, filename: str) -> str | None:
-    path = os.path.join(TEMP_DIR, filename)
-    try:
-        resp = requests.get(url, stream=True, timeout=60)
-        resp.raise_for_status()
-        with open(path, "wb") as f:
-            for chunk in resp.iter_content(chunk_size=8192):
-                if chunk:
-                    f.write(chunk)
-        return path
-    except Exception:
-        return None
+    chosen = random.choice(clips)
+    print(f"   ✅ Selected: {os.path.basename(chosen)}")
+    return [chosen]
