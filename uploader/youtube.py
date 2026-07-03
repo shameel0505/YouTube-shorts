@@ -1,5 +1,4 @@
 import os
-import pickle
 import sys
 from datetime import datetime, timedelta, timezone
 from googleapiclient.discovery import build
@@ -7,6 +6,7 @@ from googleapiclient.http import MediaFileUpload
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
 from config import YOUTUBE_CLIENT_SECRET, YOUTUBE_TOKEN_FILE, YT_CATEGORY_ID, YT_DEFAULT_TAGS, YT_PRIVACY
 
 SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
@@ -15,8 +15,7 @@ def _get_youtube_client():
     creds = None
     if os.path.exists(YOUTUBE_TOKEN_FILE):
         try:
-            with open(YOUTUBE_TOKEN_FILE, "rb") as token:
-                creds = pickle.load(token)
+            creds = Credentials.from_authorized_user_file(YOUTUBE_TOKEN_FILE, SCOPES)
         except Exception as e:
             print(f"⚠️ Could not load token: {e}")
 
@@ -49,8 +48,8 @@ def _get_youtube_client():
             flow = InstalledAppFlow.from_client_secrets_file(YOUTUBE_CLIENT_SECRET, SCOPES)
             creds = flow.run_local_server(port=0)
             
-        with open(YOUTUBE_TOKEN_FILE, "wb") as token:
-            pickle.dump(creds, token)
+        with open(YOUTUBE_TOKEN_FILE, "w") as token:
+            token.write(creds.to_json())
             
     return build("youtube", "v3", credentials=creds)
 
