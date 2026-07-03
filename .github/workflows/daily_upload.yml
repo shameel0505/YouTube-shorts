@@ -47,10 +47,10 @@ jobs:
         # Daily full run starts at 09:00 UTC (13:00 local time)
         if [ "$HOUR" = "09" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
           echo "🚀 Daily trigger time (09:00 UTC). Running full pipeline..."
-          python main.py run --format all
+          python -u main.py run --format all
         else
           echo "⏳ Checking and resuming pending video renders..."
-          python main.py run --format all --resume-only
+          python -u main.py run --format all --resume-only
         fi
 
     - name: Commit & Push Updated Topic Logs
