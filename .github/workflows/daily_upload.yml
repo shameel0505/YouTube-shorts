@@ -2,7 +2,7 @@ name: Daily Shorts & Reels Uploader
 
 on:
   schedule:
-    - cron: '0 10 * * *'  # Runs every day at 10:00 UTC
+    - cron: '0 * * * *'  # Runs every hour on the hour
   workflow_dispatch:      # Allows manual trigger from the GitHub UI
 
 jobs:
@@ -35,7 +35,15 @@ jobs:
 
     - name: Run Pipeline
       run: |
-        python main.py run --format all
+        HOUR=$(date -u +%H)
+        # Daily full run starts at 09:00 UTC (13:00 local time)
+        if [ "$HOUR" = "09" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          echo "🚀 Daily trigger time (09:00 UTC). Running full pipeline..."
+          python main.py run --format all
+        else
+          echo "⏳ Checking and resuming pending video renders..."
+          python main.py run --format all --resume-only
+        fi
 
     - name: Commit & Push Updated Topic Logs
       run: |
@@ -43,5 +51,5 @@ jobs:
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git add memory/ || true
         git add analytics/ || true
-        git commit -m "chore: Update used topics and analytics log [skip ci]" || true
+        git commit -m "chore: Update used topics, rendering states, and analytics log [skip ci]" || true
         git push origin main || true

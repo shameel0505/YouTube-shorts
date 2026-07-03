@@ -76,10 +76,15 @@ def _load_audio_duration(path: str) -> float:
 
 # ── FORMAT 1: Mind-Blowing Facts ─────────────────────────────────────────────
 
-def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False) -> dict:
+def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False) -> dict:
     fmt = "1"
     log("━" * 50, fmt)
     
+    state_path = os.path.join(os.path.dirname(TEMP_DIR), "memory", f"nblm_state_f{fmt}.json")
+    if resume_only and not os.path.exists(state_path):
+        log("⏭️  No active generation state found and resume-only is active. Skipping.", fmt)
+        return {"format": 1, "skipped": True}
+
     if upload:
         from analytics.tracker import was_format_uploaded_today
         if was_format_uploaded_today(1):
@@ -193,6 +198,10 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
         return {"format": 1, "script": script_data, "video_path": video_path, "result": result}
 
     except Exception as e:
+        err_msg = str(e).lower()
+        if "timeout" in err_msg or "deadline" in err_msg:
+            log(f"⏳ NotebookLM video generation is still processing. Saving state. The next run will resume.", fmt)
+            return {"format": 1, "rendering": True, "script": locals().get("script_data")}
         log(f"❌ Format 1 failed: {e}", fmt)
         log(traceback.format_exc(), fmt)
         raise
@@ -200,13 +209,18 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
 
 # ── FORMAT 2: Serialized Thriller ─────────────────────────────────────────────
 
-def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False) -> dict:
+def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False) -> dict:
     from generator.script import generate_thriller
     from generator.researcher import research_thriller
     
     fmt = "2"
     log("━" * 50, fmt)
     
+    state_path = os.path.join(os.path.dirname(TEMP_DIR), "memory", f"nblm_state_f{fmt}.json")
+    if resume_only and not os.path.exists(state_path):
+        log("⏭️  No active generation state found and resume-only is active. Skipping.", fmt)
+        return {"format": 2, "skipped": True}
+
     if upload:
         from analytics.tracker import was_format_uploaded_today
         if was_format_uploaded_today(2):
@@ -309,6 +323,10 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
         return {"format": 2, "script": script_data, "video_path": video_path, "result": result}
 
     except Exception as e:
+        err_msg = str(e).lower()
+        if "timeout" in err_msg or "deadline" in err_msg:
+            log(f"⏳ NotebookLM video generation is still processing. Saving state. The next run will resume.", fmt)
+            return {"format": 2, "rendering": True, "script": locals().get("script_data")}
         log(f"❌ Format 2 failed: {e}", fmt)
         log(traceback.format_exc(), fmt)
         raise
@@ -317,10 +335,15 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
 # ── FORMAT 3: Moral Dilemma ───────────────────────────────────────────────────
 
-def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False) -> dict:
+def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False) -> dict:
     fmt = "3"
     log("━" * 50, fmt)
     
+    state_path = os.path.join(os.path.dirname(TEMP_DIR), "memory", f"nblm_state_f{fmt}.json")
+    if resume_only and not os.path.exists(state_path):
+        log("⏭️  No active generation state found and resume-only is active. Skipping.", fmt)
+        return {"format": 3, "skipped": True}
+
     if upload:
         from analytics.tracker import was_format_uploaded_today
         if was_format_uploaded_today(3):
@@ -431,6 +454,10 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
         return {"format": 3, "script": script_data, "video_path": video_path, "result": result}
 
     except Exception as e:
+        err_msg = str(e).lower()
+        if "timeout" in err_msg or "deadline" in err_msg:
+            log(f"⏳ NotebookLM video generation is still processing. Saving state. The next run will resume.", fmt)
+            return {"format": 3, "rendering": True, "script": locals().get("script_data")}
         log(f"❌ Format 3 failed: {e}", fmt)
         log(traceback.format_exc(), fmt)
         raise
@@ -438,13 +465,18 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
 # ── FORMAT 4: Dark Psychology & Insane Real-Life Cases ────────────────────────
 
-def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False) -> dict:
+def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False) -> dict:
     from generator.script import generate_psychology
     from generator.researcher import research_psychology
     
     fmt = "4"
     log("━" * 50, fmt)
     
+    state_path = os.path.join(os.path.dirname(TEMP_DIR), "memory", f"nblm_state_f{fmt}.json")
+    if resume_only and not os.path.exists(state_path):
+        log("⏭️  No active generation state found and resume-only is active. Skipping.", fmt)
+        return {"format": 4, "skipped": True}
+
     if upload:
         from analytics.tracker import was_format_uploaded_today
         if was_format_uploaded_today(4):
@@ -544,6 +576,10 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
         return {"format": 4, "script": script_data, "video_path": video_path, "result": result}
 
     except Exception as e:
+        err_msg = str(e).lower()
+        if "timeout" in err_msg or "deadline" in err_msg:
+            log(f"⏳ NotebookLM video generation is still processing. Saving state. The next run will resume.", fmt)
+            return {"format": 4, "rendering": True, "script": locals().get("script_data")}
         log(f"❌ Format 4 failed: {e}", fmt)
         log(traceback.format_exc(), fmt)
         raise
@@ -551,7 +587,7 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
 # ── All Formats ───────────────────────────────────────────────────────────────
 
-def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False, resume: bool = False, mock: bool = False, fmt_list=["1", "2", "3", "4"]):
+def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False, resume: bool = False, mock: bool = False, fmt_list=["1", "2", "3", "4"], resume_only: bool = False):
     """
     Run all formats in quota-priority order (F1 → F2 → F3 → F4).
     Skips remaining formats if Gemini quota runs out.
@@ -561,13 +597,13 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
 
     runners = []
     if "all" in fmt_list or "1" in fmt_list:
-        runners.append(("1", lambda attempt=1: run_format1(upload=upload, niche=niche, manual=manual, attempt=attempt, resume=resume, mock=mock)))
+        runners.append(("1", lambda attempt=1: run_format1(upload=upload, niche=niche, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only)))
     if "all" in fmt_list or "2" in fmt_list:
-        runners.append(("2", lambda attempt=1: run_format2(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock)))
+        runners.append(("2", lambda attempt=1: run_format2(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only)))
     if "all" in fmt_list or "3" in fmt_list:
-        runners.append(("3", lambda attempt=1: run_format3(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock)))
+        runners.append(("3", lambda attempt=1: run_format3(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only)))
     if "all" in fmt_list or "4" in fmt_list:
-        runners.append(("4", lambda attempt=1: run_format4(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock)))
+        runners.append(("4", lambda attempt=1: run_format4(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only)))
     
     def notify_telegram(msg: str):
         try:
@@ -592,8 +628,14 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
             try:
                 results[fmt_name] = runner(attempt=attempt)
                 
-                # Success notification
                 res = results[fmt_name]
+                if res.get("skipped"):
+                    break
+                if res.get("rendering"):
+                    rendering_msg = f"⏳ <b>Format {fmt_name} is rendering...</b>\nNotebookLM is generating the video overview. The next run will check task completion and upload it."
+                    notify_telegram(rendering_msg)
+                    break
+
                 success_msg = f"<b>✅ Format {fmt_name} Succeeded!</b>\n"
                 if "script" in res:
                     success_msg += f"• Title: <i>{res['script'].get('title', 'Unknown')}</i>\n"
@@ -707,6 +749,7 @@ def parse_args():
     parser.add_argument("--reset-story", action="store_true", help="Reset Format 2 story arc and start fresh")
     parser.add_argument("--manual", action="store_true", help="Enable manual approval via Telegram")
     parser.add_argument("--resume", action="store_true", help="Resume from cached files without clearing temp directory")
+    parser.add_argument("--resume-only", action="store_true", help="Only check and resume pending generations from state, do not start new ones")
     parser.add_argument("--mock", action="store_true", help="Use static mock scripts instead of live research during dry-run")
     return parser.parse_args()
 
@@ -766,4 +809,4 @@ if __name__ == "__main__":
                 log(f"\n{'='*60}\n▶ Pipeline Run {i+1}/{args.count}\n{'='*60}")
             
             fmt_list = ["1", "2", "3", "4"] if args.format == "all" else [args.format]
-            run_all_formats(upload, niche=args.niche, manual=args.manual, resume=args.resume, mock=args.mock, fmt_list=fmt_list)
+            run_all_formats(upload, niche=args.niche, manual=args.manual, resume=args.resume, mock=args.mock, fmt_list=fmt_list, resume_only=args.resume_only)

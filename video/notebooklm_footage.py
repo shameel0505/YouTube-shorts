@@ -7,7 +7,8 @@ from config import TEMP_DIR
 from video.footage import fetch_footage as fallback_fetch_footage
 
 def _get_state_path(fmt: int) -> str:
-    return os.path.join(TEMP_DIR, f"nblm_state_f{fmt}.json")
+    # Save states to the git-tracked memory folder to persist across serverless VM runs
+    return os.path.join(os.path.dirname(TEMP_DIR), "memory", f"nblm_state_f{fmt}.json")
 
 def _load_state(fmt: int) -> dict:
     path = _get_state_path(fmt)
@@ -217,9 +218,9 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool) -> s
                     "output_file": output_file
                 })
 
-            # 4. Wait for completion (Retry polling up to 5 times for transient errors)
-            print(f"   [NotebookLM] Waiting for task {task_id} to finish (this can take 5-15 mins)...")
-            await _retry_call(client.artifacts.wait_for_completion, notebook_id, task_id, timeout=86400.0)
+            # 4. Wait for completion (Timeout after 300s to prevent GitHub Action runner billing)
+            print(f"   [NotebookLM] Waiting for task {task_id} to finish (timeout 300s)...")
+            await _retry_call(client.artifacts.wait_for_completion, notebook_id, task_id, timeout=300.0)
 
             # 5. Download the completed video (Retry up to 5 times)
             print(f"   [NotebookLM] Downloading completed video to '{output_file}'...")
