@@ -208,7 +208,7 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool) -> s
                     null_result_artifact_type="cinematic video"
                 )
                 task_id = status.task_id
-                output_file = os.path.join(TEMP_DIR, f"notebooklm_f{fmt}_{int(time.time())}.mp4")
+                output_file = os.path.join(os.path.dirname(TEMP_DIR), "memory", f"notebooklm_f{fmt}_{int(time.time())}.mp4")
 
 
                 # Save state immediately so we can resume if we get interrupted during render/download
@@ -269,9 +269,9 @@ def fetch_notebooklm_footage(script_data: dict, duration_needed: float, fmt: int
         print(f"   [NotebookLM] Found active state file for Format {fmt}. Forcing resume mode.")
         resume = True
 
-    # Check if a video was already generated and downloaded in this run's temp folder
+    # Check if a video was already generated and downloaded in memory/ folder
     import glob
-    existing_videos = glob.glob(os.path.join(TEMP_DIR, f"notebooklm_f{fmt}_*.mp4"))
+    existing_videos = glob.glob(os.path.join(os.path.dirname(TEMP_DIR), "memory", f"notebooklm_f{fmt}_*.mp4"))
     if existing_videos:
         existing_videos.sort(key=os.path.getmtime)
         valid_video = existing_videos[-1]

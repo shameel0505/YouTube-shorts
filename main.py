@@ -649,6 +649,24 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
                     else:
                         success_msg += "• Instagram: ⚠️ Upload Failed/Skipped\n"
                 notify_telegram(success_msg)
+
+                # Delete local cached video from memory/ folder only if both uploads succeeded
+                video_path = res.get("video_path")
+                result_data = res.get("result", {})
+                from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
+                ig_configured = bool(IG_ACCESS_TOKEN and IG_ACCOUNT_ID)
+                ig_success = bool(result_data.get("ig_post_id")) if isinstance(result_data, dict) else False
+
+                if video_path and os.path.exists(video_path):
+                    if not ig_configured or ig_success:
+                        try:
+                            os.remove(video_path)
+                            log(f"🧹 Cleaned up uploaded video cache: {os.path.basename(video_path)}")
+                        except Exception as de:
+                            log(f"⚠️ Could not delete uploaded video cache: {de}")
+                    else:
+                        log(f"ℹ️ Preserving video file in memory/ folder for manual re-upload: {os.path.basename(video_path)}")
+
                 break
             except Exception as e:
                 import traceback

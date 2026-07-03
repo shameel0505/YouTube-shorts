@@ -113,14 +113,15 @@ FORMAT3_SCHEDULE_HOUR = int(os.getenv("FORMAT3_SCHEDULE_HOUR", "17"))  # Dilemma
 
 # ── Quota management ─────────────────────────────────────────────────────────
 GEMINI_QUOTA_LIMIT    = 20
-GEMINI_QUOTA_FILE     = os.path.join(TEMP_DIR, "gemini_quota.json")
+GEMINI_QUOTA_FILE     = os.path.join(os.path.dirname(TEMP_DIR), "memory", "gemini_quota.json")
 
 # ── Story state (Format 2 — Serialized Thriller) ─────────────────────────────
-STORY_STATE_FILE      = os.path.join(TEMP_DIR, "story_state.json")
+STORY_STATE_FILE      = os.path.join(os.path.dirname(TEMP_DIR), "memory", "story_state.json")
 
 # ── Create dirs on import ─────────────────────────────────────────────────────
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 os.makedirs(TEMP_DIR, exist_ok=True)
+os.makedirs(os.path.join(os.path.dirname(TEMP_DIR), "memory"), exist_ok=True)
 os.makedirs("./logs", exist_ok=True)
 
 # Asset subfolders

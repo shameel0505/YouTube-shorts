@@ -6,9 +6,8 @@ import json
 import os
 import uuid
 from datetime import datetime, timezone
-from config import TEMP_DIR
+from config import TEMP_DIR, STORY_STATE_FILE
 
-STORY_STATE_FILE = os.path.join(TEMP_DIR, "../memory/story_state.json")
 COMPLETED_STORIES_FILE = os.path.join(TEMP_DIR, "../memory/completed_stories.json")
 
 _DEFAULT_STATE = {

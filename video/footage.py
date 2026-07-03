@@ -6,8 +6,7 @@ def fetch_footage(keyword: str = None, duration_needed: float = 0.0, fmt: int = 
     print(f"🎬 Selecting background gameplay footage for format {fmt}...")
     
     if not os.path.exists(GAMEPLAY_DIR):
-        print("⚠️  Gameplay folder not found! Please run setup_gameplay.sh")
-        return []
+        raise RuntimeError("Gameplay directory not found! Please run setup_gameplay.sh")
         
     subfolder_map = {
         1: ["facts", "satisfying", "timelapse"],
@@ -30,8 +29,7 @@ def fetch_footage(keyword: str = None, duration_needed: float = 0.0, fmt: int = 
         clips = [os.path.join(GAMEPLAY_DIR, f) for f in os.listdir(GAMEPLAY_DIR) if f.endswith(".mp4")]
     
     if not clips:
-        print("⚠️  No MP4 files found in gameplay folders!")
-        return []
+        raise RuntimeError("No gameplay MP4 files found in the gameplay directory. B-roll fallback failed.")
         
     chosen = random.choice(clips)
     print(f"   ✅ Selected: {os.path.basename(chosen)}")
