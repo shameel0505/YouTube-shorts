@@ -7,9 +7,30 @@
         {
             "text": "Believe it or not, there are more individual trees on Earth than there are stars in our entire Milky Way galaxy.",
             "date": "2026-06-01T08:48:01.400667"
+        },
+        {
+            "text": "The placebo effect is so powerful that people in clinical trials have experienced genuine adverse side effects, like nausea or headaches, even when they knew they were taking an inert sugar pill.",
+            "date": "2026-06-02T08:32:29.122702"
+        },
+        {
+            "text": "For a photon, a particle of light, the journey from the Sun to your eye is instantaneous. Light travels so fast it effectively doesn't experience time at all.",
+            "date": "2026-06-03T10:36:27.980215"
+        },
+        {
+            "text": "If the entire 13.8 billion-year history of the universe were compressed into a single calendar year, human civilization would only appear in the last few seconds of December 31st.",
+            "date": "2026-06-04T08:47:04.786856"
+        },
+        {
+            "text": "Every time you recall a memory, your brain doesn't just retrieve it; it actively reconstructs it, often subtly altering it in the process. This means your memories aren't fixed recordings, but constantly evolving narratives.",
+            "date": "2026-07-03T20:00:32.079462"
         }
     ],
-    "format2_titles": [],
+    "format2_titles": [
+        {
+            "text": "The Handprint's Echo",
+            "date": "2026-07-03T20:01:04.043572"
+        }
+    ],
     "format3_dilemmas": [
         {
             "text": "Memory wipe for money",
@@ -18,6 +39,22 @@
         {
             "text": "You discover a critical, dangerous flaw in your company's bestselling product that could harm thousands of customers. Exposing it would bankrupt the company and cause mass layoffs, including your own job.",
             "date": "2026-06-01T08:24:44.592391"
+        },
+        {
+            "text": "A close friend confides they committed a serious crime and asks you to be their alibi. You know they're guilty but also know being caught would ruin their life.",
+            "date": "2026-06-02T08:44:56.441295"
+        },
+        {
+            "text": "Your sibling needs a very expensive, life-saving surgery, but you only have enough savings to either pay for their surgery or guarantee your child's college education. Both are critical needs.",
+            "date": "2026-06-03T10:56:41.581993"
+        },
+        {
+            "text": "You find a wallet overflowing with cash, along with an ID. You're struggling financially and could use the money to pay an urgent, overdue bill for your family. Returning the wallet means giving up much-needed funds for your own immediate needs.",
+            "date": "2026-06-04T09:27:53.272048"
+        },
+        {
+            "text": "You accidentally witness your close friend's partner cheating on them. Telling your friend would cause immense pain and likely end their long-term relationship, but staying silent feels dishonest.",
+            "date": "2026-07-03T20:06:24.043861"
         }
     ]
 }

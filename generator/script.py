@@ -113,107 +113,70 @@ def _call_gemini_for_script(prompt: str, required_keys: list, retries: int = 3) 
         except Exception as e:
             if "429" in str(e) or "quota" in str(e).lower() or "ResourceExhausted" in str(type(e)):
                 print("   ⏳ Rate limit hit! Sleeping for 60 seconds...")
-                import time
-                time.sleep(60)
-            else:
-                import time
-                time.sleep(1)
-            if attempt == retries - 1:
-                raise RuntimeError(f"Failed to generate valid script after {retries} attempts.") from e
-    return {}
+              # ── FORMAT 1: Mind-Blowing Facts ─────────────────────────────────────────────
 
+_F1_PROMPT = """You are a professional educational content developer and science/history writer. 
+Your goal is to write a highly detailed, comprehensive article about the researched fact topic below.
 
-# ── FORMAT 1: Mind-Blowing Facts ─────────────────────────────────────────────
-
-_F1_PROMPT = """You are a viral YouTube Shorts scriptwriter. Your scripts get 50M+ views.
-You write for TEXT-TO-SPEECH narration — every word must sound natural when spoken aloud.
+This article will be uploaded to Google's NotebookLM to generate a video/audio overview, so it must be professional, informative, and packed with fascinating details, historical contexts, scientific mechanisms, and surprising implications.
 
 Niche: {niche}
-Target: {duration} seconds at 155 WPM (~{word_count} words)
-
 RESEARCHED TOPIC: {research_topic}
 Key facts: {key_facts}
 Hook angle: {hook_angle}
 
-══ 5-BEAT VIRAL STRUCTURE ══
+══ WRITING RULES (CRITICAL) ══
+1. LENGTH: Write a comprehensive, fully developed educational essay between 300 and 500 words. Do not write a short voiceover script.
+2. DETAILS: Unpack the complexity. Explain the "why" and "how". Use specific figures, scientific terms, historical names, and concrete evidence.
+3. STRUCTURE:
+   - Catchy Hook Introduction: Open with the single most counterintuitive aspect of the topic.
+   - Deep Dive Explanation: Provide context, background, and the underlying mechanisms/history.
+   - Escalation/Payoff: Reveal additional layers of complexity, current research, or fascinating implications.
+4. TONE: Professional, authoritative, engaging, and mind-expanding.
 
-BEAT 1 — HOOK (first 3 seconds, 1-2 sentences MAX):
-  Lead with the single most shocking or counterintuitive sentence.
-  Proven hook styles:
-  - "[FACT]. And nobody talks about it."
-  - "This [thing] should not exist. But it does."
-  - "You have been [wrong about this] your entire life."
-  The hook must make the viewer physically unable to scroll.
-
-BEAT 2 — CONTEXT (5-10 seconds):
-  Fast setup. One or two sentences. No filler. Get in, get out.
-
-BEAT 3 — ESCALATION (15-20 seconds):
-  2-3 facts that each top the last.
-  End with a RE-HOOK to prevent drop-off:
-  "But wait." / "Now it gets worse." / "Plot twist." / "The real reason?"
-
-BEAT 4 — TWIST (10-15 seconds):
-  The counterintuitive reveal. The "wait WHAT" moment. Make it land hard.
-
-BEAT 5 — PAYOFF (5-8 seconds):
-  End with something that makes the viewer feel smart, disturbed, or in awe.
-  A mind-bending final fact, rhetorical question, or dark implication.
-{tts_rules}
 ══ OUTPUT FORMAT ══
-Respond ONLY with valid JSON. No markdown. No text outside the JSON.
+Respond ONLY with a strict JSON object (no markdown):
 {{
   "format": "facts",
   "topic": "3-5 word internal label",
-  "title": "Under 60 chars. Curiosity-gap. No 'shocking' or 'amazing'.",
-  "description": "One punchy sentence under 100 chars.",
-  "hashtags": ["#shorts", "#facts", "6 more relevant tags"],
-  "script": "The full spoken script. Clean spoken words only.",
-  "pexels_keyword": "A 3-5 word descriptive phrase combining the topic title and visual elements for a highly specific image search",
-  "hook_preview": "Copy the exact first sentence."
-}}{avoid_clause}"""
+  "title": "Curiosity-gap title (under 60 chars)",
+  "description": "Engaging description (under 100 chars)",
+  "hashtags": ["#shorts", "#facts", "6 more tags"],
+  "script": "The complete, detailed 300-500 word educational article.",
+  "pexels_keyword": "A highly descriptive visual B-roll prompt (e.g., 'Retro science laboratory, glowing chemical reactions, vintage 35mm film')",
+  "hook_preview": "A 1-sentence hook preview."
+}}"""
 
-_F1_PROMPT_NO_RESEARCH = """You are a viral YouTube Shorts scriptwriter. Your scripts get 50M+ views.
-You write for TEXT-TO-SPEECH narration — every word must sound natural when spoken aloud.
+_F1_PROMPT_NO_RESEARCH = """You are a professional educational content developer and science/history writer.
+Your goal is to write a highly detailed, comprehensive article about a mind-blowing topic in this niche.
+
+This article will be uploaded to Google's NotebookLM to generate a video/audio overview, so it must be professional, informative, and packed with fascinating details, scientific mechanisms, and surprising implications.
 
 Niche: {niche}
-Target: {duration} seconds at 155 WPM (~{word_count} words)
 
-══ 5-BEAT VIRAL STRUCTURE ══
+══ WRITING RULES (CRITICAL) ══
+1. LENGTH: Write a comprehensive, fully developed educational essay between 300 and 500 words.
+2. DETAILS: Unpack the complexity. Explain the "why" and "how". Use specific figures and evidence.
+3. STRUCTURE: Catchy Hook Introduction, Deep Dive, and Escalation/Payoff.
+4. TONE: Professional, authoritative, and mind-expanding.
 
-BEAT 1 — HOOK (first 3 seconds):
-  The most shocking counterintuitive fact about this niche.
-  - "[FACT]. And nobody talks about it."
-  - "This [thing] should not exist. But it does."
-  - "You have been [wrong] your entire life."
-
-BEAT 2 — CONTEXT (5-10 seconds): Fast setup. No filler.
-
-BEAT 3 — ESCALATION (15-20 seconds):
-  2-3 facts, each bigger. End with:
-  "But wait." / "Now it gets worse." / "Plot twist." / "I am not done."
-
-BEAT 4 — TWIST (10-15 seconds): The "wait WHAT" moment.
-
-BEAT 5 — PAYOFF (5-8 seconds): Lingering fact, mind-bender, or rhetorical question.
-{tts_rules}
-Respond ONLY with valid JSON. No markdown. No text outside the JSON.
+══ OUTPUT FORMAT ══
+Respond ONLY with a strict JSON object (no markdown):
 {{
   "format": "facts",
   "topic": "3-5 word internal label",
-  "title": "Under 60 chars. Curiosity-gap. No 'shocking' or 'amazing'.",
-  "description": "One punchy sentence under 100 chars.",
-  "hashtags": ["#shorts", "#facts", "6 more relevant tags"],
-  "script": "The full spoken script. Clean spoken words only.",
-  "pexels_keyword": "A 3-5 word descriptive phrase combining the topic title and visual elements for a highly specific image search",
-  "hook_preview": "Copy the exact first sentence."
-}}{avoid_clause}"""
+  "title": "Curiosity-gap title (under 60 chars)",
+  "description": "Engaging description (under 100 chars)",
+  "hashtags": ["#shorts", "#facts", "6 more tags"],
+  "script": "The complete, detailed 300-500 word educational article.",
+  "pexels_keyword": "A highly descriptive visual B-roll prompt",
+  "hook_preview": "A 1-sentence hook preview."
+}}"""
 
 
 def generate_script(niche: str = None, research: dict = None, retries: int = 3) -> dict:
-    """Generate a Format 1 (Mind-Blowing Facts) script."""
+    """Generate a Format 1 (Mind-Blowing Facts) article."""
     niche = niche or NICHE
-    word_count = int((VIDEO_DURATION_SEC / 60) * 155)
     recent = _load_used_topics()
     avoid_clause = (
         f"\n\nDo NOT cover these recently used topics: {', '.join(recent[-20:])}"
@@ -225,20 +188,14 @@ def generate_script(niche: str = None, research: dict = None, retries: int = 3) 
         key_facts_str = "".join([f"  • {f}\n" for f in facts]) if facts else "  • Use verified supporting facts\n"
         prompt = _F1_PROMPT.format(
             niche=niche,
-            duration=VIDEO_DURATION_SEC,
-            word_count=word_count,
             research_topic=research["chosen_topic"],
             key_facts=key_facts_str,
             hook_angle=research.get("hook_angle", "Start with the most surprising fact"),
-            tts_rules=_TTS_RULES,
             avoid_clause=avoid_clause,
         )
     else:
         prompt = _F1_PROMPT_NO_RESEARCH.format(
             niche=niche,
-            duration=VIDEO_DURATION_SEC,
-            word_count=word_count,
-            tts_rules=_TTS_RULES,
             avoid_clause=avoid_clause,
         )
 
@@ -246,167 +203,97 @@ def generate_script(niche: str = None, research: dict = None, retries: int = 3) 
     if research and research.get("pexels_keyword") and len(data.get("pexels_keyword", "")) < 3:
         data["pexels_keyword"] = research["pexels_keyword"]
     _save_used_topic(data["topic"])
-    print(f"✅ [FORMAT 1] Script: '{data['title']}'")
+    print(f"✅ [FORMAT 1] Comprehensive Article: '{data['title']}'")
     return data
 
 
-# ── FORMAT 2: Serialized Thriller ─────────────────────────────────────────────
+_F2_PROMPT = """You are a creative writer and storyteller specializing in suspense, horror, and mystery. 
+Your goal is to write a detailed, highly comprehensive short story in the style of a **{genre}**.
+This story is going to be processed by Google's NotebookLM to generate a video discussion overview, so it needs to be rich in details, characters, settings, and atmosphere.
 
-_F2_PROMPT_NEW = """You are a serialized thriller scriptwriter for YouTube Shorts.
-Each episode is 30-40 seconds (~{word_count} words at 155 WPM).
-This is PART 1 of a new story.
-
-STORY PREMISE:
-{premise}
-
+PREMISE: "{premise}"
 Protagonist: {protagonist}
-Core mystery: {core_mystery}
+Core Mystery/Conflict: {core_mystery}
 Setting: {setting}
+{avoid_clause}
 
-CLIFFHANGER STYLE FOR THIS PART: {cliffhanger_style}
-(Your ending MUST use this specific type of cliffhanger.)
-
-══ STRUCTURE ══
-0-5s   HOOK: Open mid-action or with a shocking statement. No setup. No introduction.
-5-25s  ESCALATION: Build tension through tight, vivid descriptive sentences.
-       Each sentence raises the stakes. No resolution. No answers given.
-25-35s CLIFFHANGER: Hard cut at the moment of MAXIMUM tension.
-       The viewer must NOT know what happens next.
-       Forbidden: any hint of resolution, safety, or explanation.
-Last spoken line MUST be: "Come back tomorrow to find out what happens."
-{tts_rules}
-══ CLIFFHANGER STYLE GUIDE ══
-physical peril      — character in immediate physical danger, outcome unknown
-shocking revelation — a fact is revealed that recontextualises everything
-moral crossroads    — character must choose between two devastating options, NOW
-ticking clock       — a deadline is revealed with seconds or hours remaining
+══ WRITING RULES (CRITICAL) ══
+1. LENGTH: Write a comprehensive, fully developed story between 300 and 500 words.
+2. ATMOSPHERE & DETAILS: Describe the setting with rich sensory details (sights, sounds, shadows). Give depth to the protagonist's inner thoughts, fears, and history.
+3. PLOT TWIST: End the story with a shocking, unexpected twist or a profound cliffhanger that will make viewers debate the meaning in the comments.
+4. TONE: Engaging, atmospheric, and highly suspenseful.
 
 ══ OUTPUT FORMAT ══
-Respond ONLY with valid JSON. No markdown. No text outside the JSON.
+Respond ONLY with a strict JSON object (no markdown):
 {{
   "format": "thriller",
-  "part_number": 1,
-  "story_title": "4-6 word series title (no 'The Mystery of...')",
-  "title": "Series Title — Part 1 (under 60 chars)",
-  "description": "Tense one-liner under 100 chars. Ends with a question or ellipsis.",
-  "hashtags": ["#shorts", "#thriller", "#mystery", "5 more relevant tags"],
-  "script": "Full spoken script. Ends with 'Come back tomorrow to find out what happens.'",
-  "cliffhanger": "Copy the exact cliffhanger moment — the last sentence BEFORE the come-back line.",
-  "characters": ["protagonist name", "any other named characters"],
-  "unresolved_thread": "One sentence: what question is left unanswered?"
+  "title": "Curiosity-gap story title (under 60 chars)",
+  "description": "Tense one-liner story description (under 100 chars)",
+  "hashtags": ["#shorts", "#thriller", "#mystery", "5 more tags"],
+  "script": "The complete, detailed 300-500 word story.",
+  "hook": "A 2-3 word punchy hook text for the on-screen title card",
+  "pexels_keyword": "A highly descriptive visual B-roll prompt"
 }}"""
-
-_F2_PROMPT_CONTINUING = """You are a serialized thriller scriptwriter for YouTube Shorts.
-Each episode is 30-40 seconds (~{word_count} words at 155 WPM).
-This is PART {part_number} of an ongoing story.
-
-STORY SO FAR (summary):
-{story_so_far}
-
-Characters: {characters}
-Last part ended with this cliffhanger: "{last_cliffhanger}"
-Unresolved thread: {unresolved_thread}
-
-CLIFFHANGER STYLE FOR THIS PART: {cliffhanger_style}
-(Your ending MUST use this specific type of cliffhanger — different from the last part.)
-
-══ STRUCTURE ══
-0-5s   RECAP: One sentence only. Remind viewers of the last cliffhanger. Raise the tension immediately.
-5-25s  ESCALATION: Continue the story. Build tension. Raise stakes. No resolution. No answers.
-       Add one new complication that makes things worse.
-25-35s CLIFFHANGER: Hard cut at maximum tension. Do NOT resolve anything.
-       The cliffhanger must be different in style from the previous part.
-Last spoken line MUST be: "Come back tomorrow to find out what happens."
-{tts_rules}
-══ STRICT RULES ══
-- This part must NOT feel complete or resolved on its own.
-- Do NOT answer the previous cliffhanger directly — deepen the mystery instead.
-- Do NOT introduce more than one new plot element per part.
-- Vary sentence rhythm: mix very short (3-4 word) punches with longer tension-building lines.
-
-══ OUTPUT FORMAT ══
-Respond ONLY with valid JSON. No markdown. No text outside the JSON.
-{{
-  "format": "thriller",
-  "part_number": {part_number},
-  "story_title": "{story_title}",
-  "title": "{story_title} — Part {part_number} (under 60 chars)",
-  "description": "Tense one-liner under 100 chars.",
-  "hashtags": ["#shorts", "#thriller", "#mystery", "5 more relevant tags"],
-  "script": "Full spoken script. Ends with 'Come back tomorrow to find out what happens.'",
-  "cliffhanger": "Copy the exact cliffhanger moment.",
-  "characters": ["list all named characters"],
-  "unresolved_thread": "One sentence: what is still unanswered?"
-}}"""
-
 
 def generate_thriller(research: dict = None, retries: int = 3) -> dict:
     """
-    Generate a full 7-part Serialized Thriller script in one go.
+    Generate a single-episode suspense/thriller story with dynamic genre and repetition prevention.
     """
-    word_count = int((35 / 60) * 155)  # ~90 words for 35s
     r = research or {}
     
-    premise = r.get("premise", "A stranger wakes with no memory in a locked room.")
+    premise = r.get("premise", "A man buys an old mirror and notices his reflection is lagging.")
+    protagonist = r.get("protagonist", "Liam")
+    core_mystery = r.get("core_mystery", "What is the reflection trying to warn him about?")
+    setting = r.get("setting", "A dimly lit bedroom, late night")
+    
+    # Avoid recent stories
+    recent = _load_used_topics()
+    avoid_clause = (
+        f"\n\nDo NOT cover or repeat these recently used premises/plots: {', '.join(recent[-20:])}"
+        if recent else ""
+    )
 
-    prompt = f"""You are a viral YouTube Shorts and TikTok thriller writer. Your stories hook viewers instantly and keep them on the edge of their seats.
+    # Randomly select a genre style for variety
+    import random
+    genres = [
+        "Psychological Thriller", 
+        "Cosmic Horror (Lovecraftian)", 
+        "Gothic Ghost Story", 
+        "Neo-Noir Crime Mystery", 
+        "Glitch-in-the-Matrix Horror",
+        "Sci-Fi Techno-Thriller"
+    ]
+    genre = random.choice(genres)
 
-Take this premise: "{premise}"
+    prompt = _F2_PROMPT.format(
+        genre=genre,
+        premise=premise,
+        protagonist=protagonist,
+        core_mystery=core_mystery,
+        setting=setting,
+        avoid_clause=avoid_clause
+    )
 
-Write a complete serialized story broken into EXACTLY 7 parts.
-Each part must be 30 to 40 seconds when read aloud (~{word_count} words).
+    data = _call_gemini_for_script(
+        prompt,
+        ["title", "description", "hashtags", "script", "hook", "pexels_keyword"],
+        retries=retries
+    )
+    
+    # Save the premise/title to prevent repetition in future runs
+    _save_used_topic(data.get("title", premise))
+    
+    print(f"✅ [FORMAT 2] Single-Episode Thriller Script ({genre}): '{data.get('title')}'")
+    return data
 
-NARRATION & HOOKING RULES (CRITICAL):
-- HOOK FAST: The first sentence of EVERY part MUST be a massive hook. Open in the middle of extreme action, a chilling realization, or a shocking dialogue line. No boring exposition.
-- PACING: Use short, punchy sentences. Avoid long, complex phrasing. This is for fast-paced text-to-speech.
-- HIGH TENSION: Every single sentence must raise the stakes. Make it visceral and gripping.
-- SHOW, DON'T TELL: Don't say "She was scared." Say "Her pulse pounded in her throat as the lock clicked."
-- CLIFFHANGERS: Each part MUST end on a brutal cliffhanger at the exact moment of maximum tension. Cut it off right before the outcome is revealed.
-- Vary cliffhanger styles across parts (physical peril, shocking revelation, moral crossroads, ticking clock).
-- The final part (Part 7) must provide a satisfying, mind-bending resolution.
-- Length constraint: {int(word_count * 0.9)} to {int(word_count * 1.1)} words per part.
-
-Respond ONLY with a strict JSON object containing:
-{{
-  "story_title": "Title of the story",
-  "story_premise": "The premise used",
-  "total_parts": 7,
-  "parts": [
-    {{
-      "part_number": 1,
-      "script_text": "The full spoken text for this part.",
-      "cliffhanger_summary": "Summary of the cliffhanger.",
-      "recap_line": "A single sentence recap to be used at the START of the next part. (Leave empty for part 7)"
-    }},
-    ... (all 7 parts)
-  ]
-}}"""
-
-    data = _call_gemini_for_script(prompt, ["story_title", "story_premise", "total_parts", "parts"], retries=retries)
-    if data and "parts" in data and len(data["parts"]) == 7:
-        print(f"✅ [FORMAT 2] Story Arc Generated: '{data.get('story_title')}' — 7 parts.")
-        return data
-
-    print("⚠️ Format 2 Gemini generation failed or returned invalid parts. Using fallback.")
-    return {
-        "story_title": "The Locked Room",
-        "story_premise": premise,
-        "total_parts": 7,
-        "parts": [
-            {
-                "part_number": i,
-                "script_text": f"This is fallback part {i}. The mystery deepens.",
-                "cliffhanger_summary": "A shadow appears.",
-                "recap_line": "Previously, the mystery deepened."
-            } for i in range(1, 8)
-        ]
-    }
 
 
 # ── FORMAT 3: Moral Dilemma ───────────────────────────────────────────────────
 
-_F3_PROMPT = """You are a moral dilemma scriptwriter for YouTube Shorts.
-Each video is 30-40 seconds (~{word_count} words at 155 WPM).
+_F3_PROMPT = """You are a professional content writer and ethical strategist.
+Your goal is to write a highly detailed, comprehensive case study describing a profound moral dilemma.
+
+This case study will be uploaded to Google's NotebookLM to generate an interactive video/audio discussion overview, so it must be professional, immersive, and lay out both choices and their consequences in detail.
 
 RESEARCHED DILEMMA:
 {dilemma_seed}
@@ -416,58 +303,40 @@ Option A: {option_a}
 Option B: {option_b}
 Closing question: "{closing_question}"
 
-══ STRUCTURE (MANDATORY) ══
-
-0-10s  SCENARIO SETUP — second person ("you"), vivid and specific:
-  Place the viewer inside the situation immediately.
-  Use sensory detail. Make it feel REAL.
-  Open with action or conflict — NOT background or introduction.
-
-10-30s CONFLICT — present both options clearly and fairly:
-  Describe what each choice means and costs.
-  Do NOT imply which is correct.
-  Do NOT editorialize. Do NOT moralize.
-  Both options must seem equally defensible to reasonable people.
-
-30-40s CLOSING QUESTION — spoken aloud, then fades to on-screen text:
-  Speak the exact closing question: "{closing_question}"
-  This is the FINAL line of the script. Nothing after it.
-{tts_rules}
-══ ABSOLUTE RULES ══
-- NO resolution. NO moral lesson. NO "the right answer is..."
-- NO language that implies one choice is better: "obviously", "clearly", "anyone would"
-- Topics must pit widely held values against each other — not right vs wrong
-- The scenario must be specific enough that viewers argue in comments
-- The closing question must be 6 words or fewer
+══ WRITING RULES (CRITICAL) ══
+1. LENGTH: Write a comprehensive, fully developed scenario between 300 and 500 words. Do not write a short voiceover script.
+2. DETAILS: Build a rich, highly specific scenario using second-person ("you") to put the reader directly in the shoes of the decision-maker. Add sensory details, background history of the conflict, and exact stakes.
+3. STRUCTURE:
+   - Setup: Describe the situation, how you got here, and the immediate emotional or physical stakes.
+   - The Conflict: Detail the two conflicting options. Dive deep into the trade-offs of both options, highlighting why there is no easy or right answer (loyalty vs honesty, self-preservation vs altruism).
+   - Closing Question: Conclude with the exact closing question: "{closing_question}".
+4. TONE: Objective, highly dramatic, engaging, and thought-provoking.
 
 ══ OUTPUT FORMAT ══
-Respond ONLY with valid JSON. No markdown. No text outside the JSON.
+Respond ONLY with a strict JSON object (no markdown):
 {{
   "format": "dilemma",
   "topic": "3-5 word internal label",
-  "title": "Under 60 chars. Ends with a question mark. Frames the dilemma clearly.",
-  "description": "One punchy sentence under 100 chars. Ends with ?",
-  "hashtags": ["#shorts", "#moraldilemma", "#wouldyourather", "5 more relevant tags"],
-  "script": "Full spoken script. Final line is exactly the closing question.",
-  "closing_question": "The exact on-screen question text — 6 words max, ends with ?",
+  "title": "Curiosity-gap dilemma title (under 60 chars)",
+  "description": "Engaging description (under 100 chars)",
+  "hashtags": ["#shorts", "#moraldilemma", "#wouldyourather", "5 more tags"],
+  "script": "The complete, detailed 300-500 word case study. Ending with the closing question.",
+  "closing_question": "The exact closing question — 6 words max, ends with ?",
   "values_in_conflict": ["{value_a}", "{value_b}"]
 }}"""
 
 
 def generate_dilemma(research: dict = None, retries: int = 3) -> dict:
-    """Generate a Format 3 (Moral Dilemma) script."""
-    word_count = int((35 / 60) * 155)  # ~90 words for 35s
+    """Generate a Format 3 (Moral Dilemma) case study."""
     r = research or {}
 
     prompt = _F3_PROMPT.format(
-        word_count=word_count,
         dilemma_seed=r.get("dilemma_seed", "Your best friend asks you to lie for them."),
         value_a=r.get("value_a", "loyalty"),
         value_b=r.get("value_b", "honesty"),
         option_a=r.get("option_a", "Keep the secret."),
         option_b=r.get("option_b", "Tell the truth."),
         closing_question=r.get("closing_question", "What would you do?"),
-        tts_rules=_TTS_RULES,
     )
 
     data = _call_gemini_for_script(
@@ -475,8 +344,88 @@ def generate_dilemma(research: dict = None, retries: int = 3) -> dict:
         ["title", "script", "closing_question", "values_in_conflict"],
         retries,
     )
-    print(f"✅ [FORMAT 3] Script: '{data['title']}'")
-    print(f"   Closing Q: {data.get('closing_question', '')}")
+    print(f"✅ [FORMAT 3] Comprehensive Dilemma Case Study: '{data['title']}'")
+    return data
+
+
+# ── FORMAT 4: Dark Psychology & Insane Real-Life Cases ────────────────────────
+
+_F4_PROMPT = """You are a professional case study writer and narrative strategist.
+Your goal is to write a detailed, highly comprehensive story/case study about a mind-bending psychological experiment or bizarre real-life case in the style of a **{genre}**.
+
+This case study will be uploaded to Google's NotebookLM to generate a video discussion overview, so it must be professional, immersive, and lay out the characters, settings, manipulation details, or survival events in detail.
+
+PREMISE: "{premise}"
+Protagonist/Case: {protagonist}
+Core Psychological Conflict: {core_mystery}
+Setting: {setting}
+{avoid_clause}
+
+══ WRITING RULES (CRITICAL) ══
+1. LENGTH: Write a comprehensive, fully developed case study/story between 300 and 500 words. Do not make it a short script.
+2. DETAILS: Build a rich, highly specific scenario using third-person or second-person to immerse the reader. Detail the psychological methods used, the extreme physical survival stakes, or the bizarre details of the manipulation.
+3. COMMENT-DRIVING ENDING: Conclude the story with a shocking twist, an ethical question, or a mind-bending realization that will make viewers debate the morality or possibility of the case in the comments section.
+4. TONE: Objective, highly dramatic, suspenseful, and engaging.
+
+══ OUTPUT FORMAT ══
+Respond ONLY with a strict JSON object (no markdown):
+{{
+  "format": "psychology",
+  "title": "Curiosity-gap case title (under 60 chars)",
+  "description": "Intriguing one-liner description (under 100 chars)",
+  "hashtags": ["#shorts", "#psychology", "#darkpsychology", "#truecrime", "4 more tags"],
+  "script": "The complete, detailed 300-500 word story/case study.",
+  "hook": "A 2-3 word punchy hook text for the title card",
+  "pexels_keyword": "A highly descriptive visual B-roll prompt"
+}}"""
+
+def generate_psychology(research: dict = None, retries: int = 3) -> dict:
+    """Generate a Format 4 (Dark Psychology) story/case study with dynamic genre and repetition prevention."""
+    r = research or {}
+    
+    premise = r.get("premise", "An imposter convinces a family he is their missing son.")
+    protagonist = r.get("protagonist", "Frédéric Bourdin — a serial impostor")
+    core_mystery = r.get("core_mystery", "How a master manipulator leveraged the family's grief to blind them.")
+    setting = r.get("setting", "A quiet suburban home in Texas, 1997")
+
+    # Avoid recent premises
+    recent = _load_used_topics()
+    avoid_clause = (
+        f"\n\nDo NOT cover or repeat these recently used case premises: {', '.join(recent[-20:])}"
+        if recent else ""
+    )
+
+    # Randomly select a psychology genre style for variety
+    import random
+    genres = [
+        "Dark Psychology Case Study", 
+        "Bizarre Real-Life Survival Story", 
+        "Mind-Bending Social Experiment", 
+        "Cold-Blooded Manipulation Case", 
+        "Unbelievable Imposter Story",
+        "Subconscious Brainwashing Case"
+    ]
+    genre = random.choice(genres)
+
+    prompt = _F4_PROMPT.format(
+        genre=genre,
+        premise=premise,
+        protagonist=protagonist,
+        core_mystery=core_mystery,
+        setting=setting,
+        avoid_clause=avoid_clause
+    )
+
+    data = _call_gemini_for_script(
+        prompt,
+        ["title", "script", "hook", "pexels_keyword"],
+        retries=retries
+    )
+    
+    # Save the premise/title to prevent repetition in future runs
+    _save_used_topic(data.get("title", premise))
+    
+    print(f"✅ [FORMAT 4] Dark Psychology Case study ({genre}): '{data.get('title')}'")
     return data
 
 

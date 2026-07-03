@@ -30,7 +30,7 @@ from generator.researcher import research_topic, research_thriller, research_dil
 from generator.script import generate_script, generate_thriller, generate_dilemma
 from generator.voiceover import generate_voiceover
 from generator.story_state import load_state, save_state, reset_state
-from video.footage import fetch_footage
+from video.notebooklm_footage import fetch_notebooklm_footage
 from video.captions import transcribe_audio
 from video.editor import build_video
 from uploader.youtube import upload_short
@@ -76,7 +76,7 @@ def _load_audio_duration(path: str) -> float:
 
 # ── FORMAT 1: Mind-Blowing Facts ─────────────────────────────────────────────
 
-def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual: bool = False, resume: bool = False) -> dict:
+def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False) -> dict:
     fmt = "1"
     log("━" * 50, fmt)
     
@@ -111,15 +111,15 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
                 research = {"chosen_topic": script_data.get("chosen_topic", "Cached")}
                 
         if not script_data:
-            if not upload:
+            if mock:
                 log("🧪 Dry run: Using static mock script for Format 1...", fmt)
                 script_data = {
-                    "title": "Static F1 Dry Run",
-                    "description": "Dry run description",
-                    "hashtags": ["#shorts"],
-                    "script": "Did you know that water can boil and freeze at the exact same time? It's called the triple point, and it happens when temperature and pressure are perfectly balanced.",
+                    "title": "The Triple Point of Water",
+                    "description": "How water can boil and freeze at the exact same time.",
+                    "hashtags": ["#shorts", "#science", "#physics"],
+                    "script": "In everyday life, water exists in three distinct states: solid ice, liquid water, or gaseous steam. We assume these states are strictly divided by temperature: ice melts at zero degrees Celsius, and water boils at one hundred degrees Celsius. However, in the world of thermodynamics, these boundaries can completely break down under the right conditions. This phenomenon is known as the 'triple point' of water. The triple point occurs at a very specific temperature—exactly 0.01 degrees Celsius—and an extremely low atmospheric pressure of 611.65 pascals, which is about 0.6% of the normal air pressure at sea level. When water is placed in a vacuum chamber and stabilized at these precise parameters, the liquid water, solid ice, and gaseous vapor coexist in stable thermodynamic equilibrium. Visually, this creates a bizarre and mind-bending spectacle: the water vigorously boils, releasing large bubbles of steam, while simultaneously forming delicate crystals of solid ice right on the surface. This happens because the low pressure lowers the boiling point of the water to its freezing point, causing rapid evaporation that cools the remaining liquid into ice. It is a stunning demonstration that temperature is only half of the story—pressure dictates reality.",
                     "hook": "Boil and freeze at the same time",
-                    "pexels_keyword": "iceberg",
+                    "pexels_keyword": "Boiling ice water vacuum chamber thermodynamics",
                     "chosen_topic": "Triple point of water",
                     "hook_angle": "Scientific impossibility"
                 }
@@ -149,56 +149,15 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
             with open(script_path, "w") as f:
                 json.dump(script_data, f)
 
-        # Step 3 — Voiceover
-        if os.path.exists(voice_path):
-            log("🎙️  Step 3/7: Loading cached voiceover...", fmt)
-            audio_path     = voice_path
-            audio_duration = _load_audio_duration(audio_path)
-        else:
-            log("🎙️  Step 3/7: Generating voiceover via Kokoro...", fmt)
-            audio_path, audio_duration = generate_voiceover(
-                script_data["script"], output_filename="voiceover_f1.mp3"
-            )
-        log(f"   Duration: {audio_duration:.1f}s", fmt)
-
-        # Step 4 — Footage
-        existing_clips = sorted(Path(TEMP_DIR).glob("clip_f1_*.mp4"))
-        if existing_clips:
-            log("🎬 Step 4/7: Using cached footage...", fmt)
-            footage_paths = [str(p) for p in existing_clips]
-        else:
-            log("🎬 Step 4/7: Selecting gameplay footage...", fmt)
-            footage_paths = fetch_footage(
-                keyword=script_data.get("pexels_keyword", ""),
-                duration_needed=audio_duration + 2,
-                fmt=1
-            )
-        log(f"   Clips: {len(footage_paths)}", fmt)
-
-        # Step 5 — Captions
-        if os.path.exists(caption_path):
-            log("📄 Step 5/7: Loading cached captions...", fmt)
-            with open(caption_path) as f:
-                captions = json.load(f)
-        else:
-            log("📄 Step 5/7: Transcribing captions...", fmt)
-            captions = transcribe_audio(audio_path, words_per_caption=3)
-            with open(caption_path, "w") as f:
-                json.dump(captions, f)
-        log(f"   Chunks: {len(captions)}", fmt)
-
-        # Step 6 — Render
-        log("🎞️  Step 6/7: Assembling video...", fmt)
-        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        
-        from video.pexels import get_pattern_image
-        pattern_img_path = get_pattern_image(script_data, manual=manual)
-        
-        video_path = build_video(
-            footage_paths, audio_path, captions, audio_duration,
-            f"short_f1_{ts}.mp4",
-            fmt=1, script_data=script_data, pattern_img_path=pattern_img_path
+        # Step 4 — Footage (Direct video delivery)
+        log("🎬 Step 4/7: Generating NotebookLM video (voiceover & subtitles built-in)...", fmt)
+        footage_paths = fetch_notebooklm_footage(
+            script_data=script_data,
+            duration_needed=45.0,
+            fmt=1,
+            resume=resume
         )
+        video_path = footage_paths[0]
         log(f"   ✅ Saved: {video_path}", fmt)
 
         # Step 7 — Upload
@@ -241,8 +200,7 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
 
 # ── FORMAT 2: Serialized Thriller ─────────────────────────────────────────────
 
-def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False) -> dict:
-    from generator.story_state import load_state, save_state, reset_state, is_story_abandoned, start_new_story, archive_completed_story
+def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False) -> dict:
     from generator.script import generate_thriller
     from generator.researcher import research_thriller
     
@@ -255,121 +213,66 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
             log("⏭️  Format 2 already uploaded today. Skipping.", fmt)
             return {"format": 2, "skipped": True}
 
+    log(f"🚀 Starting Single-Episode Thriller | upload: {upload} | attempt: {attempt}", fmt)
+
     if attempt == 1 and not resume:
         _clean_temp_for_format(2)
 
-    script_path = os.path.join(TEMP_DIR, "script_f2.json")
+    script_path  = os.path.join(TEMP_DIR, "script_f2.json")
+    caption_path = os.path.join(TEMP_DIR, "captions_f2.json")
+    voice_path   = os.path.join(TEMP_DIR, "voiceover_f2.mp3")
 
     try:
-        story_state = load_state()
-        
-        needs_new_story = (
-            not story_state.get("parts_scripts") or 
-            is_story_abandoned(story_state) or 
-            story_state.get("story_complete")
-        )
-        
-        if needs_new_story:
-            if story_state.get("story_complete"):
-                archive_completed_story(story_state)
+        # Steps 1 & 2 — Research + Script
+        script_data = None
+        if os.path.exists(script_path):
+            with open(script_path) as f:
+                cached_data = json.load(f)
+            from memory.content_log import is_topic_used
+            if is_topic_used(cached_data.get("title", ""), 2):
+                log("♻️  Cached script is stale (already uploaded previously). Wiping temp to recreate...", fmt)
+                _clean_temp_for_format(2)
             else:
-                log("⚠️ Previous story abandoned. Starting fresh.", fmt)
+                log("📝 Steps 1 & 2: Loading cached script...", fmt)
+                script_data = cached_data
                 
-            log("🔄 Starting a fresh 7-part story arc...", fmt)
-            if not upload:
-                log("🧪 Dry run: Using static mock arc for Format 2...", fmt)
-                arc_data = {
-                    "story_title": "The Simulation Glitch",
-                    "story_premise": "A programmer finds a bug in reality.",
-                    "total_parts": 7,
-                    "parts": [
-                        {
-                            "part_number": i,
-                            "script_text": f"Alex stared at the screen. The code was bleeding into the real world. A shadow detached from the wall and moved toward him. He tried to scream, but the air turned to static. The simulation was collapsing.",
-                            "cliffhanger_summary": "A shadow attacks.",
-                            "recap_line": f"Previously, the code bled into reality." if i > 1 else ""
-                        } for i in range(1, 8)
-                    ]
+        if not script_data:
+            if mock:
+                log("🧪 Dry run: Using static mock script for Format 2...", fmt)
+                script_data = {
+                    "title": "The Antique Mirror",
+                    "description": "Liam bought an antique mirror, but his reflection was lagging...",
+                    "hashtags": ["#shorts", "#thriller", "#mystery"],
+                    "script": "Liam was a collector of oddities, always searching the dust-caked shelves of antique stores for items with a past. Yesterday, he found a massive, heavy brass-framed mirror in the cellar of a shop on Elm Street. The shopkeeper practically threw it at him for twenty dollars, refusing to explain its origin. Liam hung it in his bedroom, admiring the way the glass caught the late afternoon sun. But as night fell, he noticed something unsettling. While sitting at his desk, he caught his reflection moving out of the corner of his eye. When he turned to face it, the mirror image was perfectly still. Intrigued, Liam stood up and raised his right hand. The reflection stood still for a solid second, before slowly, stiffly lifting its own hand to match. Liam froze, cold dread pooling in his stomach. He raised his hand again. One. Two. The reflection lagged behind. Terrified, he walked closer to the glass, his face inches from the cold surface. He stared into his own mirrored eyes. Slowly, the reflection's lips parted into a wide, unnatural grin that Liam was definitely not making. The mirror image leaned forward, pressed its hands against the glass, and whispered in a dry, rasping voice: get out.",
+                    "hook": "The Antique Mirror",
+                    "pexels_keyword": "Moody antique mirror, lagging reflection, slow camera zoom"
                 }
+
             else:
+                if not quota_tracker.can_proceed(2):
+                    raise RuntimeError("Gemini quota exhausted — Format 2 skipped.")
+                log("🔍 Step 1/7: Researching thriller story concept...", fmt)
                 research = research_thriller()
-                arc_data = generate_thriller(research=research)
-            story_state = start_new_story(arc_data)
-            save_state(story_state)
-            
-        current_part = story_state.get("current_part", 1)
-        part_index = current_part - 1
-        
-        log(f"🚀 Starting Serialized Thriller Part {current_part} | upload: {upload} | attempt: {attempt}", fmt)
-        
-        caption_path = os.path.join(TEMP_DIR, f"captions_f2_p{current_part}.json")
-        voice_path   = os.path.join(TEMP_DIR, f"voiceover_f2_p{current_part}.mp3")
-        
-        # Get the script for the current part
-        part_script_obj = story_state["parts_scripts"][part_index]
-        base_script = part_script_obj["script_text"]
-        
-        final_script = base_script
-        
-        # 1. Add recap if not part 1
-        if current_part > 1:
-            prev_recap = story_state["parts_scripts"][part_index - 1].get("recap_line", "")
-            if prev_recap:
-                final_script = f"{prev_recap} {final_script}"
+                log(f"   Premise: {research.get('premise')[:60]}...", fmt)
+                log(f"   {quota_tracker.status()}", fmt)
+
+                log("📝 Step 2/7: Generating single-episode script...", fmt)
+                script_data = generate_thriller(research=research)
+                log(f"   Title: {script_data['title']}", fmt)
+                log(f"   {quota_tracker.status()}", fmt)
                 
-        # 2. Add come back tomorrow if not final part
-        if current_part < story_state["total_parts"]:
-            final_script = f"{final_script} Come back tomorrow for the next part."
-            
-        script_data = {
-            "title": f"{story_state['story_title']} - Part {current_part}",
-            "description": f"Part {current_part} of {story_state['story_title']}. {story_state['story_premise']}",
-            "hashtags": ["#shorts", "#thriller", "#storytime"],
-            "script": final_script,
-            "hook": story_state['story_title'],
-            "part": current_part
-        }
-        
-        with open(script_path, "w") as f:
-            json.dump(script_data, f)
+            with open(script_path, "w") as f:
+                json.dump(script_data, f)
 
-        # Step 3 — Voiceover
-        if os.path.exists(voice_path):
-            log("🎙️  Step 3/7: Loading cached voiceover...", fmt)
-            audio_path     = voice_path
-            audio_duration = _load_audio_duration(audio_path)
-        else:
-            log("🎙️  Step 3/7: Generating voiceover via Kokoro...", fmt)
-            audio_path, audio_duration = generate_voiceover(
-                script_data["script"], output_filename="voiceover_f2.mp3"
-            )
-        log(f"   Duration: {audio_duration:.1f}s", fmt)
-
-        # Step 4 — Footage
-        log("🎬 Step 4/7: Selecting gameplay footage...", fmt)
-        footage_paths = fetch_footage(duration_needed=audio_duration + 2, fmt=2)
-        log(f"   Clips: {len(footage_paths)}", fmt)
-
-        # Step 5 — Captions
-        if os.path.exists(caption_path):
-            log("📄 Step 5/7: Loading cached captions...", fmt)
-            with open(caption_path) as f:
-                captions = json.load(f)
-        else:
-            log("📄 Step 5/7: Transcribing captions...", fmt)
-            captions = transcribe_audio(audio_path, words_per_caption=3)
-            with open(caption_path, "w") as f:
-                json.dump(captions, f)
-        log(f"   Chunks: {len(captions)}", fmt)
-
-        # Step 6 — Render
-        log("🎞️  Step 6/7: Assembling video...", fmt)
-        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        video_path = build_video(
-            footage_paths, audio_path, captions, audio_duration,
-            f"short_f2_{ts}.mp4",
-            fmt=2, script_data=script_data
+        # Step 4 — Footage (Direct video delivery)
+        log("🎬 Step 4/7: Generating NotebookLM video (voiceover & subtitles built-in)...", fmt)
+        footage_paths = fetch_notebooklm_footage(
+            script_data=script_data,
+            duration_needed=45.0,
+            fmt=2,
+            resume=resume
         )
+        video_path = footage_paths[0]
         log(f"   ✅ Saved: {video_path}", fmt)
 
         # Step 7 — Upload
@@ -383,8 +286,10 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
             
             # Post-upload tracking
             from analytics.tracker import log_upload
+            from memory.content_log import add_used_topic
             if "video_id" in result:
-                log_upload(result["video_id"], 2, story_state["story_title"], script_data["hook"])
+                log_upload(result["video_id"], 2, script_data["title"], script_data["hook"])
+            add_used_topic(script_data["title"], 2)
             
             from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
             if IG_ACCESS_TOKEN and IG_ACCOUNT_ID:
@@ -396,14 +301,6 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
                 except Exception as e:
                     log(f"   ⚠️ IG Upload Failed: {e}", fmt)
                 
-            story_state["parts_posted"][part_index] = True
-            if current_part >= story_state["total_parts"]:
-                story_state["story_complete"] = True
-                log("🎉 Story arc fully completed!", fmt)
-            else:
-                story_state["current_part"] = current_part + 1
-            save_state(story_state)
-            
         else:
             log("⏭️  Step 7/7: Upload skipped (dry run)", fmt)
             result = {"video_path": video_path}
@@ -417,9 +314,10 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
         raise
 
 
+
 # ── FORMAT 3: Moral Dilemma ───────────────────────────────────────────────────
 
-def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False) -> dict:
+def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False) -> dict:
     fmt = "3"
     log("━" * 50, fmt)
     
@@ -453,15 +351,15 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
                 script_data = cached_data
                 
         if not script_data:
-            if not upload:
+            if mock:
                 log("🧪 Dry run: Using static mock script for Format 3...", fmt)
                 script_data = {
                     "title": "The Million Dollar Button",
-                    "description": "Would you press it?",
-                    "hashtags": ["#shorts", "#dilemma"],
-                    "script": "There is a button in front of you. If you press it, you receive one million dollars, but a random person in the world loses all their memories. You have five seconds to decide.",
+                    "description": "A dark dilemma: wealth versus a stranger's memories.",
+                    "hashtags": ["#shorts", "#dilemma", "#philosophy"],
+                    "script": "Imagine walking into a room to find a sleek, black box sitting on a mahogany table. In the center of the box is a single, glowing red button. A representative from a mysterious organization presents you with a simple, binding contract: if you press the button, you will instantly receive one million dollars, tax-free. However, there is a catch. The moment the button clicks down, a random person somewhere in the world will lose all of their memories forever. They won't die, but their entire history, their name, their childhood, and their love for their family will be instantly wiped clean, leaving them a complete blank slate. If you choose not to press the button, you walk away with nothing, and the stranger's life remains untouched. This dilemma pits extreme self-preservation and life-altering wealth against absolute altruism and the moral duty to prevent harm. On one hand, one million dollars could secure your family's future, pay off your debts, and give you complete freedom. On the other hand, erasing a human being's memories is arguably a form of psychological murder, destroying the very essence of who they are for personal gain. You stand before the button, feeling the weight of the red light. The timer is ticking. What would you do?",
                     "hook": "The million dollar button",
-                    "closing_question": "Would you press the button?",
+                    "closing_question": "What would you do?",
                     "dilemma_seed": "Memory wipe for money"
                 }
             else:
@@ -489,45 +387,15 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
             with open(script_path, "w") as f:
                 json.dump(script_data, f)
 
-        # Step 3 — Voiceover
-        if os.path.exists(voice_path):
-            log("🎙️  Step 3/7: Loading cached voiceover...", fmt)
-            audio_path     = voice_path
-            audio_duration = _load_audio_duration(audio_path)
-        else:
-            log("🎙️  Step 3/7: Generating voiceover via Kokoro...", fmt)
-            audio_path, audio_duration = generate_voiceover(
-                script_data["script"], output_filename="voiceover_f3.mp3"
-            )
-        log(f"   Duration: {audio_duration:.1f}s", fmt)
-
-        # Step 4 — Footage
-        log("🎬 Step 4/7: Selecting gameplay footage...", fmt)
-        footage_paths = fetch_footage(duration_needed=audio_duration + 2, fmt=3)
-        log(f"   Clips: {len(footage_paths)}", fmt)
-
-        # Step 5 — Captions
-        if os.path.exists(caption_path):
-            log("📄 Step 5/7: Loading cached captions...", fmt)
-            with open(caption_path) as f:
-                captions = json.load(f)
-        else:
-            log("📄 Step 5/7: Transcribing captions...", fmt)
-            captions = transcribe_audio(audio_path, words_per_caption=3)
-            with open(caption_path, "w") as f:
-                json.dump(captions, f)
-        log(f"   Chunks: {len(captions)}", fmt)
-
-        # Step 6 — Render with closing question overlay
-        log("🎞️  Step 6/7: Assembling video with closing question overlay...", fmt)
-        ts         = datetime.now().strftime("%Y%m%d_%H%M%S")
-        closing_q  = script_data.get("closing_question")
-        video_path = build_video(
-            footage_paths, audio_path, captions, audio_duration,
-            f"short_f3_{ts}.mp4",
-            closing_question=closing_q,
-            fmt=3, script_data=script_data
+        # Step 4 — Footage (Direct video delivery)
+        log("🎬 Step 4/7: Generating NotebookLM video (voiceover & subtitles built-in)...", fmt)
+        footage_paths = fetch_notebooklm_footage(
+            script_data=script_data,
+            duration_needed=45.0,
+            fmt=3,
+            resume=resume
         )
+        video_path = footage_paths[0]
         log(f"   ✅ Saved: {video_path}", fmt)
 
         # Step 7 — Upload
@@ -537,13 +405,23 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
                 video_path, script_data["title"],
                 script_data["description"], script_data["hashtags"],
             )
-            log(f"   ✅ Live: {result['url']}", fmt)
+            log(f"   ✅ YouTube Live: {result['url']}", fmt)
             
             from analytics.tracker import log_upload
             from memory.content_log import add_used_topic
             if "video_id" in result:
                 log_upload(result["video_id"], 3, script_data["dilemma_seed"], script_data.get("closing_question", ""))
             add_used_topic(script_data["dilemma_seed"], 3)
+            
+            from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
+            if IG_ACCESS_TOKEN and IG_ACCOUNT_ID:
+                try:
+                    log("📸 Uploading to Instagram Reels...", fmt)
+                    caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
+                    ig_post_id = upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
+                    result["ig_post_id"] = ig_post_id
+                except Exception as e:
+                    log(f"   ⚠️ IG Upload Failed: {e}", fmt)
             
         else:
             log("⏭️  Step 7/7: Upload skipped (dry run)", fmt)
@@ -558,24 +436,146 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
         raise
 
 
+# ── FORMAT 4: Dark Psychology & Insane Real-Life Cases ────────────────────────
+
+def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False) -> dict:
+    from generator.script import generate_psychology
+    from generator.researcher import research_psychology
+    
+    fmt = "4"
+    log("━" * 50, fmt)
+    
+    if upload:
+        from analytics.tracker import was_format_uploaded_today
+        if was_format_uploaded_today(4):
+            log("⏭️  Format 4 already uploaded today. Skipping.", fmt)
+            return {"format": 4, "skipped": True}
+
+    log(f"🚀 Starting Dark Psychology Case study | upload: {upload} | attempt: {attempt}", fmt)
+
+    if attempt == 1 and not resume:
+        _clean_temp_for_format(4)
+
+    script_path  = os.path.join(TEMP_DIR, "script_f4.json")
+
+    try:
+        # Steps 1 & 2 — Research + Script
+        script_data = None
+        if os.path.exists(script_path):
+            with open(script_path) as f:
+                cached_data = json.load(f)
+            from memory.content_log import is_topic_used
+            if is_topic_used(cached_data.get("title", ""), 4):
+                log("♻️  Cached script is stale (already uploaded previously). Wiping temp to recreate...", fmt)
+                _clean_temp_for_format(4)
+            else:
+                log("📝 Steps 1 & 2: Loading cached script...", fmt)
+                script_data = cached_data
+                
+        if not script_data:
+            if mock:
+                log("🧪 Dry run: Using static mock script for Format 4...", fmt)
+                script_data = {
+                    "title": "The Imposter Frédéric Bourdin",
+                    "description": "How a con artist convinced a family he was their missing son...",
+                    "hashtags": ["#shorts", "#psychology", "#manipulation", "#truecrime"],
+                    "script": "In 1997, a quiet suburban family in San Antonio, Texas, received a phone call they had prayed for. Their sixteen-year-old son, Nicholas Barclay, who had vanished three years prior, had been found alive in a youth shelter in Spain. The family flew to Europe immediately, desperate to bring their boy home. When they arrived, the boy they met had blue eyes, a French accent, and looked years older than Nicholas. Yet, in their desperate grief, they embraced him and brought him back to Texas. For nearly four months, they lived with a stranger. In reality, this was Frédéric Bourdin, a twenty-three-year-old French con artist known as 'The Chameleon,' who had spent his life assuming the identities of missing children. Bourdin dyed his hair, spoke with a forced American drawl, and wore a cap to hide his receding hairline. How did he pull off such a massive manipulation? Dark psychology experts suggest that Bourdin exploited the family's 'motivated blindness'—their overwhelming desire to believe their tragedy was over was so powerful that their brains actively filtered out the obvious differences in his appearance, accent, and mannerisms. It was only when a private investigator noticed the different eye colors that the illusion shattered, raising the chilling question: did the family truly believe he was Nicholas, or did they just need to believe it?",
+                    "hook": "The Imposter",
+                    "pexels_keyword": "Suburban house shadow, vintage photo frame, mysterious figure, slow zoom"
+                }
+            else:
+                if not quota_tracker.can_proceed(2):
+                    raise RuntimeError("Gemini quota exhausted — Format 4 skipped.")
+                log("🔍 Step 1/7: Researching dark psychology case...", fmt)
+                research = research_psychology()
+                log(f"   Premise: {research.get('premise')[:60]}...", fmt)
+                log(f"   {quota_tracker.status()}", fmt)
+
+                log("📝 Step 2/7: Generating case study script...", fmt)
+                script_data = generate_psychology(research=research)
+                log(f"   Title: {script_data['title']}", fmt)
+                log(f"   {quota_tracker.status()}", fmt)
+                
+            with open(script_path, "w") as f:
+                json.dump(script_data, f)
+
+        # Step 4 — Footage (Direct video delivery)
+        log("🎬 Step 4/7: Generating NotebookLM video (voiceover & subtitles built-in)...", fmt)
+        footage_paths = fetch_notebooklm_footage(
+            script_data=script_data,
+            duration_needed=45.0,
+            fmt=4,
+            resume=resume
+        )
+        video_path = footage_paths[0]
+        log(f"   ✅ Saved: {video_path}", fmt)
+
+        # Step 7 — Upload
+        if upload:
+            log("📤 Step 7/7: Uploading to YouTube...", fmt)
+            result = upload_short(
+                video_path, script_data["title"],
+                script_data["description"], script_data["hashtags"],
+            )
+            log(f"   ✅ YouTube Live: {result['url']}", fmt)
+            
+            # Post-upload tracking
+            from analytics.tracker import log_upload
+            from memory.content_log import add_used_topic
+            if "video_id" in result:
+                log_upload(result["video_id"], 4, script_data["title"], script_data.get("hook", ""))
+            add_used_topic(script_data["title"], 4)
+            
+            from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
+            if IG_ACCESS_TOKEN and IG_ACCOUNT_ID:
+                try:
+                    log("📸 Uploading to Instagram Reels...", fmt)
+                    caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
+                    ig_post_id = upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
+                    result["ig_post_id"] = ig_post_id
+                except Exception as e:
+                    log(f"   ⚠️ IG Upload Failed: {e}", fmt)
+                
+        else:
+            log("⏭️  Step 7/7: Upload skipped (dry run)", fmt)
+            result = {"video_path": video_path}
+
+        log("🎉 Format 4 completed successfully!", fmt)
+        return {"format": 4, "script": script_data, "video_path": video_path, "result": result}
+
+    except Exception as e:
+        log(f"❌ Format 4 failed: {e}", fmt)
+        log(traceback.format_exc(), fmt)
+        raise
+
+
 # ── All Formats ───────────────────────────────────────────────────────────────
 
-def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False, resume: bool = False, fmt_list=["1", "2", "3"]):
+def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False, resume: bool = False, mock: bool = False, fmt_list=["1", "2", "3", "4"]):
     """
-    Run all three formats in quota-priority order (F1 → F2 → F3).
+    Run all formats in quota-priority order (F1 → F2 → F3 → F4).
     Skips remaining formats if Gemini quota runs out.
     """
     log("━" * 50)
-    log(f"▶▶ Running all three formats | {quota_tracker.status()}")
+    log(f"▶▶ Running formats | {quota_tracker.status()}")
 
     runners = []
     if "all" in fmt_list or "1" in fmt_list:
-        runners.append(("1", lambda attempt=1: run_format1(upload=upload, niche=niche, manual=manual, attempt=attempt, resume=resume)))
+        runners.append(("1", lambda attempt=1: run_format1(upload=upload, niche=niche, manual=manual, attempt=attempt, resume=resume, mock=mock)))
     if "all" in fmt_list or "2" in fmt_list:
-        runners.append(("2", lambda attempt=1: run_format2(upload=upload, manual=manual, attempt=attempt, resume=resume)))
+        runners.append(("2", lambda attempt=1: run_format2(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock)))
     if "all" in fmt_list or "3" in fmt_list:
-        runners.append(("3", lambda attempt=1: run_format3(upload=upload, manual=manual, attempt=attempt, resume=resume)))
+        runners.append(("3", lambda attempt=1: run_format3(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock)))
+    if "all" in fmt_list or "4" in fmt_list:
+        runners.append(("4", lambda attempt=1: run_format4(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock)))
     
+    def notify_telegram(msg: str):
+        try:
+            from telegram.approver import send_telegram_notification
+            send_telegram_notification(msg)
+        except Exception as e:
+            log(f"⚠️ Telegram notify error: {e}")
+
     results = {}
 
     for fmt_name, runner in runners:
@@ -583,6 +583,7 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
             skipped = [f for f, _ in runners if f >= fmt_name]
             msg = f"Quota exhausted. Skipping Format(s): {', '.join(skipped)}"
             log(f"⚠️  {msg}")
+            notify_telegram(f"⚠️ <b>Pipeline Quota Skip</b>\n{msg}")
             with open("./logs/pipeline.log", "a") as f:
                 f.write(f"[QUOTA SKIP] {msg}\n")
             break
@@ -590,15 +591,41 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
         for attempt in range(1, 4):
             try:
                 results[fmt_name] = runner(attempt=attempt)
+                
+                # Success notification
+                res = results[fmt_name]
+                success_msg = f"<b>✅ Format {fmt_name} Succeeded!</b>\n"
+                if "script" in res:
+                    success_msg += f"• Title: <i>{res['script'].get('title', 'Unknown')}</i>\n"
+                if "result" in res:
+                    yt_url = res["result"].get("url")
+                    ig_post_id = res["result"].get("ig_post_id")
+                    if yt_url:
+                        success_msg += f"• YouTube Shorts: <a href='{yt_url}'>Link</a>\n"
+                    if ig_post_id:
+                        success_msg += f"• Instagram Reels Post ID: <code>{ig_post_id}</code>\n"
+                    else:
+                        success_msg += "• Instagram: ⚠️ Upload Failed/Skipped\n"
+                notify_telegram(success_msg)
                 break
             except Exception as e:
+                import traceback
+                err_msg = str(e)
+                tb = traceback.format_exc()
+                
                 if attempt < 3:
                     log(f"⚠️  Format {fmt_name} attempt {attempt} failed — retrying in 30s: {e}")
+                    warn_msg = f"<b>⚠️ Format {fmt_name} Attempt {attempt} Failed</b>\nError: <code>{err_msg}</code>\nRetrying in 30s..."
+                    notify_telegram(warn_msg)
                     time.sleep(30)
                 else:
                     log(f"❌ Format {fmt_name} failed after 3 attempts: {e}")
+                    crit_msg = f"<b>❌ Format {fmt_name} FATAL FAILURE</b>\nFailed after 3 attempts.\n\nError: <code>{err_msg}</code>\n\nTraceback:\n<pre>{tb[-600:]}</pre>"
+                    notify_telegram(crit_msg)
+                    raise e
 
     log(f"✅ All-format run complete. {quota_tracker.status()}")
+    notify_telegram(f"🏁 <b>Pipeline Run Complete!</b>\nAll formats processed.\n{quota_tracker.status()}")
     return results
 
 
@@ -626,6 +653,12 @@ def run_scheduler():
         id="format3_daily", name="Format 3 — Dilemma",
         misfire_grace_time=3600,
     )
+    scheduler.add_job(
+        func=lambda: run_format4(upload=True),
+        trigger="cron", hour=FORMAT3_SCHEDULE_HOUR, minute=30,
+        id="format4_daily", name="Format 4 — Dark Psychology",
+        misfire_grace_time=3600,
+    )
     
     from analytics.tracker import check_performance
     from memory.content_log import purge_old_entries
@@ -646,7 +679,8 @@ def run_scheduler():
         f"⏰ Scheduler active — "
         f"F1@{FORMAT1_SCHEDULE_HOUR:02d}:00 UTC  "
         f"F2@{FORMAT2_SCHEDULE_HOUR:02d}:00 UTC  "
-        f"F3@{FORMAT3_SCHEDULE_HOUR:02d}:00 UTC"
+        f"F3@{FORMAT3_SCHEDULE_HOUR:02d}:00 UTC  "
+        f"F4@{FORMAT3_SCHEDULE_HOUR:02d}:30 UTC"
     )
     try:
         scheduler.start()
@@ -666,13 +700,14 @@ def parse_args():
     parser.add_argument("--niche", type=str, help="Override NICHE from .env (Format 1 only)")
     parser.add_argument(
         "--format", type=str, default="all",
-        choices=["1", "2", "3", "all"],
+        choices=["1", "2", "3", "4", "all"],
         help="Which format(s) to run (default: all)",
     )
     parser.add_argument("--count", type=int, default=1, help="Times to run the pipeline")
     parser.add_argument("--reset-story", action="store_true", help="Reset Format 2 story arc and start fresh")
     parser.add_argument("--manual", action="store_true", help="Enable manual approval via Telegram")
     parser.add_argument("--resume", action="store_true", help="Resume from cached files without clearing temp directory")
+    parser.add_argument("--mock", action="store_true", help="Use static mock scripts instead of live research during dry-run")
     return parser.parse_args()
 
 
@@ -692,18 +727,18 @@ if __name__ == "__main__":
             research = research_topic(niche=args.niche)
             data = generate_script(niche=args.niche, research=research)
         elif fmt == "2":
-            state    = load_state()
-            research = research_thriller() if state.get("part_number", 0) == 0 else None
-            data     = generate_thriller(story_state=state, research=research)
-        else:
+            research = research_thriller()
+            data     = generate_thriller(research=research)
+        elif fmt == "3":
             research = research_dilemma()
             data     = generate_dilemma(research=research)
+        else:
+            research = research_psychology()
+            data     = generate_psychology(research=research)
         print(f"TITLE:    {data['title']}")
         print(f"SCRIPT:\n{data['script']}")
         if data.get("closing_question"):
             print(f"\nCLOSING Q: {data['closing_question']}")
-        if data.get("cliffhanger"):
-            print(f"\nCLIFFHANGER: {data['cliffhanger']}")
 
     elif args.mode == "test-voice":
         fmt = args.format if args.format != "all" else "1"
@@ -711,12 +746,14 @@ if __name__ == "__main__":
             research = research_topic(niche=args.niche)
             data = generate_script(niche=args.niche, research=research)
         elif fmt == "2":
-            state    = load_state()
-            research = research_thriller() if state.get("part_number", 0) == 0 else None
-            data     = generate_thriller(story_state=state, research=research)
-        else:
+            research = research_thriller()
+            data     = generate_thriller(research=research)
+        elif fmt == "3":
             research = research_dilemma()
             data     = generate_dilemma(research=research)
+        else:
+            research = research_psychology()
+            data     = generate_psychology(research=research)
         path, dur = generate_voiceover(data["script"])
         print(f"\n✅ Voice file: {path} ({dur:.1f}s)")
 
@@ -728,5 +765,5 @@ if __name__ == "__main__":
             if args.count > 1:
                 log(f"\n{'='*60}\n▶ Pipeline Run {i+1}/{args.count}\n{'='*60}")
             
-            fmt_list = ["1", "2", "3"] if args.format == "all" else [args.format]
-            run_all_formats(upload, niche=args.niche, manual=args.manual, resume=args.resume, fmt_list=fmt_list)
+            fmt_list = ["1", "2", "3", "4"] if args.format == "all" else [args.format]
+            run_all_formats(upload, niche=args.niche, manual=args.manual, resume=args.resume, mock=args.mock, fmt_list=fmt_list)

@@ -276,46 +276,46 @@ Respond ONLY in valid JSON with no markdown:
 
 def research_thriller() -> dict:
     """
-    Fetch thriller/mystery premises from r/WritingPrompts and r/nosleep.
+    Fetch thriller/mystery/suspense premises from r/shortscarystories, r/twoSentenceHorror, and r/unresolvedmysteries.
     Returns a premise dict for use in generate_thriller().
     """
     print("🔍 [FORMAT 2] Researching thriller premise...")
 
-    print("   📡 Fetching r/WritingPrompts and r/nosleep top posts (week, 500+ upvotes)...")
+    print("   📡 Fetching mystery/horror subreddits top posts (week, 100+ upvotes)...")
     posts = get_reddit_posts(
-        subreddits=["WritingPrompts", "nosleep"],
+        subreddits=["shortscarystories", "twoSentenceHorror", "unresolvedmysteries"],
         sort="top",
         time_filter="week",
         limit=10,
-        min_score=500,
+        min_score=100,
     )
     posts_str = (
         "\n".join([f"- [{p['score']} upvotes | r/{p['subreddit']}] {p['title']}" for p in posts])
         if posts else "No high-engagement posts found — use your own premise."
     )
 
-    prompt = f"""You are a creative director for a serialized YouTube Shorts thriller channel.
+    prompt = f"""You are a creative director for a popular single-episode YouTube Shorts mystery/thriller channel.
 
-Below are top posts from r/WritingPrompts and r/nosleep this week:
+Below are top posts from relevant Reddit communities this week:
 
 {posts_str}
 
 Your task: identify or synthesize the single most tension-filled, mysterious, or suspenseful
-premise that could sustain a serialized story told in daily 30-40 second episodes.
+premise that can be told as a complete, catchy story in a single 40-50 second episode.
 
 Choose something with:
-- A clear protagonist in immediate danger or conflict
-- An unresolved mystery that can escalate across multiple parts
-- Maximum emotional stakes (life, identity, betrayal, or survival)
-- A visual and vivid setting
+- A clear protagonist and a fast setup
+- A catchy hook that instantly grabs attention
+- A twist, mystery, or chilling realization that resolves within the episode
+- Highly visual setting that translates well to cinematic video
 
 Respond ONLY in valid JSON with no markdown:
 {{
   "premise": "2-3 sentence story premise",
   "protagonist": "character name and one-line description",
-  "core_mystery": "the central unanswered question driving the story",
+  "core_mystery": "the central question or twist driving the story",
   "setting": "vivid 1-sentence location/time description",
-  "genre_tags": ["thriller", "mystery", ...],
+  "genre_tags": ["thriller", "mystery", "suspense"],
   "reddit_source": "subreddit and post title if adapted, or 'original'"
 }}"""
 
@@ -325,10 +325,10 @@ Respond ONLY in valid JSON with no markdown:
         return data
 
     return {
-        "premise": "A woman wakes in an unfamiliar room with no memory of the past 48 hours.",
-        "protagonist": "Maya Chen — a forensic analyst",
-        "core_mystery": "Who brought her here, and why does she recognise the handwriting on the wall?",
-        "setting": "An isolated farmhouse, winter, 3AM",
+        "premise": "A man buys an old mirror and notices his reflection is always lagging exactly one second behind him.",
+        "protagonist": "Liam — a collector of antiques",
+        "core_mystery": "What is the reflection trying to warn him about before it stops lagging?",
+        "setting": "A dimly lit bedroom, late night",
         "genre_tags": ["thriller", "mystery", "suspense"],
         "reddit_source": "original",
     }
@@ -406,3 +406,61 @@ Respond ONLY in valid JSON with no markdown:
         "closing_question": "What would you do?",
         "reddit_source": "original",
     }]
+
+def research_psychology() -> dict:
+    """
+    Fetch bizarre real-life stories, dark psychology cases, and social experiments from Reddit.
+    Returns a premise dict for use in generate_psychology().
+    """
+    print("🔍 [FORMAT 4] Researching dark psychology / bizarre real-life premise...")
+
+    posts = get_reddit_posts(
+        subreddits=["todayilearned", "bizarrelife", "TrueCrime", "psychology"],
+        sort="top",
+        time_filter="week",
+        limit=10,
+        min_score=100,
+    )
+    posts_str = (
+        "\n".join([f"- [{p['score']} upvotes | r/{p['subreddit']}] {p['title']}" for p in posts])
+        if posts else "No high-engagement posts found — use your own premise."
+    )
+
+    prompt = f"""You are a creative director for a popular YouTube Shorts channel specializing in Dark Psychology, Social Experiments, and Bizarre Real-Life survival stories.
+
+Below are top posts from relevant Reddit communities this week:
+
+{posts_str}
+
+Your task: identify or synthesize the single most fascinating, hooking, or mind-bending
+dark psychology concept, strange social experiment, or survival event that can be told as a complete, catchy story in a single 40-50 second episode.
+
+Choose something with:
+- An instant hook about human behavior, manipulation, or extreme survival
+- Deep psychological tension or an unbelievable real-world survival twist
+- A visual setting that translates well to cinematic video
+- A conclusion that leaves viewers questioning human nature
+
+Respond ONLY in valid JSON with no markdown:
+{{
+  "premise": "2-3 sentence case/story premise",
+  "protagonist": "protagonist name (e.g., the manipulator, experimenter, or survivor) and description",
+  "core_mystery": "the central psychological twist, manipulation trick, or survival anomaly",
+  "setting": "vivid 1-sentence location/time description (e.g., 'A high-security prison lab, 1971')",
+  "genre_tags": ["dark psychology", "manipulation", "survival", "experiment"],
+  "reddit_source": "subreddit and post title if adapted, or 'original'"
+}}"""
+
+    data = _call_gemini(prompt)
+    if data:
+        print(f"   ✅ Premise: {data.get('premise', '')[:80]}...")
+        return data
+
+    return {
+        "premise": "An imposter successfully convinces an entire family he is their missing 16-year-old son, despite having different colored eyes and a French accent.",
+        "protagonist": "Frédéric Bourdin — a serial impostor",
+        "core_mystery": "How a master manipulator leveraged the family's grief to blind them to the obvious physical differences.",
+        "setting": "A quiet suburban home in Texas, 1997",
+        "genre_tags": ["manipulation", "psychology", "imposter"],
+        "reddit_source": "original"
+    }

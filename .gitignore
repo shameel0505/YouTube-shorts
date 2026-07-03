@@ -8,6 +8,7 @@ __pycache__/
 .DS_Store
 token.json
 client_secret_*.json
+client_secret.json
 *.mp4
 gameplay/
 assets/

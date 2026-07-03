@@ -7,17 +7,17 @@ LOG_FILE = os.path.join(TEMP_DIR, "../memory/used_topics.json")
 
 def _load_log() -> dict:
     if not os.path.exists(LOG_FILE):
-        return {"format1_topics": [], "format2_titles": [], "format3_dilemmas": []}
+        return {"format1_topics": [], "format2_titles": [], "format3_dilemmas": [], "format4_cases": []}
     try:
         with open(LOG_FILE, "r") as f:
             data = json.load(f)
             # Ensure keys exist
-            for k in ["format1_topics", "format2_titles", "format3_dilemmas"]:
+            for k in ["format1_topics", "format2_titles", "format3_dilemmas", "format4_cases"]:
                 if k not in data:
                     data[k] = []
             return data
     except Exception:
-        return {"format1_topics": [], "format2_titles": [], "format3_dilemmas": []}
+        return {"format1_topics": [], "format2_titles": [], "format3_dilemmas": [], "format4_cases": []}
 
 def _save_log(data: dict):
     os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
@@ -25,11 +25,11 @@ def _save_log(data: dict):
         json.dump(data, f, indent=4)
 
 def purge_old_entries():
-    """Removes F1 and F3 entries older than 90 days."""
+    """Removes F1, F3, and F4 entries older than 90 days."""
     data = _load_log()
     now = datetime.now()
     
-    for k in ["format1_topics", "format3_dilemmas"]:
+    for k in ["format1_topics", "format3_dilemmas", "format4_cases"]:
         new_list = []
         for entry in data[k]:
             try:
@@ -65,6 +65,10 @@ def is_topic_used(topic: str, fmt: int) -> bool:
                         return True
                 except:
                     return True
+    elif fmt == 4:
+        for t in data["format4_cases"]:
+            if t["text"].strip().lower() == topic:
+                return True
     return False
 
 def add_used_topic(topic: str, fmt: int):
@@ -77,5 +81,7 @@ def add_used_topic(topic: str, fmt: int):
         data["format2_titles"].append(entry)
     elif fmt == 3:
         data["format3_dilemmas"].append(entry)
+    elif fmt == 4:
+        data["format4_cases"].append(entry)
         
     _save_log(data)

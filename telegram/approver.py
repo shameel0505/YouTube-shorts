@@ -167,3 +167,16 @@ def wait_for_video_approval(video_path: str, caption: str, timeout=1800) -> str:
         
     print("   ⚠️ Timeout waiting for video approval. Skipping upload.")
     return "Timeout"
+
+def send_telegram_notification(text: str) -> bool:
+    """Sends an automated HTML-formatted notification to the user on Telegram."""
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        return False
+    try:
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        payload = {"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}
+        resp = requests.post(url, json=payload, timeout=10)
+        return resp.json().get("ok", False)
+    except Exception as e:
+        print(f"⚠️ Failed to send Telegram notification: {e}")
+        return False
