@@ -240,8 +240,12 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool) -> s
 
     except Exception as e:
         print(f"   [NotebookLM] Generation pipeline failed: {e}")
-        # We do NOT delete the notebook on failure so the user can resume.
-        # We raise the exception to let the outer bot handler retry the pipeline run.
+        err_msg = str(e).lower()
+        # If it's a timeout, we keep the state so we can resume.
+        # Otherwise (critical API failure, task not found, etc.), we clear the state to prevent infinite loops!
+        if "timeout" not in err_msg and "deadline" not in err_msg:
+            print("   [NotebookLM] Critical non-timeout failure. Clearing state to prevent infinite retry loop.")
+            _clear_state(fmt)
         raise e
 
 
