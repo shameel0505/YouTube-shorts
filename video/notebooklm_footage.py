@@ -217,10 +217,18 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool) -> s
                     "task_id": task_id,
                     "output_file": output_file
                 })
+                print("   [NotebookLM] Task triggered successfully. Exiting to run other formats in parallel.")
+                raise Exception("Task rendering in background")
 
-            # 4. Wait for completion (Timeout after 300s to prevent GitHub Action runner billing)
-            print(f"   [NotebookLM] Waiting for task {task_id} to finish (timeout 300s)...")
-            await _retry_call(client.artifacts.wait_for_completion, notebook_id, task_id, timeout=300.0)
+            # 4. Wait for completion (Short 5s poll check to prevent billing actions minutes)
+            print(f"   [NotebookLM] Checking task {task_id} status (timeout 5s)...")
+            try:
+                await client.artifacts.wait_for_completion(notebook_id, task_id, timeout=5.0)
+            except Exception as e:
+                err_msg = str(e).lower()
+                if "timeout" in err_msg or "deadline" in err_msg:
+                    raise Exception("Task rendering in background")
+                raise e
 
             # 5. Download the completed video (Retry up to 5 times)
             print(f"   [NotebookLM] Downloading completed video to '{output_file}'...")
@@ -255,6 +263,12 @@ def fetch_notebooklm_footage(script_data: dict, duration_needed: float, fmt: int
     """
     print(f"🎬 Requesting AI Cinematic Footage from NotebookLM (Format {fmt}, Resume={resume})...")
     
+    # Force resume if a saved state file exists in memory/
+    state_file = os.path.join(os.path.dirname(TEMP_DIR), "memory", f"nblm_state_f{fmt}.json")
+    if os.path.exists(state_file):
+        print(f"   [NotebookLM] Found active state file for Format {fmt}. Forcing resume mode.")
+        resume = True
+
     # Check if a video was already generated and downloaded in this run's temp folder
     import glob
     existing_videos = glob.glob(os.path.join(TEMP_DIR, f"notebooklm_f{fmt}_*.mp4"))
