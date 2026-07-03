@@ -1,5 +1,6 @@
 import os
 import pickle
+import sys
 from datetime import datetime, timedelta, timezone
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
@@ -20,11 +21,18 @@ def _get_youtube_client():
             print(f"⚠️ Could not load token: {e}")
 
     if not creds or not creds.valid:
+        is_headless = os.getenv("GITHUB_ACTIONS") == "true" or os.getenv("RENDER") == "true" or not sys.stdin.isatty()
+        
         if creds and creds.expired and creds.refresh_token:
             try:
                 creds.refresh(Request())
             except Exception as e:
                 print(f"⚠️ Refresh token failed: {e}. Re-authenticating...")
+                if is_headless:
+                    raise RuntimeError(
+                        "YouTube OAuth token expired and cannot be refreshed in a headless environment. "
+                        "Please run the script locally on your computer to re-authenticate, then update TOKEN_JSON in GitHub secrets."
+                    )
                 if os.path.exists(YOUTUBE_TOKEN_FILE):
                     try:
                         os.remove(YOUTUBE_TOKEN_FILE)
@@ -33,6 +41,11 @@ def _get_youtube_client():
                 flow = InstalledAppFlow.from_client_secrets_file(YOUTUBE_CLIENT_SECRET, SCOPES)
                 creds = flow.run_local_server(port=0)
         else:
+            if is_headless:
+                raise RuntimeError(
+                    "YouTube OAuth credentials are missing or invalid in a headless environment. "
+                    "Please run the script locally on your computer to authenticate first, then update TOKEN_JSON in GitHub secrets."
+                )
             flow = InstalledAppFlow.from_client_secrets_file(YOUTUBE_CLIENT_SECRET, SCOPES)
             creds = flow.run_local_server(port=0)
             

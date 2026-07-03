@@ -52,4 +52,5 @@ jobs:
         git add memory/ || true
         git add analytics/ || true
         git commit -m "chore: Update used topics, rendering states, and analytics log [skip ci]" || true
+        git pull --rebase origin main || true
         git push origin main || true
