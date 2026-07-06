@@ -249,9 +249,9 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool) -> s
     except Exception as e:
         print(f"   [NotebookLM] Generation pipeline failed: {e}")
         err_msg = str(e).lower()
-        # If it's a timeout, we keep the state so we can resume.
+        # If it's a timeout or expected background rendering, we keep the state so we can resume.
         # Otherwise (critical API failure, task not found, etc.), we clear the state to prevent infinite loops!
-        if "timeout" not in err_msg and "deadline" not in err_msg:
+        if "timeout" not in err_msg and "deadline" not in err_msg and "rendering in background" not in err_msg:
             print("   [NotebookLM] Critical non-timeout failure. Clearing state to prevent infinite retry loop.")
             _clear_state(fmt)
         raise e
@@ -290,6 +290,10 @@ def fetch_notebooklm_footage(script_data: dict, duration_needed: float, fmt: int
             print(f"   ✅ NotebookLM Footage Ready: {os.path.basename(video_path)}")
             return [video_path]
     except Exception as e:
+        err_msg = str(e).lower()
+        if "timeout" in err_msg or "deadline" in err_msg or "rendering in background" in err_msg:
+            print(f"   [NotebookLM] Task is still processing: {e}")
+            raise e
         print(f"   [NotebookLM] Fatal error in fetch_notebooklm_footage: {e}")
         
     print("   ⚠️ NotebookLM footage generation failed. Falling back to classic gameplay B-roll...")
