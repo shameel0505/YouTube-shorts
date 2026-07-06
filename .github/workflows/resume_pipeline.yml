@@ -33,6 +33,8 @@ jobs:
         echo "${{ secrets.ENV_FILE }}" > .env
         echo "${{ secrets.CLIENT_SECRET_JSON }}" > client_secret.json
         echo "${{ secrets.TOKEN_JSON }}" > token.json
+        mkdir -p ~/.notebooklm/profiles/default/
+        echo "${{ secrets.STORAGE_STATE_JSON }}" > ~/.notebooklm/profiles/default/storage_state.json
 
     - name: Run Resume Check
       run: |
