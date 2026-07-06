@@ -858,10 +858,39 @@ if __name__ == "__main__":
                 exit(1)
 
         elif args.resume_check:
-            from memory.state_manager import get_state, set_active_render, mark_posted, mark_skipped, mark_failed
-            from telegram.approver import notify_pipeline_failed
+            from memory.state_manager import get_state, set_active_render, mark_posted, mark_skipped, mark_failed, start_fresh_run
+            from telegram.approver import notify_pipeline_failed, notify_pipeline_started
+            from datetime import datetime, timezone
             
             state = get_state()
+            
+            # Fallback: If daily schedule missed, start fresh run here
+            if state["status"] == "pending" and datetime.now(timezone.utc).hour >= 9:
+                log("⚠️ Fallback triggered: Missed daily 09:00 UTC run. Starting fresh pipeline now.")
+                start_fresh_run()
+                notify_pipeline_started("Fresh Run (Fallback)", state["current_day"])
+                
+                try:
+                    fmt_list = ["1", "2", "3", "4"] if args.format == "all" else [args.format]
+                    results = run_all_formats(upload, niche=args.niche, manual=args.manual, resume=False, mock=args.mock, fmt_list=fmt_list, resume_only=False)
+                    
+                    is_rendering = any(res.get("rendering") for res in results.values())
+                    if is_rendering:
+                        set_active_render(True)
+                    else:
+                        posted_any = any(res.get("result", {}).get("url") for res in results.values())
+                        if posted_any:
+                            mark_posted()
+                        else:
+                            mark_skipped("Pipeline finished but no format was uploaded.")
+                except Exception as e:
+                    import traceback
+                    mark_failed(str(e))
+                    notify_pipeline_failed(str(e), "Check logs and resolve error.")
+                    log(traceback.format_exc())
+                exit(0)
+
+            # Normal Resume Logic
             if state["status"] != "running" or not state["active_render"]:
                 log("⏭️ No active render state detected. Resume check taking no action.")
                 exit(0)
