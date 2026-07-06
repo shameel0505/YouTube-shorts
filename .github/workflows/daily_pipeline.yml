@@ -1,8 +1,8 @@
-name: Daily Shorts & Reels Uploader
+name: Daily Fresh Pipeline
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Runs every hour on the hour
+    - cron: '0 9 * * *'  # Runs every day at 09:00 UTC
   workflow_dispatch:      # Allows manual trigger from the GitHub UI
 
 jobs:
@@ -34,31 +34,17 @@ jobs:
         echo "${{ secrets.CLIENT_SECRET_JSON }}" > client_secret.json
         echo "${{ secrets.TOKEN_JSON }}" > token.json
 
-    - name: Run Pipeline
+    - name: Run Fresh Pipeline
       run: |
-        echo "🔍 DEBUG: Listing workspace root files..."
-        python -c "import os; print(os.listdir('.'))"
-        echo "🔍 DEBUG: Checking python sys.path..."
-        python -c "import sys; print(sys.path)"
-        echo "🔍 DEBUG: Attempting to import notebooklm..."
-        python -c "import notebooklm; print('notebooklm imported from:', notebooklm.__file__ if hasattr(notebooklm, '__file__') else 'unknown location')" || true
-        
-        HOUR=$(date -u +%H)
-        # Daily full run starts at 09:00 UTC (13:00 local time)
-        if [ "$HOUR" = "09" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-          echo "🚀 Daily trigger time (09:00 UTC). Running full pipeline..."
-          python -u main.py run --format all
-        else
-          echo "⏳ Checking and resuming pending video renders..."
-          python -u main.py run --format all --resume-only
-        fi
+        echo "🚀 Triggering fresh daily pipeline..."
+        python -u main.py run --fresh --format all
 
-    - name: Commit & Push Updated Topic Logs
+    - name: Commit & Push Updated State
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git add memory/ || true
         git add analytics/ || true
-        git commit -m "chore: Update used topics, rendering states, and analytics log [skip ci]" || true
+        git commit -m "chore: Update pipeline state and topic logs [skip ci]" || true
         git pull --rebase origin main || true
         git push origin main || true

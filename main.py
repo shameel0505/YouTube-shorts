@@ -604,13 +604,6 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
         runners.append(("3", lambda attempt=1: run_format3(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only)))
     if "all" in fmt_list or "4" in fmt_list:
         runners.append(("4", lambda attempt=1: run_format4(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only)))
-    
-    def notify_telegram(msg: str):
-        try:
-            from telegram.approver import send_telegram_notification
-            send_telegram_notification(msg)
-        except Exception as e:
-            log(f"⚠️ Telegram notify error: {e}")
 
     results = {}
 
@@ -619,7 +612,10 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
             skipped = [f for f, _ in runners if f >= fmt_name]
             msg = f"Quota exhausted. Skipping Format(s): {', '.join(skipped)}"
             log(f"⚠️  {msg}")
-            notify_telegram(f"⚠️ <b>Pipeline Quota Skip</b>\n{msg}")
+            try:
+                from telegram.approver import send_telegram_notification
+                send_telegram_notification(f"⚠️ <b>Pipeline Quota Skip</b>\n{msg}")
+            except: pass
             with open("./logs/pipeline.log", "a") as f:
                 f.write(f"[QUOTA SKIP] {msg}\n")
             break
@@ -632,25 +628,24 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
                 if res.get("skipped"):
                     break
                 if res.get("rendering"):
-                    rendering_msg = f"⏳ <b>Format {fmt_name} is rendering...</b>\nNotebookLM is generating the video overview. The next run will check task completion and upload it."
-                    notify_telegram(rendering_msg)
+                    title = res.get('script', {}).get('title', 'Unknown')
+                    try:
+                        from telegram.approver import notify_pipeline_running
+                        notify_pipeline_running(fmt_name, title)
+                    except: pass
                     break
 
-                success_msg = f"<b>✅ Format {fmt_name} Succeeded!</b>\n"
-                if "script" in res:
-                    success_msg += f"• Title: <i>{res['script'].get('title', 'Unknown')}</i>\n"
-                if "result" in res:
+                if "result" in res and res.get("result", {}).get("url"):
+                    # Success
+                    title = res.get('script', {}).get('title', 'Unknown')
                     yt_url = res["result"].get("url")
                     ig_post_id = res["result"].get("ig_post_id")
-                    if yt_url:
-                        success_msg += f"• YouTube Shorts: <a href='{yt_url}'>Link</a>\n"
-                    if ig_post_id:
-                        success_msg += f"• Instagram Reels Post ID: <code>{ig_post_id}</code>\n"
-                    else:
-                        success_msg += "• Instagram: ⚠️ Upload Failed/Skipped\n"
-                notify_telegram(success_msg)
+                    try:
+                        from telegram.approver import notify_pipeline_success
+                        notify_pipeline_success(fmt_name, title, yt_url, ig_post_id)
+                    except: pass
 
-                # Delete local cached video from memory/ folder only if both uploads succeeded
+                # Clean cache code remains the same
                 video_path = res.get("video_path")
                 result_data = res.get("result", {})
                 from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
@@ -676,16 +671,20 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
                 if attempt < 3:
                     log(f"⚠️  Format {fmt_name} attempt {attempt} failed — retrying in 30s: {e}")
                     warn_msg = f"<b>⚠️ Format {fmt_name} Attempt {attempt} Failed</b>\nError: <code>{err_msg}</code>\nRetrying in 30s..."
-                    notify_telegram(warn_msg)
+                    try:
+                        from telegram.approver import send_telegram_notification
+                        send_telegram_notification(warn_msg)
+                    except: pass
                     time.sleep(30)
                 else:
                     log(f"❌ Format {fmt_name} failed after 3 attempts: {e}")
-                    crit_msg = f"<b>❌ Format {fmt_name} FATAL FAILURE</b>\nFailed after 3 attempts.\n\nError: <code>{err_msg}</code>\n\nTraceback:\n<pre>{tb[-600:]}</pre>"
-                    notify_telegram(crit_msg)
+                    try:
+                        from telegram.approver import notify_pipeline_failed
+                        notify_pipeline_failed(err_msg, "Check logs for traceback")
+                    except: pass
                     raise e
 
     log(f"✅ All-format run complete. {quota_tracker.status()}")
-    notify_telegram(f"🏁 <b>Pipeline Run Complete!</b>\nAll formats processed.\n{quota_tracker.status()}")
     return results
 
 
@@ -767,7 +766,9 @@ def parse_args():
     parser.add_argument("--reset-story", action="store_true", help="Reset Format 2 story arc and start fresh")
     parser.add_argument("--manual", action="store_true", help="Enable manual approval via Telegram")
     parser.add_argument("--resume", action="store_true", help="Resume from cached files without clearing temp directory")
-    parser.add_argument("--resume-only", action="store_true", help="Only check and resume pending generations from state, do not start new ones")
+    parser.add_argument("--resume-only", action="store_true", help="Backward compatibility flag")
+    parser.add_argument("--fresh", action="store_true", help="Start a daily fresh run enforcing state logic")
+    parser.add_argument("--resume-check", action="store_true", help="Resume pending render enforcing state logic")
     parser.add_argument("--mock", action="store_true", help="Use static mock scripts instead of live research during dry-run")
     return parser.parse_args()
 
@@ -822,9 +823,74 @@ if __name__ == "__main__":
         run_scheduler()
 
     elif args.mode in ("run", "dry-run"):
-        for i in range(args.count):
-            if args.count > 1:
-                log(f"\n{'='*60}\n▶ Pipeline Run {i+1}/{args.count}\n{'='*60}")
+        if args.fresh:
+            from memory.state_manager import get_state, start_fresh_run, set_active_render, mark_posted, mark_skipped, mark_failed
+            from telegram.approver import notify_pipeline_started, notify_pipeline_skipped, notify_pipeline_failed
             
-            fmt_list = ["1", "2", "3", "4"] if args.format == "all" else [args.format]
-            run_all_formats(upload, niche=args.niche, manual=args.manual, resume=args.resume, mock=args.mock, fmt_list=fmt_list, resume_only=args.resume_only)
+            state = get_state()
+            if state["status"] in ("posted", "running"):
+                msg = f"Pipeline is already '{state['status']}' for today. No new run started."
+                log(f"⏭️ {msg}")
+                notify_pipeline_skipped(msg)
+                exit(0)
+            
+            start_fresh_run()
+            notify_pipeline_started("Fresh Run", state["current_day"])
+            
+            try:
+                fmt_list = ["1", "2", "3", "4"] if args.format == "all" else [args.format]
+                results = run_all_formats(upload, niche=args.niche, manual=args.manual, resume=False, mock=args.mock, fmt_list=fmt_list, resume_only=False)
+                
+                is_rendering = any(res.get("rendering") for res in results.values())
+                if is_rendering:
+                    set_active_render(True)
+                else:
+                    posted_any = any(res.get("result", {}).get("url") for res in results.values())
+                    if posted_any:
+                        mark_posted()
+                    else:
+                        mark_skipped("Pipeline finished but no format was uploaded.")
+            except Exception as e:
+                import traceback
+                mark_failed(str(e))
+                notify_pipeline_failed(str(e), "Check logs and resolve error.")
+                log(traceback.format_exc())
+                exit(1)
+
+        elif args.resume_check:
+            from memory.state_manager import get_state, set_active_render, mark_posted, mark_skipped, mark_failed
+            from telegram.approver import notify_pipeline_failed
+            
+            state = get_state()
+            if state["status"] != "running" or not state["active_render"]:
+                log("⏭️ No active render state detected. Resume check taking no action.")
+                exit(0)
+                
+            log("⏳ Active render state detected. Resuming pipeline...")
+            try:
+                fmt_list = ["1", "2", "3", "4"] if args.format == "all" else [args.format]
+                results = run_all_formats(upload, niche=args.niche, manual=args.manual, resume=True, mock=args.mock, fmt_list=fmt_list, resume_only=True)
+                
+                is_rendering = any(res.get("rendering") for res in results.values())
+                if is_rendering:
+                    set_active_render(True)
+                else:
+                    posted_any = any(res.get("result", {}).get("url") for res in results.values())
+                    if posted_any:
+                        mark_posted()
+                    else:
+                        mark_skipped("Resume completed but no format was uploaded.")
+            except Exception as e:
+                import traceback
+                mark_failed(str(e))
+                notify_pipeline_failed(str(e), "Check NotebookLM generation or logs.")
+                log(traceback.format_exc())
+                exit(1)
+        else:
+            # Normal run
+            for i in range(args.count):
+                if args.count > 1:
+                    log(f"\n{'='*60}\n▶ Pipeline Run {i+1}/{args.count}\n{'='*60}")
+                
+                fmt_list = ["1", "2", "3", "4"] if args.format == "all" else [args.format]
+                run_all_formats(upload, niche=args.niche, manual=args.manual, resume=args.resume, mock=args.mock, fmt_list=fmt_list, resume_only=args.resume_only)

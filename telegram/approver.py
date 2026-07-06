@@ -180,3 +180,29 @@ def send_telegram_notification(text: str) -> bool:
     except Exception as e:
         print(f"⚠️ Failed to send Telegram notification: {e}")
         return False
+
+def notify_pipeline_started(mode: str, day: str) -> bool:
+    text = f"🚀 <b>Daily pipeline started</b> for <code>{day}</code>.\nMode: <code>{mode}</code>.\nChecking pending topics..."
+    return send_telegram_notification(text)
+
+def notify_pipeline_running(format_num: str, script_title: str) -> bool:
+    text = f"⏳ <b>Pipeline is waiting on NotebookLM render.</b>\nFormat <code>{format_num}</code>: <i>{script_title}</i>\nThe resume check will verify it in 15 minutes."
+    return send_telegram_notification(text)
+
+def notify_pipeline_success(format_num: str, title: str, yt_url: str, ig_id: str) -> bool:
+    text = f"✅ <b>Daily Post Actually Uploaded!</b>\nFormat: <code>{format_num}</code>\nTitle: <i>{title}</i>\n"
+    if yt_url:
+        text += f"YouTube: <a href='{yt_url}'>Link</a>\n"
+    if ig_id:
+        text += f"Instagram: <code>{ig_id}</code>\n"
+    else:
+        text += "Instagram: ⚠️ Upload Failed/Skipped\n"
+    return send_telegram_notification(text)
+
+def notify_pipeline_failed(error_summary: str, action_needed: str) -> bool:
+    text = f"❌ <b>Pipeline Failed</b>\nReason: <code>{error_summary}</code>\nNext Action: {action_needed}"
+    return send_telegram_notification(text)
+
+def notify_pipeline_skipped(reason: str) -> bool:
+    text = f"⏭️ <b>Pipeline Run Skipped</b>\nReason: <i>{reason}</i>"
+    return send_telegram_notification(text)

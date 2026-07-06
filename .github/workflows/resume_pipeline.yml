@@ -1,0 +1,50 @@
+name: Resume Pipeline Check
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # Runs every 15 minutes
+  workflow_dispatch:        # Allows manual trigger from the GitHub UI
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: true
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update && sudo apt-get install -y ffmpeg
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        python -m playwright install chromium
+
+    - name: Restore Credentials from Secrets
+      run: |
+        echo "${{ secrets.ENV_FILE }}" > .env
+        echo "${{ secrets.CLIENT_SECRET_JSON }}" > client_secret.json
+        echo "${{ secrets.TOKEN_JSON }}" > token.json
+
+    - name: Run Resume Check
+      run: |
+        echo "⏳ Checking for active renders to resume..."
+        python -u main.py run --resume-check --format all
+
+    - name: Commit & Push Updated State
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add memory/ || true
+        git add analytics/ || true
+        git commit -m "chore: Update pipeline state and topic logs [skip ci]" || true
+        git pull --rebase origin main || true
+        git push origin main || true
