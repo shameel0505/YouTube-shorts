@@ -29,12 +29,17 @@ jobs:
         python -m playwright install chromium
 
     - name: Restore Credentials from Secrets
+      env:
+        ENV_FILE_CONTENT: ${{ secrets.ENV_FILE }}
+        CLIENT_SECRET_CONTENT: ${{ secrets.CLIENT_SECRET_JSON }}
+        TOKEN_CONTENT: ${{ secrets.TOKEN_JSON }}
+        STORAGE_STATE_CONTENT: ${{ secrets.STORAGE_STATE_JSON }}
       run: |
-        echo "${{ secrets.ENV_FILE }}" > .env
-        echo "${{ secrets.CLIENT_SECRET_JSON }}" > client_secret.json
-        echo "${{ secrets.TOKEN_JSON }}" > token.json
+        echo "$ENV_FILE_CONTENT" > .env
+        echo "$CLIENT_SECRET_CONTENT" > client_secret.json
+        echo "$TOKEN_CONTENT" > token.json
         mkdir -p ~/.notebooklm/profiles/default/
-        echo "${{ secrets.STORAGE_STATE_JSON }}" > ~/.notebooklm/profiles/default/storage_state.json
+        echo "$STORAGE_STATE_CONTENT" > ~/.notebooklm/profiles/default/storage_state.json
 
     - name: Run Resume Check
       run: |
