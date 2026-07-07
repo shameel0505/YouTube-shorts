@@ -9,10 +9,13 @@ import re
 import os
 import google.generativeai as genai
 import quota_tracker
-from config import GEMINI_API_KEY, GEMINI_MODEL, NICHE, VIDEO_DURATION_SEC
+import time
+from config import GEMINI_API_KEY, GEMINI_API_KEYS, GEMINI_MODEL, NICHE, VIDEO_DURATION_SEC
 
 genai.configure(api_key=GEMINI_API_KEY)
 _model = genai.GenerativeModel(GEMINI_MODEL)
+_current_key_idx = 0
+
 
 _USED_TOPICS_FILE = "./temp/used_topics.json"
 
@@ -96,7 +99,9 @@ def _save_used_topic(topic: str):
 
 
 def _call_gemini_for_script(prompt: str, required_keys: list, retries: int = 3) -> dict:
-    """Call Gemini, parse and validate JSON, track quota."""
+    """Call Gemini, parse and validate JSON, track quota, and rotate keys if necessary."""
+    global _current_key_idx, _model
+    
     for attempt in range(retries):
         try:
             quota_tracker.increment()
@@ -112,12 +117,21 @@ def _call_gemini_for_script(prompt: str, required_keys: list, retries: int = 3) 
             return data
         except Exception as e:
             if "429" in str(e) or "quota" in str(e).lower() or "ResourceExhausted" in str(type(e)):
-                print("   ⏳ Rate limit hit! Sleeping for 60 seconds...")
-                time.sleep(60)
+                if len(GEMINI_API_KEYS) > 1:
+                    _current_key_idx = (_current_key_idx + 1) % len(GEMINI_API_KEYS)
+                    print(f"   ⏳ Key exhausted. Switching to backup key #{_current_key_idx + 1}...")
+                    genai.configure(api_key=GEMINI_API_KEYS[_current_key_idx])
+                    _model = genai.GenerativeModel(GEMINI_MODEL)
+                    time.sleep(2)
+                    continue
+                else:
+                    print("   ⏳ Rate limit hit! Sleeping for 60 seconds...")
+                    time.sleep(60)
             else:
                 print(f"   ⚠️ Gemini Error: {e}")
                 time.sleep(5)
     return None
+
 
 # ── FORMAT 1: Mind-Blowing Facts ─────────────────────────────────────────────
 

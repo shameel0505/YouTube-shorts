@@ -4,7 +4,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Google / Gemini
-GEMINI_API_KEY        = os.getenv("GEMINI_API_KEY")
+GEMINI_API_KEYS = []
+for k in ["GEMINI_API_KEY", "GEMINI_API_KEY_2", "GEMINI_API_KEY_3", "GEMINI_API_KEY_4", "GEMINI_API_KEY_5"]:
+    val = os.getenv(k)
+    if val:
+        GEMINI_API_KEYS.append(val)
+GEMINI_API_KEY = GEMINI_API_KEYS[0] if GEMINI_API_KEYS else None
+
 GCP_PROJECT_ID        = os.getenv("GCP_PROJECT_ID")
 GCP_REGION            = os.getenv("GCP_REGION", "us-central1")
 GCS_BUCKET            = os.getenv("GCS_BUCKET")
@@ -112,7 +118,7 @@ FORMAT2_SCHEDULE_HOUR = int(os.getenv("FORMAT2_SCHEDULE_HOUR", "13"))  # Thrille
 FORMAT3_SCHEDULE_HOUR = int(os.getenv("FORMAT3_SCHEDULE_HOUR", "17"))  # Dilemma
 
 # ── Quota management ─────────────────────────────────────────────────────────
-GEMINI_QUOTA_LIMIT    = 20
+GEMINI_QUOTA_LIMIT    = 20 * max(1, len(GEMINI_API_KEYS))
 GEMINI_QUOTA_FILE     = os.path.join(os.path.dirname(TEMP_DIR), "memory", "gemini_quota.json")
 
 # ── Story state (Format 2 — Serialized Thriller) ─────────────────────────────
