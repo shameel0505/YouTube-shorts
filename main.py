@@ -657,6 +657,7 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
         runners.append(("4", lambda attempt=1: run_format4(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only)))
 
     results = {}
+    pipeline_has_errors = False
 
     for fmt_name, runner in runners:
         if not quota_tracker.can_proceed(2):
@@ -728,14 +729,24 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
                     except: pass
                     time.sleep(30)
                 else:
-                    log(f"❌ Format {fmt_name} failed after 3 attempts: {e}")
-                    try:
-                        from telegram.approver import notify_pipeline_failed
-                        notify_pipeline_failed(err_msg, "Check logs for traceback")
-                    except: pass
-                    raise e
+                    is_timeout = any(kw in err_msg.lower() for kw in ["timeout", "timed out", "in progress", "rendering in background"])
+                    if is_timeout:
+                        log(f"⏳ Format {fmt_name} is still rendering in the background after 3 attempts. Will check again later.")
+                    else:
+                        log(f"❌ Format {fmt_name} failed completely after 3 attempts: {e}")
+                        pipeline_has_errors = True
+                        try:
+                            from telegram.approver import notify_pipeline_failed
+                            notify_pipeline_failed(err_msg, "Check logs for traceback")
+                        except: pass
+                    
+                    # Do not raise e; just break the retry loop to continue to the next format!
+                    break
 
     log(f"✅ All-format run complete. {quota_tracker.status()}")
+    if pipeline_has_errors:
+        import sys
+        sys.exit(1)
     return results
 
 
