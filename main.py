@@ -204,6 +204,9 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
             log("⏭️  Step 7/7: Upload skipped (dry run)", fmt)
             result = {"video_path": video_path}
 
+        from video.notebooklm_footage import cleanup_notebooklm_state
+        cleanup_notebooklm_state(1)
+        
         log("🎉 Format 1 completed successfully!", fmt)
         return {"format": 1, "script": script_data, "video_path": video_path, "result": result}
 
@@ -337,6 +340,9 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
         else:
             log("⏭️  Step 7/7: Upload skipped (dry run)", fmt)
             result = {"video_path": video_path}
+
+        from video.notebooklm_footage import cleanup_notebooklm_state
+        cleanup_notebooklm_state(2)
 
         log("🎉 Format 2 completed successfully!", fmt)
         return {"format": 2, "script": script_data, "video_path": video_path, "result": result}
@@ -479,6 +485,9 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
             log("⏭️  Step 7/7: Upload skipped (dry run)", fmt)
             result = {"video_path": video_path}
 
+        from video.notebooklm_footage import cleanup_notebooklm_state
+        cleanup_notebooklm_state(3)
+
         log("🎉 Format 3 completed successfully!", fmt)
         return {"format": 3, "script": script_data, "video_path": video_path, "result": result}
 
@@ -610,6 +619,9 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
         else:
             log("⏭️  Step 7/7: Upload skipped (dry run)", fmt)
             result = {"video_path": video_path}
+
+        from video.notebooklm_footage import cleanup_notebooklm_state
+        cleanup_notebooklm_state(4)
 
         log("🎉 Format 4 completed successfully!", fmt)
         return {"format": 4, "script": script_data, "video_path": video_path, "result": result}

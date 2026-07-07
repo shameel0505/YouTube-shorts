@@ -239,12 +239,10 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool) -> s
             # 5b. Upscale the video to 1080x1920 (Full HD vertical)
             await _upscale_video(output_file)
 
-            # 6. Cleanup Google Notebook
-            print(f"   [NotebookLM] Cleaning up temporary notebook {notebook_id}...")
-            await _retry_call(client.notebooks.delete, notebook_id)
+            # NOTE: We no longer delete the notebook or the state file here.
+            # They will be kept intact so we can re-download if the YouTube upload crashes.
+            # `cleanup_notebooklm_state(fmt)` must be called by main.py ONLY after successful upload.
 
-            # Clear state file only on absolute success
-            _clear_state(fmt)
             return output_file
 
     except Exception as e:
