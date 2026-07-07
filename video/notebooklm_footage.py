@@ -253,8 +253,11 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool) -> s
         # Keep state if it's a timeout/deadline/background render — task is still running.
         # Clear state only on genuine critical failures to prevent infinite retry loops.
         is_still_running = any(kw in err_msg for kw in ["timeout", "timed out", "deadline", "rendering in background"])
+        if "not_found" in err_msg:
+            is_still_running = False
+            
         if not is_still_running:
-            print("   [NotebookLM] Critical non-timeout failure. Clearing state to prevent infinite retry loop.")
+            print("   [NotebookLM] Critical non-timeout failure (or task not found). Clearing state.")
             _clear_state(fmt)
         raise e
 
@@ -294,6 +297,9 @@ def fetch_notebooklm_footage(script_data: dict, duration_needed: float, fmt: int
     except Exception as e:
         err_msg = str(e).lower()
         is_still_running = any(kw in err_msg for kw in ["timeout", "timed out", "deadline", "rendering in background"])
+        if "not_found" in err_msg:
+            is_still_running = False
+            
         if is_still_running:
             print(f"   [NotebookLM] Task is still processing: {e}")
             raise e
