@@ -202,7 +202,8 @@ def generate_script(niche: str = None, research: dict = None, retries: int = 3) 
     data = _call_gemini_for_script(prompt, ["topic", "title", "description", "hashtags", "script", "pexels_keyword"], retries)
     if research and research.get("pexels_keyword") and len(data.get("pexels_keyword", "")) < 3:
         data["pexels_keyword"] = research["pexels_keyword"]
-    _save_used_topic(data["topic"])
+    if data.get("topic"):
+        _save_used_topic(data["topic"])
     print(f"✅ [FORMAT 1] Comprehensive Article: '{data['title']}'")
     return data
 

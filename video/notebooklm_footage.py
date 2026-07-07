@@ -215,7 +215,8 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool) -> s
                 _save_state(fmt, {
                     "notebook_id": notebook_id,
                     "task_id": task_id,
-                    "output_file": output_file
+                    "output_file": output_file,
+                    "script_data": script_data
                 })
                 print("   [NotebookLM] Task triggered successfully. Exiting to run other formats in parallel.")
                 raise Exception("Task rendering in background")
