@@ -113,7 +113,13 @@ def _call_gemini_for_script(prompt: str, required_keys: list, retries: int = 3) 
         except Exception as e:
             if "429" in str(e) or "quota" in str(e).lower() or "ResourceExhausted" in str(type(e)):
                 print("   ⏳ Rate limit hit! Sleeping for 60 seconds...")
-              # ── FORMAT 1: Mind-Blowing Facts ─────────────────────────────────────────────
+                time.sleep(60)
+            else:
+                print(f"   ⚠️ Gemini Error: {e}")
+                time.sleep(5)
+    return None
+
+# ── FORMAT 1: Mind-Blowing Facts ─────────────────────────────────────────────
 
 _F1_PROMPT = """You are a professional educational content developer and science/history writer. 
 Your goal is to write a highly detailed, comprehensive article about the researched fact topic below.
@@ -200,6 +206,9 @@ def generate_script(niche: str = None, research: dict = None, retries: int = 3) 
         )
 
     data = _call_gemini_for_script(prompt, ["topic", "title", "description", "hashtags", "script", "pexels_keyword"], retries)
+    if not data:
+        raise RuntimeError("Gemini script generation failed.")
+
     if research and research.get("pexels_keyword") and len(data.get("pexels_keyword", "")) < 3:
         data["pexels_keyword"] = research["pexels_keyword"]
     if data.get("topic"):
