@@ -1,4 +1,4 @@
-name: Resume Pipeline Check
+name: Auto Pipeline
 
 on:
   schedule:
