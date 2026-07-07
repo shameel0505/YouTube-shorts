@@ -309,3 +309,23 @@ def fetch_notebooklm_footage(script_data: dict, duration_needed: float, fmt: int
         duration_needed=duration_needed,
         fmt=fmt
     )
+
+def cleanup_notebooklm_state(fmt: int):
+    """
+    Called by main.py ONLY after a successful YouTube upload.
+    This safely deletes the notebook from NotebookLM and clears the local state file.
+    """
+    state = _load_state(fmt)
+    notebook_id = state.get("notebook_id")
+    if notebook_id:
+        print(f"   [NotebookLM] Upload successful! Deleting temporary notebook: {notebook_id}")
+        try:
+            async def _delete():
+                async with NotebookLMClient.from_storage() as client:
+                    await client.notebooks.delete(notebook_id)
+            asyncio.run(_delete())
+        except Exception as e:
+            print(f"   [NotebookLM] Warning: Could not delete notebook {notebook_id} on Google's end: {e}")
+            
+    _clear_state(fmt)
+    print(f"   [NotebookLM] Cleared nblm_state_f{fmt}.json")
