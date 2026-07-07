@@ -47,6 +47,7 @@ jobs:
         python -u main.py run --resume-check --format all
 
     - name: Commit & Push Updated State
+      if: always()
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"

@@ -858,27 +858,86 @@ if __name__ == "__main__":
                 exit(1)
 
         elif args.resume_check:
-            from memory.state_manager import get_state, set_active_render, mark_posted, mark_skipped, mark_failed, start_fresh_run
-            from telegram.approver import notify_pipeline_failed, notify_pipeline_started
+            from memory.state_manager import (
+                get_state, set_active_render, mark_posted, mark_skipped,
+                mark_failed, start_fresh_run, can_retry_today, has_active_nblm_state
+            )
+            from telegram.approver import notify_pipeline_failed, notify_pipeline_started, notify_pipeline_skipped
             from datetime import datetime, timezone
-            
+            import os
+
             state = get_state()
-            
-            # Fallback: If daily schedule missed, start fresh run here
-            if state["status"] == "pending" and datetime.now(timezone.utc).hour >= 9:
-                log("⚠️ Fallback triggered: Missed daily 09:00 UTC run. Starting fresh pipeline now.")
-                start_fresh_run()
-                notify_pipeline_started("Fresh Run (Fallback)", state["current_day"])
-                
+            memory_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "memory")
+
+            # ── Priority 1: Check nblm_state files (primary truth for active renders)
+            # These files are created by notebooklm_footage.py when a render task is
+            # successfully submitted. Their existence = there is definitely a pending render.
+            if has_active_nblm_state(memory_dir):
+                log("⏳ Active NotebookLM render state files detected. Resuming pipeline...")
+                # Ensure state manager is also set consistently
+                if state["status"] != "running":
+                    start_fresh_run()
+                set_active_render(True)
                 try:
                     fmt_list = ["1", "2", "3", "4"] if args.format == "all" else [args.format]
-                    results = run_all_formats(upload, niche=args.niche, manual=args.manual, resume=False, mock=args.mock, fmt_list=fmt_list, resume_only=False)
-                    
+                    results = run_all_formats(upload, niche=args.niche, manual=args.manual, resume=True, mock=args.mock, fmt_list=fmt_list, resume_only=True)
                     is_rendering = any(res.get("rendering") for res in results.values())
                     if is_rendering:
                         set_active_render(True)
                     else:
-                        posted_any = any(res.get("result", {}).get("url") for res in results.values())
+                        posted_any = any(res.get("result", {}).get("url") for res in results.values() if isinstance(res.get("result"), dict))
+                        if posted_any:
+                            mark_posted()
+                        else:
+                            mark_skipped("Resume completed but no format was uploaded.")
+                except Exception as e:
+                    import traceback
+                    mark_failed(str(e))
+                    notify_pipeline_failed(str(e), "Check NotebookLM generation or logs.")
+                    log(traceback.format_exc())
+                exit(0)
+
+            # ── Priority 2: Normal resume via state manager (active_render flag)
+            if state["status"] == "running" and state.get("active_render"):
+                log("⏳ Active render state detected in pipeline_state.json. Resuming pipeline...")
+                try:
+                    fmt_list = ["1", "2", "3", "4"] if args.format == "all" else [args.format]
+                    results = run_all_formats(upload, niche=args.niche, manual=args.manual, resume=True, mock=args.mock, fmt_list=fmt_list, resume_only=True)
+                    is_rendering = any(res.get("rendering") for res in results.values())
+                    if is_rendering:
+                        set_active_render(True)
+                    else:
+                        posted_any = any(res.get("result", {}).get("url") for res in results.values() if isinstance(res.get("result"), dict))
+                        if posted_any:
+                            mark_posted()
+                        else:
+                            mark_skipped("Resume completed but no format was uploaded.")
+                except Exception as e:
+                    import traceback
+                    mark_failed(str(e))
+                    notify_pipeline_failed(str(e), "Check NotebookLM generation or logs.")
+                    log(traceback.format_exc())
+                exit(0)
+
+            # ── Priority 3: Fallback fresh run (missed 09:00 UTC or failed state with retries left)
+            utc_hour = datetime.now(timezone.utc).hour
+            status_allows_retry = state["status"] in ("pending", "failed")
+            if status_allows_retry and utc_hour >= 9 and can_retry_today():
+                retry_num = state.get("retry_count", 0) + 1
+                if state["status"] == "failed":
+                    log(f"⚠️ Previous run failed. Retry attempt {retry_num}/3 for today...")
+                else:
+                    log("⚠️ Fallback triggered: Missed daily 09:00 UTC run. Starting fresh pipeline now.")
+                start_fresh_run()
+                notify_pipeline_started(f"Fresh Run (Fallback #{retry_num})", state["current_day"])
+                try:
+                    fmt_list = ["1", "2", "3", "4"] if args.format == "all" else [args.format]
+                    results = run_all_formats(upload, niche=args.niche, manual=args.manual, resume=False, mock=args.mock, fmt_list=fmt_list, resume_only=False)
+                    is_rendering = any(res.get("rendering") for res in results.values())
+                    if is_rendering:
+                        set_active_render(True)
+                    else:
+                        posted_any = any(res.get("result", {}).get("url") for res in results.values() if isinstance(res.get("result"), dict))
                         if posted_any:
                             mark_posted()
                         else:
@@ -886,35 +945,19 @@ if __name__ == "__main__":
                 except Exception as e:
                     import traceback
                     mark_failed(str(e))
-                    notify_pipeline_failed(str(e), "Check logs and resolve error.")
+                    notify_pipeline_failed(str(e), f"Retry #{retry_num} failed. Check logs.")
                     log(traceback.format_exc())
                 exit(0)
 
-            # Normal Resume Logic
-            if state["status"] != "running" or not state["active_render"]:
-                log("⏭️ No active render state detected. Resume check taking no action.")
-                exit(0)
-                
-            log("⏳ Active render state detected. Resuming pipeline...")
-            try:
-                fmt_list = ["1", "2", "3", "4"] if args.format == "all" else [args.format]
-                results = run_all_formats(upload, niche=args.niche, manual=args.manual, resume=True, mock=args.mock, fmt_list=fmt_list, resume_only=True)
-                
-                is_rendering = any(res.get("rendering") for res in results.values())
-                if is_rendering:
-                    set_active_render(True)
-                else:
-                    posted_any = any(res.get("result", {}).get("url") for res in results.values())
-                    if posted_any:
-                        mark_posted()
-                    else:
-                        mark_skipped("Resume completed but no format was uploaded.")
-            except Exception as e:
-                import traceback
-                mark_failed(str(e))
-                notify_pipeline_failed(str(e), "Check NotebookLM generation or logs.")
-                log(traceback.format_exc())
-                exit(1)
+            # ── No action needed
+            if state["status"] == "posted":
+                log(f"✅ Already posted today ({state.get('posted_at', 'unknown time')}). Nothing to do.")
+            elif state["status"] == "failed" and not can_retry_today():
+                log(f"❌ Max retries reached for today ({state.get('retry_count', 0)}/3). Manual intervention required.")
+                notify_pipeline_skipped(f"Max retries ({state.get('retry_count', 0)}/3) reached for today. Manual intervention required.")
+            else:
+                log(f"⏭️ No active render or pending run. Status: {state['status']}. Resume check taking no action.")
+            exit(0)
         else:
             # Normal run
             for i in range(args.count):
