@@ -1,11 +1,11 @@
 {
     "current_day": "2026-07-07",
-    "status": "skipped",
+    "status": "failed",
     "mode": "fresh",
-    "started_at": "2026-07-07T04:37:00.547206+00:00",
+    "started_at": "2026-07-07T05:14:54.556850+00:00",
     "posted_at": null,
-    "last_updated": "2026-07-07T05:04:51.687854+00:00",
-    "active_render": true,
-    "last_error": "Resume completed but no format was uploaded.",
-    "retry_count": 1
+    "last_updated": "2026-07-07T05:16:55.636081+00:00",
+    "active_render": false,
+    "last_error": "Task b9e851b4-7dab-4c31-ac66-2a5a3d608a94 in notebook 08b58c85-b592-4543-ac33-40c74ae84825 timed out after 5.0s (last status: not_found; status history: not_found)",
+    "retry_count": 2
 }
