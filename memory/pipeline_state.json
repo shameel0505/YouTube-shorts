@@ -1,11 +1,11 @@
 {
     "current_day": "2026-07-07",
-    "status": "failed",
+    "status": "running",
     "mode": "fresh",
-    "started_at": "2026-07-07T05:58:10.675481+00:00",
+    "started_at": "2026-07-07T06:23:48.852979+00:00",
     "posted_at": null,
-    "last_updated": "2026-07-07T06:08:44.328445+00:00",
-    "active_render": false,
-    "last_error": "Gemini quota exhausted \u2014 Format 1 skipped.",
-    "retry_count": 4
+    "last_updated": "2026-07-07T06:26:28.205966+00:00",
+    "active_render": true,
+    "last_error": null,
+    "retry_count": 5
 }
