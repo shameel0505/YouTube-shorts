@@ -250,5 +250,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "nHd-3EjzpG4",
+        "format": 1,
+        "topic": "There are more unique ways to shuffle a standard deck of 52 cards than there are atoms on Earth.",
+        "hook": "Original",
+        "upload_time": "2026-07-08T11:18:18.437328+00:00",
+        "check_time": "2026-07-09T11:18:18.437328+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "l4b1ts9HAos",
+        "format": 2,
+        "topic": "The Static Echo of '87",
+        "hook": "Static Echoes",
+        "upload_time": "2026-07-08T11:19:51.721494+00:00",
+        "check_time": "2026-07-09T11:19:51.721494+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "mfV8Cw63TZQ",
+        "format": 3,
+        "topic": "Your elderly parent, still mentally sharp, has a serious terminal illness. They explicitly state they want to refuse painful, life-prolonging treatment. As their legal proxy, you know their wish, but other family members insist you must override it to extend their life.",
+        "hook": "Honor parent or prolong life?",
+        "upload_time": "2026-07-08T11:21:27.065540+00:00",
+        "check_time": "2026-07-09T11:21:27.065540+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "8jeFmnqDvTk",
+        "format": 4,
+        "topic": "The Echo of Refusal: Cialdini's Campus Experiment",
+        "hook": "Guilt's Grip",
+        "upload_time": "2026-07-08T11:24:02.057165+00:00",
+        "check_time": "2026-07-09T11:24:02.057165+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]

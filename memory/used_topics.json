@@ -23,12 +23,20 @@
         {
             "text": "Every time you recall a memory, your brain doesn't just retrieve it; it actively reconstructs it, often subtly altering it in the process. This means your memories aren't fixed recordings, but constantly evolving narratives.",
             "date": "2026-07-03T20:00:32.079462"
+        },
+        {
+            "text": "There are more unique ways to shuffle a standard deck of 52 cards than there are atoms on Earth.",
+            "date": "2026-07-08T11:18:18.437828"
         }
     ],
     "format2_titles": [
         {
             "text": "The Handprint's Echo",
             "date": "2026-07-03T20:01:04.043572"
+        },
+        {
+            "text": "The Static Echo of '87",
+            "date": "2026-07-08T11:19:51.721987"
         }
     ],
     "format3_dilemmas": [
@@ -55,6 +63,16 @@
         {
             "text": "You accidentally witness your close friend's partner cheating on them. Telling your friend would cause immense pain and likely end their long-term relationship, but staying silent feels dishonest.",
             "date": "2026-07-03T20:06:24.043861"
+        },
+        {
+            "text": "Your elderly parent, still mentally sharp, has a serious terminal illness. They explicitly state they want to refuse painful, life-prolonging treatment. As their legal proxy, you know their wish, but other family members insist you must override it to extend their life.",
+            "date": "2026-07-08T11:21:27.066419"
+        }
+    ],
+    "format4_cases": [
+        {
+            "text": "The Echo of Refusal: Cialdini's Campus Experiment",
+            "date": "2026-07-08T11:24:02.058020"
         }
     ]
 }
