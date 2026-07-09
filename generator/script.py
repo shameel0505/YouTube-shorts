@@ -149,7 +149,13 @@ Hook angle: {hook_angle}
 1. LENGTH: Write a comprehensive, fully developed educational essay between 300 and 500 words. Do not write a short voiceover script.
 2. DETAILS: Unpack the complexity. Explain the "why" and "how". Use specific figures, scientific terms, historical names, and concrete evidence.
 3. STRUCTURE:
-   - Catchy Hook Introduction: Open with the single most counterintuitive aspect of the topic.
+   - Catchy Hook Introduction: You MUST open using one of these 6 styles (pick the one that fits best):
+     * "Uncomfortable Truth": Make the viewer physically hyper-aware (e.g., microscopic bugs on eyelashes).
+     * "Declassified": Frame it as intentionally hidden, ignored by schools, or recently uncovered.
+     * "Mandela Effect": Prove a universally held memory, belief, or proverb is entirely false.
+     * "Glitch in Physics": Present a phenomenon that wildly violates the laws of common sense before explaining it.
+     * "Forbidden Knowledge": Warn the viewer that once they learn this fact, they can never un-see it.
+     * "Historical Lie": Aggressively attack a famous historical event or figure that everyone learns in school.
    - Deep Dive Explanation: Provide context, background, and the underlying mechanisms/history.
    - Escalation/Payoff: Reveal additional layers of complexity, current research, or fascinating implications.
 4. TONE: Professional, authoritative, engaging, and mind-expanding.
@@ -177,7 +183,10 @@ Niche: {niche}
 ══ WRITING RULES (CRITICAL) ══
 1. LENGTH: Write a comprehensive, fully developed educational essay between 300 and 500 words.
 2. DETAILS: Unpack the complexity. Explain the "why" and "how". Use specific figures and evidence.
-3. STRUCTURE: Catchy Hook Introduction, Deep Dive, and Escalation/Payoff.
+3. STRUCTURE: 
+   - Catchy Hook Introduction: You MUST open using one of these 6 styles (pick the one that fits best): "Uncomfortable Truth", "Declassified", "Mandela Effect", "Glitch in Physics", "Forbidden Knowledge", or "Historical Lie".
+   - Deep Dive Explanation: Provide context and mechanisms.
+   - Escalation/Payoff: Reveal additional layers of complexity.
 4. TONE: Professional, authoritative, and mind-expanding.
 
 ══ OUTPUT FORMAT ══
@@ -231,30 +240,30 @@ def generate_script(niche: str = None, research: dict = None, retries: int = 3) 
     return data
 
 
-_F2_PROMPT = """You are a creative writer and storyteller specializing in suspense, horror, and mystery. 
-Your goal is to write a detailed, highly comprehensive short story in the style of a **{genre}**.
-This story is going to be processed by Google's NotebookLM to generate a video discussion overview, so it needs to be rich in details, characters, settings, and atmosphere.
+_F2_PROMPT = """You are a professional historian and educational storyteller. 
+Your goal is to write a detailed, highly comprehensive true story in the style of a **{genre}**.
+This story is going to be processed by Google's NotebookLM to generate an educational video discussion, so it needs to be rich in factual details, real characters, historical settings, and fascinating connections.
 
 PREMISE: "{premise}"
-Protagonist: {protagonist}
-Core Mystery/Conflict: {core_mystery}
+Protagonist/Figure: {protagonist}
+Core Catalyst/Event: {core_mystery}
 Setting: {setting}
 {avoid_clause}
 
 ══ WRITING RULES (CRITICAL) ══
-1. LENGTH: Write a comprehensive, fully developed story between 300 and 500 words.
-2. ATMOSPHERE & DETAILS: Describe the setting with rich sensory details (sights, sounds, shadows). Give depth to the protagonist's inner thoughts, fears, and history.
-3. PLOT TWIST: End the story with a shocking, unexpected twist or a profound cliffhanger that will make viewers debate the meaning in the comments.
-4. TONE: Engaging, atmospheric, and highly suspenseful.
+1. LENGTH: Write a comprehensive, fully developed true story between 300 and 500 words.
+2. FACTS & DETAILS: Describe the historical setting with rich, accurate details. Give depth to the real people involved, focusing on how a tiny, seemingly insignificant choice or event snowballed into massive consequences.
+3. THE REVEAL: End the story by revealing the massive, world-changing impact of that tiny initial event. Leave the viewer stunned by the chain reaction.
+4. TONE: Educational, catchy, awe-inspiring, and highly engaging. NOT dark or horrific.
 
 ══ OUTPUT FORMAT ══
 Respond ONLY with a strict JSON object (no markdown):
 {{
   "format": "thriller",
   "title": "Curiosity-gap story title (under 60 chars)",
-  "description": "Tense one-liner story description (under 100 chars)",
-  "hashtags": ["#shorts", "#thriller", "#mystery", "5 more tags"],
-  "script": "The complete, detailed 300-500 word story.",
+  "description": "Engaging one-liner story description (under 100 chars)",
+  "hashtags": ["#shorts", "#history", "#butterflyeffect", "5 more tags"],
+  "script": "The complete, detailed 300-500 word true story.",
   "hook": "A 2-3 word punchy hook text for the on-screen title card",
   "pexels_keyword": "A highly descriptive visual B-roll prompt"
 }}"""
@@ -280,12 +289,12 @@ def generate_thriller(research: dict = None, retries: int = 3) -> dict:
     # Randomly select a genre style for variety
     import random
     genres = [
-        "Psychological Thriller", 
-        "Cosmic Horror (Lovecraftian)", 
-        "Gothic Ghost Story", 
-        "Neo-Noir Crime Mystery", 
-        "Glitch-in-the-Matrix Horror",
-        "Sci-Fi Techno-Thriller"
+        "Historical Chain Reaction", 
+        "Unintended Historical Consequence", 
+        "A Tiny Mistake that Changed the World", 
+        "The Butterfly Effect", 
+        "Mind-Blowing Historical Coincidence",
+        "How One Decision Altered History"
     ]
     genre = random.choice(genres)
 
@@ -314,36 +323,36 @@ def generate_thriller(research: dict = None, retries: int = 3) -> dict:
 
 # ── FORMAT 3: Moral Dilemma ───────────────────────────────────────────────────
 
-_F3_PROMPT = """You are a professional content writer and ethical strategist.
-Your goal is to write a highly detailed, comprehensive case study describing a profound moral dilemma.
+_F3_PROMPT = """You are a professional educational writer and cognitive science expert.
+Your goal is to write a highly detailed, comprehensive case study describing a fascinating psychological phenomenon or "brain glitch" that everyone experiences.
 
-This case study will be uploaded to Google's NotebookLM to generate an interactive video/audio discussion overview, so it must be professional, immersive, and lay out both choices and their consequences in detail.
+This case study will be uploaded to Google's NotebookLM to generate an interactive video discussion, so it must be highly relatable, educational, and explain the science clearly.
 
-RESEARCHED DILEMMA:
+RESEARCHED PHENOMENON:
 {dilemma_seed}
 
-Values in conflict: {value_a} vs {value_b}
-Option A: {option_a}
-Option B: {option_b}
+Conflict: {value_a} vs {value_b}
+Perception: {option_a}
+Reality: {option_b}
 Closing question: "{closing_question}"
 
 ══ WRITING RULES (CRITICAL) ══
-1. LENGTH: Write a comprehensive, fully developed scenario between 300 and 500 words. Do not write a short voiceover script.
-2. DETAILS: Build a rich, highly specific scenario using second-person ("you") to put the reader directly in the shoes of the decision-maker. Add sensory details, background history of the conflict, and exact stakes.
+1. LENGTH: Write a comprehensive, fully developed explanation between 300 and 500 words. Do not write a short voiceover script.
+2. DETAILS: Build a rich, highly specific scenario using second-person ("you") to make the viewer realize they do this every day. Add scientific explanations, cognitive bias names, and everyday examples.
 3. STRUCTURE:
-   - Setup: Describe the situation, how you got here, and the immediate emotional or physical stakes.
-   - The Conflict: Detail the two conflicting options. Dive deep into the trade-offs of both options, highlighting why there is no easy or right answer (loyalty vs honesty, self-preservation vs altruism).
+   - Setup: Describe a highly relatable everyday situation where this glitch happens.
+   - The Science: Detail exactly why our brains are wired this way (evolution, shortcuts, biases).
    - Closing Question: Conclude with the exact closing question: "{closing_question}".
-4. TONE: Objective, highly dramatic, engaging, and thought-provoking.
+4. TONE: Objective, catchy, mind-expanding, and strictly educational/non-dark.
 
 ══ OUTPUT FORMAT ══
 Respond ONLY with a strict JSON object (no markdown):
 {{
   "format": "dilemma",
   "topic": "3-5 word internal label",
-  "title": "Curiosity-gap dilemma title (under 60 chars)",
+  "title": "Curiosity-gap phenomenon title (under 60 chars)",
   "description": "Engaging description (under 100 chars)",
-  "hashtags": ["#shorts", "#moraldilemma", "#wouldyourather", "5 more tags"],
+  "hashtags": ["#shorts", "#psychology", "#brainglitch", "5 more tags"],
   "script": "The complete, detailed 300-500 word case study. Ending with the closing question.",
   "closing_question": "The exact closing question — 6 words max, ends with ?",
   "values_in_conflict": ["{value_a}", "{value_b}"]
@@ -375,21 +384,21 @@ def generate_dilemma(research: dict = None, retries: int = 3) -> dict:
 # ── FORMAT 4: Dark Psychology & Insane Real-Life Cases ────────────────────────
 
 _F4_PROMPT = """You are a professional case study writer and narrative strategist.
-Your goal is to write a detailed, highly comprehensive story/case study about a mind-bending psychological experiment or bizarre real-life case in the style of a **{genre}**.
+Your goal is to write a detailed, highly comprehensive true story about extreme human ingenuity, a brilliant negotiation, or a harmless genius caper in the style of a **{genre}**.
 
-This case study will be uploaded to Google's NotebookLM to generate a video discussion overview, so it must be professional, immersive, and lay out the characters, settings, manipulation details, or survival events in detail.
+This case study will be uploaded to Google's NotebookLM to generate an educational video discussion, so it must be professional, immersive, and lay out the characters, settings, and brilliant strategies in detail.
 
 PREMISE: "{premise}"
-Protagonist/Case: {protagonist}
-Core Psychological Conflict: {core_mystery}
+Protagonist/Genius: {protagonist}
+Core Strategy/Loophole: {core_mystery}
 Setting: {setting}
 {avoid_clause}
 
 ══ WRITING RULES (CRITICAL) ══
-1. LENGTH: Write a comprehensive, fully developed case study/story between 300 and 500 words. Do not make it a short script.
-2. DETAILS: Build a rich, highly specific scenario using third-person or second-person to immerse the reader. Detail the psychological methods used, the extreme physical survival stakes, or the bizarre details of the manipulation.
-3. COMMENT-DRIVING ENDING: Conclude the story with a shocking twist, an ethical question, or a mind-bending realization that will make viewers debate the morality or possibility of the case in the comments section.
-4. TONE: Objective, highly dramatic, suspenseful, and engaging.
+1. LENGTH: Write a comprehensive, fully developed true story between 300 and 500 words. Do not make it a short script.
+2. DETAILS: Build a rich scenario that explains exactly how the person outsmarted the system, found the loophole, or executed the brilliant strategy. Use facts, exact numbers, and historical context.
+3. COMMENT-DRIVING ENDING: Conclude the story with the clever aftermath or an inspiring realization that makes viewers want to share this incredible true story.
+4. TONE: Inspiring, catchy, clever, and highly engaging. NOT dark or criminal (focus on harmless capers, clever business, or legal loopholes).
 
 ══ OUTPUT FORMAT ══
 Respond ONLY with a strict JSON object (no markdown):
@@ -397,7 +406,7 @@ Respond ONLY with a strict JSON object (no markdown):
   "format": "psychology",
   "title": "Curiosity-gap case title (under 60 chars)",
   "description": "Intriguing one-liner description (under 100 chars)",
-  "hashtags": ["#shorts", "#psychology", "#darkpsychology", "#truecrime", "4 more tags"],
+  "hashtags": ["#shorts", "#genius", "#truestory", "#loophole", "4 more tags"],
   "script": "The complete, detailed 300-500 word story/case study.",
   "hook": "A 2-3 word punchy hook text for the title card",
   "pexels_keyword": "A highly descriptive visual B-roll prompt"
@@ -422,12 +431,12 @@ def generate_psychology(research: dict = None, retries: int = 3) -> dict:
     # Randomly select a psychology genre style for variety
     import random
     genres = [
-        "Dark Psychology Case Study", 
-        "Bizarre Real-Life Survival Story", 
-        "Mind-Bending Social Experiment", 
-        "Cold-Blooded Manipulation Case", 
-        "Unbelievable Imposter Story",
-        "Subconscious Brainwashing Case"
+        "Brilliant Legal Loophole", 
+        "Harmless Genius Caper", 
+        "Masterful Business Negotiation", 
+        "Outsmarting the System", 
+        "Unbelievable True Hustle",
+        "Historical Big Brain Moment"
     ]
     genre = random.choice(genres)
 
