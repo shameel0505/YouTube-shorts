@@ -289,14 +289,14 @@ Respond ONLY in valid JSON with no markdown:
 
 def research_thriller() -> dict:
     """
-    Fetch thriller/mystery/suspense premises from r/shortscarystories, r/twoSentenceHorror, and r/unresolvedmysteries.
+    Fetch historical events/butterfly effects from r/AskHistorians, r/todayilearned, and r/HistoryMemes.
     Returns a premise dict for use in generate_thriller().
     """
-    print("🔍 [FORMAT 2] Researching thriller premise...")
+    print("🔍 [FORMAT 2] Researching butterfly effect premise...")
 
-    print("   📡 Fetching mystery/horror subreddits top posts (week, 100+ upvotes)...")
+    print("   📡 Fetching history subreddits top posts (week, 100+ upvotes)...")
     posts = get_reddit_posts(
-        subreddits=["shortscarystories", "twoSentenceHorror", "unresolvedmysteries"],
+        subreddits=["AskHistorians", "todayilearned", "HistoryMemes"],
         sort="top",
         time_filter="week",
         limit=10,
@@ -307,28 +307,28 @@ def research_thriller() -> dict:
         if posts else "No high-engagement posts found — use your own premise."
     )
 
-    prompt = f"""You are a creative director for a popular single-episode YouTube Shorts mystery/thriller channel.
+    prompt = f"""You are a content strategist for a popular educational YouTube Shorts channel focused on "The Butterfly Effect".
 
 Below are top posts from relevant Reddit communities this week:
 
 {posts_str}
 
-Your task: identify or synthesize the single most tension-filled, mysterious, or suspenseful
+Your task: identify or synthesize the single most fascinating historical "Butterfly Effect"
 premise that can be told as a complete, catchy story in a single 40-50 second episode.
 
 Choose something with:
-- A clear protagonist and a fast setup
+- A clear historical figure and a fast setup
 - A catchy hook that instantly grabs attention
-- A twist, mystery, or chilling realization that resolves within the episode
+- A tiny, seemingly insignificant choice or event that snowballs into massive consequences
 - Highly visual setting that translates well to cinematic video
 
 Respond ONLY in valid JSON with no markdown:
 {{
-  "premise": "2-3 sentence story premise",
-  "protagonist": "character name and one-line description",
-  "core_mystery": "the central question or twist driving the story",
-  "setting": "vivid 1-sentence location/time description",
-  "genre_tags": ["thriller", "mystery", "suspense"],
+  "premise": "2-3 sentence story premise detailing the tiny choice and massive outcome",
+  "protagonist": "historical figure name and one-line description",
+  "core_mystery": "the tiny choice/mistake that caused the chain reaction",
+  "setting": "vivid 1-sentence historical location/time description",
+  "genre_tags": ["history", "butterfly effect", "educational"],
   "reddit_source": "subreddit and post title if adapted, or 'original'"
 }}"""
 
@@ -338,11 +338,11 @@ Respond ONLY in valid JSON with no markdown:
         return data
 
     return {
-        "premise": "A man buys an old mirror and notices his reflection is always lagging exactly one second behind him.",
-        "protagonist": "Liam — a collector of antiques",
-        "core_mystery": "What is the reflection trying to warn him about before it stops lagging?",
-        "setting": "A dimly lit bedroom, late night",
-        "genre_tags": ["thriller", "mystery", "suspense"],
+        "premise": "A frustrated artist gets rejected from an art academy, setting him on a political path that would ultimately ignite World War II.",
+        "protagonist": "Adolf Hitler — rejected art student",
+        "core_mystery": "How a single art school rejection letter led to the deadliest conflict in human history.",
+        "setting": "Academy of Fine Arts Vienna, 1907",
+        "genre_tags": ["history", "butterfly effect"],
         "reddit_source": "original",
     }
 
@@ -351,15 +351,15 @@ Respond ONLY in valid JSON with no markdown:
 
 def research_dilemma() -> dict:
     from memory.content_log import is_topic_used, _load_log
-    print("🔍 [FORMAT 3] Researching moral dilemma...")
+    print("🔍 [FORMAT 3] Researching cognitive bias / brain glitch...")
 
-    print("   📡 Fetching r/AmItheAsshole and r/AskReddit (week, 1000+ comments)...")
+    print("   📡 Fetching r/psychology and r/Glitch_in_the_Matrix (week, 100+ comments)...")
     posts = get_reddit_posts(
-        subreddits=["AmItheAsshole", "AskReddit"],
+        subreddits=["psychology", "neuroscience", "Glitch_in_the_Matrix"],
         sort="top",
         time_filter="week",
         limit=10,
-        min_comments=1000,
+        min_comments=100,
     )
     posts_str = (
         "\n".join([f"- [{p['comments']} comments | r/{p['subreddit']}] {p['title']}" for p in posts])
@@ -370,30 +370,30 @@ def research_dilemma() -> dict:
     used_dilemmas = [t["text"] for t in _load_log()["format3_dilemmas"]]
     used_str = "\n".join([f"- {t}" for t in used_dilemmas]) if used_dilemmas else "None"
 
-    base_prompt = f"""You are a content strategist for a moral dilemma YouTube Shorts channel.
+    base_prompt = f"""You are a content strategist for an educational cognitive science YouTube Shorts channel.
 
-Below are top posts from r/AmItheAsshole and r/AskReddit this week, sorted by debate intensity:
+Below are top posts from r/psychology and r/Glitch_in_the_Matrix this week:
 
 {posts_str}
 
-CRITICAL: DO NOT SELECT ANY OF THESE PREVIOUSLY USED DILEMMAS:
+CRITICAL: DO NOT SELECT ANY OF THESE PREVIOUSLY USED TOPICS:
 {used_str}
 
-Your task: identify the top 5 most universal, emotionally charged ethical conflicts.
-The ideal dilemmas:
-- Have no clear "correct" answer
-- Involve values like: fairness vs loyalty, honesty vs protection
+Your task: identify the top 5 most universal, fascinating "brain glitches" or cognitive biases.
+The ideal topics:
+- Are everyday phenomena everyone experiences but doesn't have a name for
+- Involve perception vs reality
 - Are vivid and specific
-- Would genuinely divide viewers 50/50
+- Would genuinely make viewers say "I do that all the time!"
 
 Respond ONLY in valid JSON with no markdown:
 [
   {{
-    "dilemma_seed": "2-3 sentence description of the specific situation",
-    "value_a": "first value at stake",
-    "value_b": "second value at stake",
-    "option_a": "one plausible choice",
-    "option_b": "the other plausible choice",
+    "dilemma_seed": "2-3 sentence description of the specific cognitive bias or brain glitch",
+    "value_a": "our perception",
+    "value_b": "the scientific reality",
+    "option_a": "how we think it works",
+    "option_b": "why our brain is actually fooling us",
     "closing_question": "Exact on-screen question — 6 words max, ends with ?",
     "reddit_source": "subreddit and post title if adapted, or 'original'"
   }},
@@ -411,24 +411,24 @@ Respond ONLY in valid JSON with no markdown:
 
     # Fallback if loop fails or exhausts options
     return [{
-        "dilemma_seed": "Your best friend confesses they cheated on their partner and asks you to keep it secret. You've known their partner for years.",
-        "value_a": "loyalty",
-        "value_b": "honesty",
-        "option_a": "Keep the secret to protect your friendship.",
-        "option_b": "Tell the partner — they deserve the truth.",
-        "closing_question": "What would you do?",
+        "dilemma_seed": "You learn a new word or buy a new car, and suddenly you see it absolutely everywhere. It feels like a simulation glitch, but it's actually the Baader-Meinhof phenomenon.",
+        "value_a": "perception",
+        "value_b": "reality",
+        "option_a": "The thing is actually appearing more often.",
+        "option_b": "Your brain just started paying attention to it.",
+        "closing_question": "Have you experienced this?",
         "reddit_source": "original",
     }]
 
 def research_psychology() -> dict:
     """
-    Fetch bizarre real-life stories, dark psychology cases, and social experiments from Reddit.
+    Fetch human ingenuity and genius loophole stories from Reddit.
     Returns a premise dict for use in generate_psychology().
     """
-    print("🔍 [FORMAT 4] Researching dark psychology / bizarre real-life premise...")
+    print("🔍 [FORMAT 4] Researching genius loopholes / human ingenuity...")
 
     posts = get_reddit_posts(
-        subreddits=["todayilearned", "bizarrelife", "TrueCrime", "psychology"],
+        subreddits=["interestingasfuck", "LifeProTips", "ActLikeYouBelong"],
         sort="top",
         time_filter="week",
         limit=10,
@@ -439,28 +439,29 @@ def research_psychology() -> dict:
         if posts else "No high-engagement posts found — use your own premise."
     )
 
-    prompt = f"""You are a creative director for a popular YouTube Shorts channel specializing in Dark Psychology, Social Experiments, and Bizarre Real-Life survival stories.
+    prompt = f"""You are a creative director for an educational YouTube Shorts channel specializing in Human Ingenuity, Brilliant Loopholes, and Outsmarting the System.
 
 Below are top posts from relevant Reddit communities this week:
 
 {posts_str}
 
-Your task: identify or synthesize the single most fascinating, hooking, or mind-bending
-dark psychology concept, strange social experiment, or survival event that can be told as a complete, catchy story in a single 40-50 second episode.
+Your task: identify or synthesize the single most fascinating, inspiring, or clever
+real-life story of extreme human ingenuity or a harmless genius caper.
 
 Choose something with:
-- An instant hook about human behavior, manipulation, or extreme survival
-- Deep psychological tension or an unbelievable real-world survival twist
+- An instant hook about a clever strategy, negotiation, or outsmarting a flawed system
+- Deep awe or respect for the genius of the protagonist
 - A visual setting that translates well to cinematic video
-- A conclusion that leaves viewers questioning human nature
+- A conclusion that makes viewers want to share the incredible story
+- STRICTLY NO dark true crime or malicious scams.
 
 Respond ONLY in valid JSON with no markdown:
 {{
-  "premise": "2-3 sentence case/story premise",
-  "protagonist": "protagonist name (e.g., the manipulator, experimenter, or survivor) and description",
-  "core_mystery": "the central psychological twist, manipulation trick, or survival anomaly",
-  "setting": "vivid 1-sentence location/time description (e.g., 'A high-security prison lab, 1971')",
-  "genre_tags": ["dark psychology", "manipulation", "survival", "experiment"],
+  "premise": "2-3 sentence case/story premise about the genius loophole or strategy",
+  "protagonist": "protagonist name and description",
+  "core_mystery": "the central clever trick, loophole, or brilliant strategy used",
+  "setting": "vivid 1-sentence location/time description",
+  "genre_tags": ["genius", "loophole", "truestory", "ingenuity"],
   "reddit_source": "subreddit and post title if adapted, or 'original'"
 }}"""
 
@@ -470,10 +471,10 @@ Respond ONLY in valid JSON with no markdown:
         return data
 
     return {
-        "premise": "An imposter successfully convinces an entire family he is their missing 16-year-old son, despite having different colored eyes and a French accent.",
-        "protagonist": "Frédéric Bourdin — a serial impostor",
-        "core_mystery": "How a master manipulator leveraged the family's grief to blind them to the obvious physical differences.",
-        "setting": "A quiet suburban home in Texas, 1997",
-        "genre_tags": ["manipulation", "psychology", "imposter"],
+        "premise": "A man figures out a legal loophole to buy a lifetime first-class pass for an airline and flies around the world for decades completely free.",
+        "protagonist": "Jacques Vabre — professional loophole finder",
+        "core_mystery": "How he carefully read the fine print of a 1981 airline promotion to get $20 million worth of flights.",
+        "setting": "First Class Lounge, American Airlines, 1981",
+        "genre_tags": ["loophole", "truestory", "genius"],
         "reddit_source": "original"
     }

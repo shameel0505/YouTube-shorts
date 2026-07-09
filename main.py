@@ -240,7 +240,7 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
             log("⏭️  Format 2 already uploaded today. Skipping.", fmt)
             return {"format": 2, "skipped": True}
 
-    log(f"🚀 Starting Single-Episode Thriller | upload: {upload} | attempt: {attempt}", fmt)
+    log(f"🚀 Starting The Butterfly Effect | upload: {upload} | attempt: {attempt}", fmt)
 
     if attempt == 1 and not resume:
         _clean_temp_for_format(2)
@@ -375,7 +375,7 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
             log("⏭️  Format 3 already uploaded today. Skipping.", fmt)
             return {"format": 3, "skipped": True}
 
-    log(f"🚀 Starting Moral Dilemma | upload: {upload} | attempt: {attempt}", fmt)
+    log(f"🚀 Starting Everyday Brain Glitches | upload: {upload} | attempt: {attempt}", fmt)
 
     if attempt == 1 and not resume:
         _clean_temp_for_format(3)
@@ -521,7 +521,7 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
             log("⏭️  Format 4 already uploaded today. Skipping.", fmt)
             return {"format": 4, "skipped": True}
 
-    log(f"🚀 Starting Dark Psychology Case study | upload: {upload} | attempt: {attempt}", fmt)
+    log(f"🚀 Starting Genius Loopholes Case study | upload: {upload} | attempt: {attempt}", fmt)
 
     if attempt == 1 and not resume:
         _clean_temp_for_format(4)
@@ -777,7 +777,7 @@ def run_scheduler():
     scheduler.add_job(
         func=lambda: run_format4(upload=True),
         trigger="cron", hour=FORMAT3_SCHEDULE_HOUR, minute=30,
-        id="format4_daily", name="Format 4 — Dark Psychology",
+        id="format4_daily", name="Format 4 — Genius Loopholes",
         misfire_grace_time=3600,
     )
     
