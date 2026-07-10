@@ -266,7 +266,7 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
                 with open(script_path) as f:
                     cached_data = json.load(f)
                 from memory.content_log import is_topic_used
-                if is_topic_used(cached_data.get("title", ""), 2):
+                if is_topic_used(cached_data.get("used_topic_seed", cached_data.get("title", "")), 2):
                     log("♻️  Cached script is stale (already uploaded previously). Wiping temp to recreate...", fmt)
                     _clean_temp_for_format(2)
                 else:
@@ -325,7 +325,7 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
             from memory.content_log import add_used_topic
             if "video_id" in result:
                 log_upload(result["video_id"], 2, script_data["title"], script_data["hook"])
-            add_used_topic(script_data["title"], 2)
+            add_used_topic(script_data.get("used_topic_seed", script_data["title"]), 2)
             
             from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
             if IG_ACCESS_TOKEN and IG_ACCOUNT_ID:
@@ -545,7 +545,7 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
                 with open(script_path) as f:
                     cached_data = json.load(f)
                 from memory.content_log import is_topic_used
-                if is_topic_used(cached_data.get("title", ""), 4):
+                if is_topic_used(cached_data.get("used_topic_seed", cached_data.get("title", "")), 4):
                     log("♻️  Cached script is stale (already uploaded previously). Wiping temp to recreate...", fmt)
                     _clean_temp_for_format(4)
                 else:
@@ -604,7 +604,7 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
             from memory.content_log import add_used_topic
             if "video_id" in result:
                 log_upload(result["video_id"], 4, script_data["title"], script_data.get("hook", ""))
-            add_used_topic(script_data["title"], 4)
+            add_used_topic(script_data.get("used_topic_seed", script_data["title"]), 4)
             
             from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
             if IG_ACCESS_TOKEN and IG_ACCOUNT_ID:

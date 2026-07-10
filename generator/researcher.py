@@ -307,11 +307,18 @@ def research_thriller() -> dict:
         if posts else "No high-engagement posts found — use your own premise."
     )
 
+    from memory.content_log import _load_log
+    used_topics = [t["text"] for t in _load_log()["format2_titles"]]
+    used_str = "\n".join([f"- {t}" for t in used_topics]) if used_topics else "None"
+
     prompt = f"""You are a content strategist for a popular educational YouTube Shorts channel focused on "The Butterfly Effect".
 
 Below are top posts from relevant Reddit communities this week:
 
 {posts_str}
+
+CRITICAL: DO NOT SELECT OR ADAPT ANY OF THESE PREVIOUSLY USED PREMISES:
+{used_str}
 
 Your task: identify or synthesize the single most fascinating historical "Butterfly Effect"
 premise that can be told as a complete, catchy story in a single 40-50 second episode.
@@ -439,11 +446,18 @@ def research_psychology() -> dict:
         if posts else "No high-engagement posts found — use your own premise."
     )
 
+    from memory.content_log import _load_log
+    used_topics = [t["text"] for t in _load_log()["format4_cases"]]
+    used_str = "\n".join([f"- {t}" for t in used_topics]) if used_topics else "None"
+
     prompt = f"""You are a creative director for an educational YouTube Shorts channel specializing in Human Ingenuity, Brilliant Loopholes, and Outsmarting the System.
 
 Below are top posts from relevant Reddit communities this week:
 
 {posts_str}
+
+CRITICAL: DO NOT SELECT OR ADAPT ANY OF THESE PREVIOUSLY USED PREMISES:
+{used_str}
 
 Your task: identify or synthesize the single most fascinating, inspiring, or clever
 real-life story of extreme human ingenuity or a harmless genius caper.

@@ -314,6 +314,7 @@ def generate_thriller(research: dict = None, retries: int = 3) -> dict:
     )
     
     # Save the premise/title to prevent repetition in future runs
+    data["used_topic_seed"] = premise
     _save_used_topic(data.get("title", premise))
     
     print(f"✅ [FORMAT 2] Single-Episode Thriller Script ({genre}): '{data.get('title')}'")
@@ -456,6 +457,7 @@ def generate_psychology(research: dict = None, retries: int = 3) -> dict:
     )
     
     # Save the premise/title to prevent repetition in future runs
+    data["used_topic_seed"] = premise
     _save_used_topic(data.get("title", premise))
     
     print(f"✅ [FORMAT 4] Dark Psychology Case study ({genre}): '{data.get('title')}'")
