@@ -346,5 +346,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "U4skP1mDZP8",
+        "format": 1,
+        "topic": "Quantum entanglement allows two particles to be linked in such a way that measuring one instantaneously affects the other, no matter the distance, appearing to 'communicate' faster than light. Einstein called this 'spooky action at a distance.'",
+        "hook": "Original (Physics)",
+        "upload_time": "2026-07-10T11:40:39.134388+00:00",
+        "check_time": "2026-07-11T11:40:39.134388+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "Cfg1QcGMWSI",
+        "format": 2,
+        "topic": "The Turn That Unlocked Armageddon",
+        "hook": "Fatal Turn",
+        "upload_time": "2026-07-10T11:43:40.616536+00:00",
+        "check_time": "2026-07-11T11:43:40.616536+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "e5nV05Uz85Q",
+        "format": 3,
+        "topic": "Why do we often feel like everyone is watching and judging our every small flaw or mistake, when they're likely not paying much attention?",
+        "hook": "Are they really watching you?",
+        "upload_time": "2026-07-10T11:47:27.016704+00:00",
+        "check_time": "2026-07-11T11:47:27.016704+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "kPJvBaTFOL8",
+        "format": 4,
+        "topic": "The Red Paperclip's Impossible Ascent to a Home",
+        "hook": "Trade Up!",
+        "upload_time": "2026-07-10T11:49:17.917548+00:00",
+        "check_time": "2026-07-11T11:49:17.917548+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]

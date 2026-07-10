@@ -31,6 +31,10 @@
         {
             "text": "The immortal jellyfish, Turritopsis dohrnii, can revert to an earlier life stage after reaching maturity, effectively cheating death and making it biologically immortal.",
             "date": "2026-07-09T13:04:40.639000"
+        },
+        {
+            "text": "Quantum entanglement allows two particles to be linked in such a way that measuring one instantaneously affects the other, no matter the distance, appearing to 'communicate' faster than light. Einstein called this 'spooky action at a distance.'",
+            "date": "2026-07-10T11:40:39.135049"
         }
     ],
     "format2_titles": [
@@ -45,6 +49,10 @@
         {
             "text": "The Wrong Turn That Broke the World",
             "date": "2026-07-09T13:07:57.585987"
+        },
+        {
+            "text": "The Turn That Unlocked Armageddon",
+            "date": "2026-07-10T11:43:40.617278"
         }
     ],
     "format3_dilemmas": [
@@ -79,6 +87,10 @@
         {
             "text": "You learn about a new word or concept, and suddenly you start encountering it everywhere, making you wonder if it's appearing more often. Your brain just became aware of it, so it's noticing what was always there.",
             "date": "2026-07-09T13:12:39.073613"
+        },
+        {
+            "text": "Why do we often feel like everyone is watching and judging our every small flaw or mistake, when they're likely not paying much attention?",
+            "date": "2026-07-10T11:47:27.017491"
         }
     ],
     "format4_cases": [
@@ -89,6 +101,10 @@
         {
             "text": "The Economist Who Cracked the Lottery Code",
             "date": "2026-07-09T13:16:41.159368"
+        },
+        {
+            "text": "The Red Paperclip's Impossible Ascent to a Home",
+            "date": "2026-07-10T11:49:17.918772"
         }
     ]
 }
