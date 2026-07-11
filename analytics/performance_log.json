@@ -394,5 +394,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "R_w7ARcfGN8",
+        "format": 1,
+        "topic": "On gas giants like Jupiter and Saturn, scientists believe it literally rains diamonds. Extreme atmospheric pressures crush carbon into solid diamonds that then fall through the atmosphere like hailstones.",
+        "hook": "Original",
+        "upload_time": "2026-07-11T18:47:46.446795+00:00",
+        "check_time": "2026-07-12T18:47:46.446795+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "Piyz6dQ0kDU",
+        "format": 2,
+        "topic": "The Wrong Turn That Ignited a World",
+        "hook": "Turn of Fate",
+        "upload_time": "2026-07-11T18:50:25.111931+00:00",
+        "check_time": "2026-07-12T18:50:25.111931+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "XK4jxAFutkY",
+        "format": 3,
+        "topic": "After a major event, like a surprising election result or a sports upset, you find yourself thinking, \"I knew that was going to happen all along!\" Your brain unconsciously re-writes your past predictions to match the outcome.",
+        "hook": "Did you *really* know it?",
+        "upload_time": "2026-07-11T18:53:36.570006+00:00",
+        "check_time": "2026-07-12T18:53:36.570006+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "x5_Xz0Wl5fY",
+        "format": 4,
+        "topic": "The Forgotten $7.50 That Built an Empire",
+        "hook": "Tax Lien Tycoon",
+        "upload_time": "2026-07-11T18:57:06.306109+00:00",
+        "check_time": "2026-07-12T18:57:06.306109+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
