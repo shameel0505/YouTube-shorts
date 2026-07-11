@@ -745,8 +745,7 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
 
     log(f"✅ All-format run complete. {quota_tracker.status()}")
     if pipeline_has_errors:
-        import sys
-        sys.exit(1)
+        raise RuntimeError("One or more formats failed completely.")
     return results
 
 
