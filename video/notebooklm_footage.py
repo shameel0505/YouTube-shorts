@@ -102,7 +102,12 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool) -> s
         async with NotebookLMClient.from_storage() as client:
             notebook_id = state.get("notebook_id")
             task_id = state.get("task_id")
-            output_file = state.get("output_file")
+            # Reconstruct the absolute path for cross-environment compatibility (Mac -> Linux)
+            saved_output_file = state.get("output_file")
+            if saved_output_file:
+                output_file = os.path.join(os.path.dirname(TEMP_DIR), "memory", os.path.basename(saved_output_file))
+            else:
+                output_file = None
 
             # If we aren't resuming or don't have a valid state, start fresh
             if not notebook_id or not task_id:
