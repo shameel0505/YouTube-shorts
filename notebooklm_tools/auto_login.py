@@ -13,72 +13,6 @@ import pyotp
 
 load_dotenv()
 
-def create_proxy_extension(proxy_url: str, dest_path: str):
-    """
-    Chromium does not support authenticated proxies via command line arguments.
-    We must dynamically generate a Chrome extension to supply the proxy credentials.
-    """
-    parsed = urlparse(proxy_url)
-    
-    manifest_json = """
-    {
-        "version": "1.0.0",
-        "manifest_version": 2,
-        "name": "Chrome Proxy",
-        "permissions": [
-            "proxy",
-            "tabs",
-            "unlimitedStorage",
-            "storage",
-            "<all_urls>",
-            "webRequest",
-            "webRequestBlocking"
-        ],
-        "background": {
-            "scripts": ["background.js"]
-        },
-        "minimum_chrome_version":"22.0.0"
-    }
-    """
-
-    background_js = f"""
-    var config = {{
-            mode: "fixed_servers",
-            rules: {{
-            singleProxy: {{
-                scheme: "http",
-                host: "{parsed.hostname}",
-                port: parseInt({parsed.port})
-            }},
-            bypassList: ["localhost"]
-            }}
-        }};
-
-    chrome.proxy.settings.set({{value: config, scope: "regular"}}, function() {{}});
-
-    function callbackFn(details) {{
-        return {{
-            authCredentials: {{
-                username: "{parsed.username}",
-                password: "{parsed.password}"
-            }}
-        }};
-    }}
-
-    chrome.webRequest.onAuthRequired.addListener(
-                callbackFn,
-                {{urls: ["<all_urls>"]}},
-                ['blocking']
-    );
-    """
-    
-    os.makedirs(dest_path, exist_ok=True)
-    with open(os.path.join(dest_path, "manifest.json"), "w") as f:
-        f.write(manifest_json)
-    with open(os.path.join(dest_path, "background.js"), "w") as f:
-        f.write(background_js)
-    return dest_path
-
 def run_login():
     email = os.environ.get("GOOGLE_EMAIL")
     password = os.environ.get("GOOGLE_PASSWORD")
@@ -97,13 +31,6 @@ def run_login():
     options.add_argument('--use-mock-keychain')
     # Completely disable WebAuthn so Google doesn't even try to ask for a passkey or phone prompt!
     options.add_argument('--disable-features=WebAuthentication')
-    
-    proxy_url = os.environ.get("WEBSHARE_PROXY")
-    if proxy_url:
-        print(f"🛡️ Configuring Chrome to tunnel through Webshare Proxy...")
-        proxy_ext_dir = os.path.join(os.getcwd(), "proxy_auth_extension")
-        create_proxy_extension(proxy_url, proxy_ext_dir)
-        options.add_argument(f"--load-extension={proxy_ext_dir}")
 
     # We use a custom user data dir so cookies persist naturally in selenium too
     user_data_dir = Path.home() / ".notebooklm" / "chrome_profile"
