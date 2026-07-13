@@ -39,6 +39,10 @@
         {
             "text": "On gas giants like Jupiter and Saturn, scientists believe it literally rains diamonds. Extreme atmospheric pressures crush carbon into solid diamonds that then fall through the atmosphere like hailstones.",
             "date": "2026-07-11T18:47:46.448185"
+        },
+        {
+            "text": "When you 'touch' an object, your atoms never actually make contact with its atoms; the electrons repel each other due to the electromagnetic force, meaning you're always levitating slightly above everything you perceive to touch.",
+            "date": "2026-07-13T12:32:25.315742"
         }
     ],
     "format2_titles": [
@@ -65,6 +69,10 @@
         {
             "text": "In 1928, Alexander Fleming, a notoriously untidy bacteriologist, left a petri dish of staphylococcus cultures uncovered near an open window before going on holiday. A single mold spore drifted in, accidentally creating a zone free of bacteria. This tiny lapse in lab hygiene sparked the antibiotic revolution, saving countless lives and fundamentally altering human health and the course of modern medicine.",
             "date": "2026-07-12T18:38:19.747906"
+        },
+        {
+            "text": "Johannes Gutenberg's seemingly minor technical choice to develop and use a specialized oil-based ink, rather than the common water-based inks of the time, for his printing press was crucial. This innovation allowed for sharp, lasting impressions on paper, transforming the press from a niche tool into a world-changing engine for mass communication, igniting the Reformation, the Scientific Revolution, and universal literacy.",
+            "date": "2026-07-13T12:35:01.249561"
         }
     ],
     "format3_dilemmas": [
@@ -111,6 +119,10 @@
         {
             "text": "You see an item marked 'originally $200, now $50.' Even if you know $50 is a fair price, the perceived 'deal' of saving $150 makes it feel more valuable. Your brain anchors to the initial higher number.",
             "date": "2026-07-12T18:40:44.378586"
+        },
+        {
+            "text": "After seeing a dramatic news report about a plane crash, you feel more anxious about flying, even though statistically, driving is far more dangerous. Your brain relies on easily recalled, vivid examples.",
+            "date": "2026-07-13T12:37:29.179474"
         }
     ],
     "format4_cases": [
@@ -133,6 +145,10 @@
         {
             "text": "Uncover the incredible true story of David Phillips, a civil engineer who turned a mundane grocery store promotion into a lifetime of free flights. By meticulously calculating and executing a brilliant loophole, he transformed thousands of pudding cups into millions of frequent flyer miles.",
             "date": "2026-07-12T18:44:25.161400"
+        },
+        {
+            "text": "A daring former British army major transforms an abandoned WWII sea fort in international waters into his own sovereign nation, the Principality of Sealand, by exploiting a legal grey area. He defies challenges from the British government and even survives an armed coup, all to establish the world's most resilient micro-nation.",
+            "date": "2026-07-13T12:40:01.616108"
         }
     ]
 }

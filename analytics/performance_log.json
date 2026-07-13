@@ -478,5 +478,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "Qque_Y_Hl64",
+        "format": 1,
+        "topic": "When you 'touch' an object, your atoms never actually make contact with its atoms; the electrons repel each other due to the electromagnetic force, meaning you're always levitating slightly above everything you perceive to touch.",
+        "hook": "Original",
+        "upload_time": "2026-07-13T12:32:25.314857+00:00",
+        "check_time": "2026-07-14T12:32:25.314857+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "HJiLngRbkK4",
+        "format": 2,
+        "topic": "The Invisible Ink That Changed the World",
+        "hook": "INK'S HIDDEN POWER",
+        "upload_time": "2026-07-13T12:35:01.248657+00:00",
+        "check_time": "2026-07-14T12:35:01.248657+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "fkTNowObNkU",
+        "format": 3,
+        "topic": "After seeing a dramatic news report about a plane crash, you feel more anxious about flying, even though statistically, driving is far more dangerous. Your brain relies on easily recalled, vivid examples.",
+        "hook": "Fear vs. Actual Risk?",
+        "upload_time": "2026-07-13T12:37:29.178538+00:00",
+        "check_time": "2026-07-14T12:37:29.178538+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "-8qncR6RHls",
+        "format": 4,
+        "topic": "Sealand: The Fort That Became a Nation",
+        "hook": "Defy Boundaries.",
+        "upload_time": "2026-07-13T12:40:01.615155+00:00",
+        "check_time": "2026-07-14T12:40:01.615155+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
