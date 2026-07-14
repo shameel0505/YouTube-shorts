@@ -12,3 +12,5 @@ client_secret.json
 *.mp4
 gameplay/
 assets/
+
+experiments/
