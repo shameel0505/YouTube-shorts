@@ -235,12 +235,12 @@ def research_topic(niche: str = None) -> dict:
 
     base_prompt = f"""You are a research analyst for a viral YouTube Shorts channel about: {niche}
 
-Goal: find the single most mind-blowing, counterintuitive, or little-known fact/story that
-would stop a finger from scrolling in the first 2 seconds.
+Goal: find highly engaging, fascinating facts or stories that would stop a finger from scrolling in the first 2 seconds.
 
-STRICT FILTER: Choose topics that produce awe, surprise, or shock.
-Do NOT pick purely informational, political, or news-cycle content.
-The ideal topic makes a viewer say "wait, WHAT?!" — not just "oh interesting."
+STRICT FILTER: Choose topics that evoke strong emotions—whether that is awe, deep curiosity, shock, or inspiration. 
+Focus on stories that feel shareable and resonate with human nature. 
+Do NOT pick purely dry, informational, political, or news-cycle content.
+The ideal topic makes a viewer deeply invested in the outcome or implication.
 
 CRITICAL: DO NOT SELECT ANY OF THESE PREVIOUSLY USED TOPICS:
 {used_str}

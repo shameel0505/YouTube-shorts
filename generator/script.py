@@ -24,8 +24,7 @@ _TTS_RULES = """
 ══ UNIVERSAL TTS WRITING RULES (CRITICAL — apply to every word) ══
 These rules exist because this script will be spoken by a TTS voice, not read.
 
-1. OPEN LOOP: The very first sentence must create an unanswered question or curiosity gap.
-   NEVER open with context, background, or introduction.
+1. OPEN LOOP: The beginning of the video must immediately hook the viewer with a strong curiosity gap, a bold claim, or an intriguing question. Feel free to experiment with different, creative ways to start without being formulaic.
 
 2. PATTERN INTERRUPT every 5-7 seconds: a surprising reveal, a tonal shift,
    new info that raises the stakes, or an abrupt cut in pacing.
@@ -33,8 +32,7 @@ These rules exist because this script will be spoken by a TTS voice, not read.
 3. END on a hard cliffhanger, a direct question to the viewer, or a strong emotional payoff.
    Weak endings kill replays.
 
-4. SENTENCE LENGTH: 8-10 words maximum at moments of tension. Shorter = more powerful.
-   One idea per sentence. Period. Like this.
+4. SENTENCE LENGTH: Vary your sentence length naturally. Use short, punchy sentences at moments of tension, and allow for slightly longer, descriptive sentences during storytelling to create a dynamic rhythm.
 
 5. TEXT PAUSES: Insert ", ..." before major reveals to trigger Kokoro's natural pause.
    Example: "She opened the door, ... and the room was empty."
