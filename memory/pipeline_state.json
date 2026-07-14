@@ -1,11 +1,11 @@
 {
     "current_day": "2026-07-14",
-    "status": "running",
+    "status": "skipped",
     "mode": "fresh",
     "started_at": "2026-07-14T09:44:02.375854+00:00",
     "posted_at": null,
-    "last_updated": "2026-07-14T09:46:40.704860+00:00",
+    "last_updated": "2026-07-14T10:25:32.875974+00:00",
     "active_render": true,
-    "last_error": null,
+    "last_error": "Resume completed but no format was uploaded.",
     "retry_count": 2
 }
