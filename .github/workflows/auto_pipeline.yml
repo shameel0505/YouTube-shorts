@@ -44,8 +44,6 @@ jobs:
     - name: Run Resume Check
       run: |
         source .env
-        export HTTPS_PROXY=$WEBSHARE_PROXY
-        export HTTP_PROXY=$WEBSHARE_PROXY
         echo "⏳ Checking for active renders to resume..."
         python -u main.py run --resume-check --format all
 
