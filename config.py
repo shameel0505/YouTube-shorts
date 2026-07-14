@@ -48,10 +48,10 @@ VIDEO_FPS             = 30
 # ── Final export settings (change here, never in editor code) ─────────────────
 VIDEO_CODEC           = "libx264"
 AUDIO_CODEC           = "aac"
-VIDEO_BITRATE         = "8000k"
+VIDEO_BITRATE         = "12000k"
 AUDIO_BITRATE         = "192k"
 VIDEO_MIN_FPS         = 30
-EXPORT_PRESET         = "fast"
+EXPORT_PRESET         = "medium"
 EXPORT_THREADS        = 4
 
 # Caption appearance

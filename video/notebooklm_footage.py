@@ -68,7 +68,7 @@ async def _upscale_video(file_path: str):
         "ffmpeg", "-y", "-i", file_path,
         "-vf", "scale=1080:1920:flags=lanczos",
         "-c:v", "libx264",
-        "-preset", "ultrafast",
+        "-preset", "medium",
         "-crf", "18",
         "-c:a", "copy",
         temp_upscaled
