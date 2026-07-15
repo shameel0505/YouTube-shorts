@@ -526,5 +526,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "HZ2wyx_jkBU",
+        "format": 1,
+        "topic": "Octopuses are so incredibly intelligent and their biology so alien\u2014with three hearts, blue blood, and brains wrapped around their esophagus\u2014that scientists often refer to them as the closest thing we have to an extraterrestrial on Earth.",
+        "hook": "Original",
+        "upload_time": "2026-07-15T11:21:01.259960+00:00",
+        "check_time": "2026-07-16T11:21:01.259960+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "e-R1V6LkLhc",
+        "format": 2,
+        "topic": "Napoleon's Waterloo: A Tiny Pain, A Global Fall",
+        "hook": "Agony's Defeat",
+        "upload_time": "2026-07-15T11:23:02.263705+00:00",
+        "check_time": "2026-07-16T11:23:02.263705+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "XQ5u0ADhEog",
+        "format": 3,
+        "topic": "You have a strong belief about a topic, like a certain diet or political issue. When searching for information, you mostly notice and remember articles or comments that agree with your existing viewpoint, reinforcing your original conviction.",
+        "hook": "Seeking truth or comfort?",
+        "upload_time": "2026-07-15T11:27:59.397949+00:00",
+        "check_time": "2026-07-16T11:27:59.397949+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "ipGBskw05ns",
+        "format": 4,
+        "topic": "Samoa's Leap: The Day a Nation Skipped Time",
+        "hook": "Time Jump Nation",
+        "upload_time": "2026-07-15T11:30:25.848916+00:00",
+        "check_time": "2026-07-16T11:30:25.848916+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
