@@ -574,5 +574,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "DUf1hGzHB4g",
+        "format": 1,
+        "topic": "If you were to fall into a black hole, from your perspective, you'd reach the singularity quickly. But from an outside observer's perspective, you'd appear to slow down and freeze at the event horizon, never actually crossing it due to extreme time dilation.",
+        "hook": "Original",
+        "upload_time": "2026-07-16T11:02:22.629863+00:00",
+        "check_time": "2026-07-17T11:02:22.629863+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "_ZjjJMdkrJs",
+        "format": 2,
+        "topic": "The Rejected Canvas: How Art School Changed History",
+        "hook": "Art School Rejected Him...",
+        "upload_time": "2026-07-16T11:05:59.128058+00:00",
+        "check_time": "2026-07-17T11:05:59.128058+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "C9mHZwYFGAo",
+        "format": 3,
+        "topic": "You feel a headache coming on, so you take a painkiller and start feeling better almost immediately. Later, you realize you accidentally took a sugar pill, but your pain still decreased.",
+        "hook": "Does belief make it real?",
+        "upload_time": "2026-07-16T11:10:05.243081+00:00",
+        "check_time": "2026-07-17T11:10:05.243081+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "92YWBQjgjkQ",
+        "format": 4,
+        "topic": "The Dad Who Claimed a Nation for His Daughter",
+        "hook": "Dad's Kingdom",
+        "upload_time": "2026-07-16T11:13:08.127823+00:00",
+        "check_time": "2026-07-17T11:13:08.127823+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
