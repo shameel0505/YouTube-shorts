@@ -622,5 +622,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "beOkCnzFOk8",
+        "format": 1,
+        "topic": "There are creatures called tardigrades, or 'water bears', that can survive conditions that would instantly kill almost any other life form, including the vacuum of space, extreme radiation, and temperatures from near absolute zero to over 300\u00b0F, by entering a state of suspended animation.",
+        "hook": "Original",
+        "upload_time": "2026-07-17T11:53:11.223715+00:00",
+        "check_time": "2026-07-18T11:53:11.223715+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "E3HhelEu37g",
+        "format": 2,
+        "topic": "Caesar's Fatal Choice: The Republic's Last Breath",
+        "hook": "Beware the Ides?",
+        "upload_time": "2026-07-17T11:55:01.927537+00:00",
+        "check_time": "2026-07-18T11:55:01.927537+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "FLTRX3940hs",
+        "format": 3,
+        "topic": "You spend time assembling furniture or baking a cake yourself. Even if it's imperfect, you feel a disproportionate sense of pride and value it more than a professionally made version.",
+        "hook": "Love things we make?",
+        "upload_time": "2026-07-17T11:56:53.713372+00:00",
+        "check_time": "2026-07-18T11:56:53.713372+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "aQ__T1a6G1Y",
+        "format": 4,
+        "topic": "The Shed That Fooled London's Food Scene",
+        "hook": "Shed. #1. London.",
+        "upload_time": "2026-07-17T11:58:59.350947+00:00",
+        "check_time": "2026-07-18T11:58:59.350947+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
