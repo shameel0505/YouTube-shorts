@@ -117,24 +117,24 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool) -> s
                 if fmt == 1:
                     topic = script_data.get("chosen_topic", "Science and facts")
                     instructions = (
-                        f"Act as a highly creative video editor. For this video, invent a unique, engaging visual style and pacing that perfectly matches the subject matter: {topic}. "
+                        f"Act as a highly creative video editor. For this video, invent a unique, cinematic, and engaging visual style and pacing that perfectly matches the subject matter: {topic}. "
                         f"Optimize the layout for vertical 9:16 mobile screens (Shorts/Reels) and ensure the visuals and subtitles are dynamic to retain attention, experimenting freely with mood and artistic direction."
                     )
                 elif fmt == 2:
                     instructions = (
-                        "Act as a highly creative video editor. For this uploaded story, invent a unique, engaging visual style and pacing that perfectly matches the subject matter. "
+                        "Act as a highly creative video editor. For this uploaded story, invent a unique, cinematic, and engaging visual style and pacing that perfectly matches the subject matter. "
                         "Optimize the layout for vertical 9:16 mobile screens (Shorts/Reels) and ensure the visuals and subtitles are dynamic to retain attention, experimenting freely with mood and artistic direction."
                     )
                 elif fmt == 3:
                     topic = script_data.get("dilemma_seed", "Moral dilemma")
                     instructions = (
-                        f"Act as a highly creative video editor. For this moral dilemma, invent a unique, engaging visual style and pacing that perfectly matches the subject matter: {topic}. "
+                        f"Act as a highly creative video editor. For this moral dilemma, invent a unique, cinematic, and engaging visual style and pacing that perfectly matches the subject matter: {topic}. "
                         f"Optimize the layout for vertical 9:16 mobile screens (Shorts/Reels) and ensure the visuals and subtitles are dynamic to retain attention, experimenting freely with mood and artistic direction."
                     )
                 else:
                     topic = script_data.get("title", "Dark psychology case")
                     instructions = (
-                        f"Act as a highly creative video editor. For this dark psychology case, invent a unique, engaging visual style and pacing that perfectly matches the subject matter: {topic}. "
+                        f"Act as a highly creative video editor. For this dark psychology case, invent a unique, cinematic, and engaging visual style and pacing that perfectly matches the subject matter: {topic}. "
                         f"Optimize the layout for vertical 9:16 mobile screens (Shorts/Reels) and ensure the visuals and subtitles are dynamic to retain attention, experimenting freely with mood and artistic direction."
                     )
 
