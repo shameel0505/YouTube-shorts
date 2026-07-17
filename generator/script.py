@@ -78,22 +78,18 @@ _REHOOK_LINES = [
 
 def _load_used_topics() -> list:
     try:
-        with open(_USED_TOPICS_FILE, "r") as f:
-            return json.load(f)
+        import os
+        import json
+        path = os.path.join(os.path.dirname(__file__), "..", "memory", "used_topics.json")
+        with open(path, "r") as f:
+            data = json.load(f)
+        all_topics = []
+        for k, v in data.items():
+            if isinstance(v, list):
+                all_topics.extend([t.get("text", "") for t in v if isinstance(t, dict)])
+        return all_topics
     except Exception:
         return []
-
-
-def _save_used_topic(topic: str):
-    topics = _load_used_topics()
-    topics.append(topic)
-    topics = topics[-200:]
-    os.makedirs("./temp", exist_ok=True)
-    try:
-        with open(_USED_TOPICS_FILE, "w") as f:
-            json.dump(topics, f)
-    except Exception:
-        pass
 
 
 def _call_gemini_for_script(prompt: str, required_keys: list, retries: int = 3) -> dict:
@@ -210,14 +206,14 @@ def generate_script(niche: str = None, research: dict = None, retries: int = 3) 
         if recent else ""
     )
 
-    if research and research.get("chosen_topic"):
+    if research and research.get("text"):
         facts = research.get("key_facts", [])
         key_facts_str = "".join([f"  • {f}\n" for f in facts]) if facts else "  • Use verified supporting facts\n"
         prompt = _F1_PROMPT.format(
             niche=niche,
-            research_topic=research["chosen_topic"],
+            research_topic=research["text"],
             key_facts=key_facts_str,
-            hook_angle=research.get("hook_angle", "Start with the most surprising fact"),
+            hook_angle=research.get("source", "Start with the most surprising fact"),
             avoid_clause=avoid_clause,
         )
     else:
@@ -232,8 +228,7 @@ def generate_script(niche: str = None, research: dict = None, retries: int = 3) 
 
     if research and research.get("pexels_keyword") and len(data.get("pexels_keyword", "")) < 3:
         data["pexels_keyword"] = research["pexels_keyword"]
-    if data.get("topic"):
-        _save_used_topic(data["topic"])
+    
     print(f"✅ [FORMAT 1] Comprehensive Article: '{data['title']}'")
     return data
 
@@ -313,7 +308,6 @@ def generate_thriller(research: dict = None, retries: int = 3) -> dict:
     
     # Save the premise/title to prevent repetition in future runs
     data["used_topic_seed"] = premise
-    _save_used_topic(data.get("title", premise))
     
     print(f"✅ [FORMAT 2] Single-Episode Thriller Script ({genre}): '{data.get('title')}'")
     return data
@@ -456,7 +450,6 @@ def generate_psychology(research: dict = None, retries: int = 3) -> dict:
     
     # Save the premise/title to prevent repetition in future runs
     data["used_topic_seed"] = premise
-    _save_used_topic(data.get("title", premise))
     
     print(f"✅ [FORMAT 4] Dark Psychology Case study ({genre}): '{data.get('title')}'")
     return data
