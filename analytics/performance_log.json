@@ -670,5 +670,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "0GJSIn5ngSU",
+        "format": 1,
+        "topic": "Some species of male anglerfish literally fuse with the female, becoming a permanent, parasitic sperm-producing appendage for the rest of her life.",
+        "hook": "Original",
+        "upload_time": "2026-07-18T11:35:47.928015+00:00",
+        "check_time": "2026-07-19T11:35:47.928015+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "0GnDxymcSPo",
+        "format": 2,
+        "topic": "The Guarded Secret That Fed a Nation",
+        "hook": "Forbidden Spuds",
+        "upload_time": "2026-07-18T11:39:06.006932+00:00",
+        "check_time": "2026-07-19T11:39:06.006932+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "SSOnTSLtXL4",
+        "format": 3,
+        "topic": "You've invested significant time or money into a project, relationship, or activity that's clearly failing or unenjoyable. You feel compelled to continue because of what you've already put in, even if cutting your losses would be more rational.",
+        "hook": "Should you just quit?",
+        "upload_time": "2026-07-18T11:40:53.215267+00:00",
+        "check_time": "2026-07-19T11:40:53.215267+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "AwiXImJvfe8",
+        "format": 4,
+        "topic": "The Brick That Traveled The U.S. Mail Unpackaged",
+        "hook": "Unpackaged Brick?",
+        "upload_time": "2026-07-18T11:44:25.731828+00:00",
+        "check_time": "2026-07-19T11:44:25.731828+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
