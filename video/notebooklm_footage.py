@@ -131,11 +131,18 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool) -> s
                         f"Act as a highly creative video editor. For this moral dilemma, invent a unique, cinematic, and engaging visual style and pacing that perfectly matches the subject matter: {topic}. "
                         f"Optimize the layout for vertical 9:16 mobile screens (Shorts/Reels) and ensure the visuals and subtitles are dynamic to retain attention, experimenting freely with mood and artistic direction."
                     )
-                else:
+                elif fmt == 4:
                     topic = script_data.get("title", "Dark psychology case")
                     instructions = (
                         f"Act as a highly creative video editor. For this dark psychology case, invent a unique, cinematic, and engaging visual style and pacing that perfectly matches the subject matter: {topic}. "
                         f"Optimize the layout for vertical 9:16 mobile screens (Shorts/Reels) and ensure the visuals and subtitles are dynamic to retain attention, experimenting freely with mood and artistic direction."
+                    )
+                else:
+                    topic = script_data.get("topic", "Long-form documentary")
+                    custom_instructions = script_data.get("notebooklm_instructions", "Use a highly cinematic and immersive visual style.")
+                    instructions = (
+                        f"Act as a master documentary director. For this deep-dive video about {topic}, {custom_instructions} "
+                        f"Optimize the layout for standard horizontal 16:9 widescreen video and ensure the visuals and subtitles are highly engaging, experimenting freely with mood and artistic direction."
                     )
 
 
@@ -169,10 +176,14 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool) -> s
                     f_name = "Short Story"
                 elif fmt == 3:
                     f_name = "Short Dilemma"
-                else:
+                elif fmt == 4:
                     f_name = "Short Psychology"
+                else:
+                    f_name = "Long-Form Documentary"
+                    v_format_val = 3
 
-                print(f"   [NotebookLM] Triggering {f_name} vertical 9:16 video overview generation with instructions: '{instructions}'")
+                layout_str = "horizontal 16:9" if fmt == 5 else "vertical 9:16"
+                print(f"   [NotebookLM] Triggering {f_name} {layout_str} video overview generation with instructions: '{instructions}'")
 
                 source_ids = [source.id]
                 source_ids_triple = nest_source_ids(source_ids, 2)

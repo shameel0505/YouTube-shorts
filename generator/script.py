@@ -138,18 +138,22 @@ Niche: {niche}
 RESEARCHED TOPIC: {research_topic}
 Key facts: {key_facts}
 Hook angle: {hook_angle}
+{avoid_clause}
 
 ══ WRITING RULES (CRITICAL) ══
 1. LENGTH: Write a comprehensive, fully developed educational essay between 300 and 500 words. Do not write a short voiceover script.
 2. DETAILS: Unpack the complexity. Explain the "why" and "how". Use specific figures, scientific terms, historical names, and concrete evidence.
 3. STRUCTURE:
-   - Catchy Hook Introduction: You MUST open using one of these 6 styles (pick the one that fits best):
-     * "Uncomfortable Truth": Make the viewer physically hyper-aware (e.g., microscopic bugs on eyelashes).
-     * "Declassified": Frame it as intentionally hidden, ignored by schools, or recently uncovered.
-     * "Mandela Effect": Prove a universally held memory, belief, or proverb is entirely false.
+   - Catchy Hook Introduction: You MUST open using one of these styles (pick the one that fits best): 
+     * "Uncomfortable Truth": State a fact that ruins a common misconception.
+     * "Declassified": Present the fact as a closely guarded secret.
+     * "Mandela Effect": Address a false memory everyone holds.
      * "Glitch in Physics": Present a phenomenon that wildly violates the laws of common sense before explaining it.
      * "Forbidden Knowledge": Warn the viewer that once they learn this fact, they can never un-see it.
      * "Historical Lie": Aggressively attack a famous historical event or figure that everyone learns in school.
+     * "Mind-bending Paradox": State something that seems logically impossible but is entirely true.
+     * "Hidden Secret of Everyday Life": Reveal an astonishing fact about something they do or see every single day.
+     * "Futuristic Breakthrough": Present the fact as something that sounds like sci-fi but is real today.
    - Deep Dive Explanation: Provide context, background, and the underlying mechanisms/history.
    - Escalation/Payoff: Reveal additional layers of complexity, current research, or fascinating implications.
 4. TONE: Professional, authoritative, engaging, and mind-expanding.
@@ -178,7 +182,7 @@ Niche: {niche}
 1. LENGTH: Write a comprehensive, fully developed educational essay between 300 and 500 words.
 2. DETAILS: Unpack the complexity. Explain the "why" and "how". Use specific figures and evidence.
 3. STRUCTURE: 
-   - Catchy Hook Introduction: You MUST open using one of these 6 styles (pick the one that fits best): "Uncomfortable Truth", "Declassified", "Mandela Effect", "Glitch in Physics", "Forbidden Knowledge", or "Historical Lie".
+   - Catchy Hook Introduction: You MUST open using one of these styles (pick the one that fits best): "Uncomfortable Truth", "Declassified", "Mandela Effect", "Glitch in Physics", "Forbidden Knowledge", "Historical Lie", "Mind-bending Paradox", "Hidden Secret of Everyday Life", or "Futuristic Breakthrough".
    - Deep Dive Explanation: Provide context and mechanisms.
    - Escalation/Payoff: Reveal additional layers of complexity.
 4. TONE: Professional, authoritative, and mind-expanding.
@@ -318,6 +322,7 @@ def generate_thriller(research: dict = None, retries: int = 3) -> dict:
 
 _F3_PROMPT = """You are a professional educational writer and cognitive science expert.
 Your goal is to write a highly detailed, comprehensive case study describing a fascinating psychological phenomenon or "brain glitch" that everyone experiences.
+Write this case study in the style of a **{genre}**.
 
 This case study will be uploaded to Google's NotebookLM to generate an interactive video discussion, so it must be highly relatable, educational, and explain the science clearly.
 
@@ -356,7 +361,19 @@ def generate_dilemma(research: dict = None, retries: int = 3) -> dict:
     """Generate a Format 3 (Moral Dilemma) case study."""
     r = research or {}
 
+    import random
+    genres = [
+        "Cognitive Bias Deep Dive",
+        "Existential Dread Explainer",
+        "Simulation Theory Speculation",
+        "Philosophical Dilemma",
+        "Mind-Bending Thought Experiment",
+        "Everyday Phenomenon Decoded"
+    ]
+    genre = random.choice(genres)
+
     prompt = _F3_PROMPT.format(
+        genre=genre,
         dilemma_seed=r.get("dilemma_seed", "Your best friend asks you to lie for them."),
         value_a=r.get("value_a", "loyalty"),
         value_b=r.get("value_b", "honesty"),
@@ -454,6 +471,89 @@ def generate_psychology(research: dict = None, retries: int = 3) -> dict:
     print(f"✅ [FORMAT 4] Dark Psychology Case study ({genre}): '{data.get('title')}'")
     return data
 
+
+# ── FORMAT 5: Long-Form Cinematic Widescreen Video ──────────────────────────────
+
+_F5_PROMPT = """You are a master scriptwriter for premium, long-form YouTube documentary videos.
+Your goal is to write a highly detailed, deeply researched, and captivating 1000-1500 word script for a standard horizontal (16:9) video.
+This script will be processed by Google's NotebookLM to generate an educational video discussion, so it needs to be rich in factual details, real characters, historical settings, and fascinating connections.
+
+Here is a massive list of themes and recurring formats:
+Science & Nature:
+- "How the Body Works" — physiology, weird medical facts, why we feel what we feel
+- "Mysteries of the Universe" — space, physics, things we still don't understand
+- "The Secret Life of [Animals/Plants]" — nature facts that surprise people
+- "Why Does That Happen?" — everyday science (why ice is slippery, why we yawn, etc.)
+Money & Systems:
+- "Money Decoded" — economics, how banks/markets/crypto actually work
+- "Follow the Money" — how industries, scams, or business empires really operate
+- "The Hidden Rules of Society" — laws, systems, bureaucracy explained simply
+History & Civilization:
+- "Big Ideas in History" — turning points that changed everything
+- "Lost & Forgotten" — obscure history, vanished civilizations, forgotten inventions
+- "History's Biggest What-Ifs" — alternate history / turning points
+- "Ancient Genius" — old inventions/technologies that still puzzle us
+Mind & Behavior:
+- "Inside the Mind" — psychology, cognitive biases, why we do what we do
+- "Human Nature Explained" — evolutionary psych, social behavior
+- "The Science of Habits" — behavior change, productivity myths
+Tech & Future:
+- "Tech, Decoded" — how AI/tech actually works, no jargon
+- "The Future is Weird" — emerging tech, what's coming next
+- "Behind the Screen" — how apps/algorithms/internet infrastructure work
+Culture & Curiosity:
+- "Cracking the Code" — languages, symbols, ciphers, how communication works
+- "Everyday Genius" — the engineering/design behind ordinary objects
+- "Myth vs Reality" — myth-busting across any domain
+Recurring Formats:
+- "Why Does X Exist?"
+- "The Real Story Behind X"
+- "What They Don't Teach You About X"
+- "X, Explained in 10 Minutes"
+
+Select ONE highly specific and fascinating topic from ONE of the themes above to write about. 
+{avoid_clause}
+
+══ WRITING RULES (CRITICAL) ══
+1. LENGTH: Write a comprehensive, fully developed script between 1000 and 1500 words. Do not make it a short script.
+2. DETAILS: Build a rich narrative. Dive deep into the core concepts, historical context, and mechanisms. 
+3. PACING: Use bracketed visual cues (e.g. [VISUAL: Cinematic wide shot of...], [VISUAL: Fast zoom into...]) to help the video generator understand the pacing and aesthetic. Use ellipses (...) to force pauses in the voiceover.
+4. TONE: Educational, awe-inspiring, deep, and highly engaging.
+
+══ OUTPUT FORMAT ══
+Respond ONLY with a strict JSON object (no markdown):
+{{
+  "format": "long_form",
+  "topic": "3-5 word internal label of the specific topic you chose",
+  "title": "Curiosity-gap YouTube title (under 60 chars)",
+  "description": "Write a long, engaging, multi-paragraph YouTube description that summarizes the video, uses emojis, and ends with a strong Call to Action (CTA) question to drive comments.",
+  "hashtags": ["#documentary", "#educational", "6 more tags"],
+  "script": "The complete, detailed 1000-1500 word script containing [VISUAL: ...] cues.",
+  "notebooklm_instructions": "A specific 2-sentence instruction for the NotebookLM generator describing the exact visual aesthetic, color grading, and subtitle style (e.g., 'Use a gritty, dark cinematic visual style...')."
+}}"""
+
+def generate_long_video(retries: int = 3) -> dict:
+    """Generate a Format 5 (Long-Form Cinematic Widescreen Video) script."""
+    recent = _load_used_topics()
+    avoid_clause = (
+        f"\n\nDo NOT cover or repeat these recently used topics: {', '.join(recent[-50:])}"
+        if recent else ""
+    )
+
+    prompt = _F5_PROMPT.format(avoid_clause=avoid_clause)
+
+    data = _call_gemini_for_script(
+        prompt,
+        ["topic", "title", "description", "hashtags", "script", "notebooklm_instructions"],
+        retries=retries
+    )
+    
+    # Save the chosen topic to prevent repetition in future runs
+    data["used_topic_seed"] = data.get("topic")
+    data["text"] = data.get("topic")
+    
+    print(f"✅ [FORMAT 5] Long-Form Widescreen Video: '{data.get('title')}'")
+    return data
 
 # ── Batch helpers ─────────────────────────────────────────────────────────────
 

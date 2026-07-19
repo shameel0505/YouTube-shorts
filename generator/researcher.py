@@ -18,14 +18,14 @@ _current_key_idx = 0
 
 # ── Niche → subreddit mapping (Format 1) ─────────────────────────────────────
 NICHE_SUBREDDITS = {
-    "AI":         ["artificial", "MachineLearning", "technology"],
-    "technology": ["technology", "Futurology", "tech"],
-    "science":    ["science", "EverythingScience", "Physics"],
-    "space":      ["space", "Astronomy", "astrophysics"],
-    "psychology": ["psychology", "neuroscience", "cogsci"],
-    "history":    ["history", "AskHistorians", "HistoryMemes"],
-    "finance":    ["economics", "personalfinance", "investing"],
-    "default":    ["todayilearned", "interestingasfuck", "Damnthatsinteresting"],
+    "AI":         ["artificial", "MachineLearning", "technology", "Futurology"],
+    "technology": ["technology", "Futurology", "tech", "gadgets", "hardware"],
+    "science":    ["science", "EverythingScience", "Physics", "biology", "askscience"],
+    "space":      ["space", "Astronomy", "astrophysics", "Cosmology"],
+    "psychology": ["psychology", "neuroscience", "cogsci", "behavioraleconomics"],
+    "history":    ["history", "AskHistorians", "HistoryMemes", "AlternateHistory"],
+    "finance":    ["economics", "personalfinance", "investing", "StockMarket"],
+    "default":    ["todayilearned", "interestingasfuck", "Damnthatsinteresting", "explainlikeimfive", "Showerthoughts", "mildlyinteresting", "dataisbeautiful", "NatureIsFuckingLit"],
 }
 
 
@@ -76,7 +76,9 @@ def get_reddit_posts(
     results = []
     headers = {"User-Agent": "ShortsBot/1.0 (content research)"}
 
-    for sub in subreddits[:3]:
+    import random
+    selected_subs = random.sample(subreddits, min(3, len(subreddits)))
+    for sub in selected_subs:
         url = f"https://www.reddit.com/r/{sub}/{sort}.json?t={time_filter}&limit={limit * 2}"
         try:
             resp = requests.get(url, headers=headers, timeout=10)
@@ -296,7 +298,7 @@ def research_thriller() -> dict:
 
     print("   📡 Fetching history subreddits top posts (week, 100+ upvotes)...")
     posts = get_reddit_posts(
-        subreddits=["AskHistorians", "todayilearned", "HistoryMemes"],
+        subreddits=["AskHistorians", "todayilearned", "HistoryMemes", "UnresolvedMysteries", "CatastrophicFailure", "AlternateHistory", "MorbidReality"],
         sort="top",
         time_filter="week",
         limit=10,
@@ -362,7 +364,7 @@ def research_dilemma() -> dict:
 
     print("   📡 Fetching r/psychology and r/Glitch_in_the_Matrix (week, 100+ comments)...")
     posts = get_reddit_posts(
-        subreddits=["psychology", "neuroscience", "Glitch_in_the_Matrix"],
+        subreddits=["psychology", "neuroscience", "Glitch_in_the_Matrix", "HighStrangeness", "SimulationTheory", "MandelaEffect", "philosophy", "sociology"],
         sort="top",
         time_filter="week",
         limit=10,
@@ -435,7 +437,7 @@ def research_psychology() -> dict:
     print("🔍 [FORMAT 4] Researching genius loopholes / human ingenuity...")
 
     posts = get_reddit_posts(
-        subreddits=["interestingasfuck", "LifeProTips", "ActLikeYouBelong"],
+        subreddits=["interestingasfuck", "LifeProTips", "ActLikeYouBelong", "ProRevenge", "MaliciousCompliance", "HobbyDrama", "Scams", "UnethicalLifeProTips"],
         sort="top",
         time_filter="week",
         limit=10,

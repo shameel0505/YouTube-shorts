@@ -53,10 +53,13 @@ def _get_youtube_client():
             
     return build("youtube", "v3", credentials=creds)
 
-def upload_short(video_path: str, title: str, description: str, hashtags: list, schedule_time: datetime = None, thumbnail_path: str = None) -> dict:
+def upload_video(video_path: str, title: str, description: str, hashtags: list, schedule_time: datetime = None, thumbnail_path: str = None, is_short: bool = True) -> dict:
     youtube = _get_youtube_client()
     
-    full_description = f"{description}\n\n{' '.join(hashtags)}\n\n#shorts"
+    full_description = f"{description}\n\n{' '.join(hashtags)}"
+    if is_short:
+        full_description += "\n\n#shorts"
+        
     privacy = YT_PRIVACY
     publish_at = None
     
