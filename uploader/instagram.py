@@ -128,7 +128,7 @@ def upload_reel(video_path: str, caption: str, access_token: str, account_id: st
     
     print("   ⏳ Waiting for Instagram to process the video...")
     ready = False
-    for attempt in range(24):
+    for attempt in range(48):
         status = api.check_container_status(container_id)
         print(f"      ⬡ Container Status: {status}")
         if status == "FINISHED":
@@ -139,7 +139,7 @@ def upload_reel(video_path: str, caption: str, access_token: str, account_id: st
         time.sleep(10)
         
     if not ready:
-        raise RuntimeError(f"Container {container_id} not FINISHED after 240s")
+        raise RuntimeError(f"Container {container_id} not FINISHED after 480s")
         
     print("   ⏳ Publishing Reel...")
     _, post_id = api.publish(container_id)
