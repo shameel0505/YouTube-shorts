@@ -718,5 +718,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "7eUNEGyuWV0",
+        "format": 1,
+        "topic": "Cleopatra lived closer in time to the invention of the iPhone (2007) than she did to the building of the Great Pyramid of Giza (c. 2580\u20132560 BC).",
+        "hook": "Original",
+        "upload_time": "2026-07-19T11:24:37.954770+00:00",
+        "check_time": "2026-07-20T11:24:37.954770+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "cNJl6F-d9Gg",
+        "format": 2,
+        "topic": "The Sleep That Sealed a Tragedy: Titanic's Unheard Plea",
+        "hook": "Unheard Plea",
+        "upload_time": "2026-07-19T11:31:10.730714+00:00",
+        "check_time": "2026-07-20T11:31:10.730714+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "TIYWDEjXLAg",
+        "format": 3,
+        "topic": "You're convinced your opinion on a popular topic is shared by most people, only to be genuinely shocked when you encounter widespread disagreement. Your brain projects your beliefs onto others.",
+        "hook": "Is my opinion truly popular?",
+        "upload_time": "2026-07-19T11:36:29.866088+00:00",
+        "check_time": "2026-07-20T11:36:29.866088+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "6xj7j0j6JUA",
+        "format": 4,
+        "topic": "The Golden Ticket That Broke The Bank",
+        "hook": "Fly Forever?",
+        "upload_time": "2026-07-19T11:40:58.442632+00:00",
+        "check_time": "2026-07-20T11:40:58.442632+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
