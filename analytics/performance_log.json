@@ -766,5 +766,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "GpX-xnq34Rk",
+        "format": 1,
+        "topic": "If you were to fall into a black hole, time would appear to speed up around you, showing you the entire future of the universe in a flash before you reach the singularity.",
+        "hook": "Original",
+        "upload_time": "2026-07-20T12:06:41.704948+00:00",
+        "check_time": "2026-07-21T12:06:41.704948+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "e27ALtq2Mx0",
+        "format": 2,
+        "topic": "The Alps, a Dog, and a Global Invention",
+        "hook": "Burr's Secret",
+        "upload_time": "2026-07-20T12:08:23.240655+00:00",
+        "check_time": "2026-07-21T12:08:23.240655+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "1CQpQKKFBoo",
+        "format": 3,
+        "topic": "You're stuck in traffic or a queue, convinced other lanes/lines are moving faster. You switch, only for your new lane to slow down and the one you left to speed up, making it feel like the universe conspires against you every time.",
+        "hook": "Is your line slowest?",
+        "upload_time": "2026-07-20T12:10:10.060887+00:00",
+        "check_time": "2026-07-21T12:10:10.060887+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "caADJX2-_RY",
+        "format": 4,
+        "topic": "The Art of Living: Architect's Warehouse Home",
+        "hook": "Warehouse Home?",
+        "upload_time": "2026-07-20T12:11:53.149499+00:00",
+        "check_time": "2026-07-21T12:11:53.149499+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
