@@ -212,7 +212,7 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
 
     except Exception as e:
         err_msg = str(e).lower()
-        if "timeout" in err_msg or "deadline" in err_msg or "rendering in background" in err_msg:
+        if "timeout" in err_msg or "timed out" in err_msg or "deadline" in err_msg or "rendering in background" in err_msg:
             log(f"⏳ NotebookLM video generation is still processing. Saving state. The next run will resume.", fmt)
             return {"format": 1, "rendering": True, "script": locals().get("script_data")}
         log(f"❌ Format 1 failed: {e}", fmt)
@@ -349,7 +349,7 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
     except Exception as e:
         err_msg = str(e).lower()
-        if "timeout" in err_msg or "deadline" in err_msg or "rendering in background" in err_msg:
+        if "timeout" in err_msg or "timed out" in err_msg or "deadline" in err_msg or "rendering in background" in err_msg:
             log(f"⏳ NotebookLM video generation is still processing. Saving state. The next run will resume.", fmt)
             return {"format": 2, "rendering": True, "script": locals().get("script_data")}
         log(f"❌ Format 2 failed: {e}", fmt)
@@ -493,7 +493,7 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
     except Exception as e:
         err_msg = str(e).lower()
-        if "timeout" in err_msg or "deadline" in err_msg or "rendering in background" in err_msg:
+        if "timeout" in err_msg or "timed out" in err_msg or "deadline" in err_msg or "rendering in background" in err_msg:
             log(f"⏳ NotebookLM video generation is still processing. Saving state. The next run will resume.", fmt)
             return {"format": 3, "rendering": True, "script": locals().get("script_data")}
         log(f"❌ Format 3 failed: {e}", fmt)
@@ -628,7 +628,7 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
     except Exception as e:
         err_msg = str(e).lower()
-        if "timeout" in err_msg or "deadline" in err_msg or "rendering in background" in err_msg:
+        if "timeout" in err_msg or "timed out" in err_msg or "deadline" in err_msg or "rendering in background" in err_msg:
             log(f"⏳ NotebookLM video generation is still processing. Saving state. The next run will resume.", fmt)
             return {"format": 4, "rendering": True, "script": locals().get("script_data")}
         log(f"❌ Format 4 failed: {e}", fmt)
@@ -752,7 +752,7 @@ def run_format5(upload: bool = True, attempt: int = 1, resume: bool = False, moc
 
     except Exception as e:
         err_msg = str(e).lower()
-        if "timeout" in err_msg or "deadline" in err_msg or "rendering in background" in err_msg:
+        if "timeout" in err_msg or "timed out" in err_msg or "deadline" in err_msg or "rendering in background" in err_msg:
             log(f"⏳ NotebookLM video generation is still processing. Saving state. The next run will resume.", fmt)
             return {"format": 5, "rendering": True, "script": locals().get("script_data")}
         log(f"❌ Format 5 failed: {e}", fmt)
