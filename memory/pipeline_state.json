@@ -2,10 +2,10 @@
     "current_day": "2026-07-21",
     "status": "failed",
     "mode": "fresh",
-    "started_at": "2026-07-21T09:16:30.156671+00:00",
+    "started_at": "2026-07-21T11:20:05.297580+00:00",
     "posted_at": null,
-    "last_updated": "2026-07-21T09:22:37.293576+00:00",
+    "last_updated": "2026-07-21T11:27:14.348342+00:00",
     "active_render": false,
     "last_error": "One or more formats failed completely.",
-    "retry_count": 1
+    "retry_count": 2
 }
