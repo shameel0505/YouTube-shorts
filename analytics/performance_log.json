@@ -814,5 +814,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "I61vZmTcS1Y",
+        "format": 1,
+        "topic": "There's a parasitic fungus that can infect ants, take control of their minds, force them to climb to a high point, and then explode from their bodies to spread spores, effectively creating zombie ants.",
+        "hook": "Original",
+        "upload_time": "2026-07-21T15:47:05.355833+00:00",
+        "check_time": "2026-07-22T15:47:05.355833+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "vEvlNWT-Fz8",
+        "format": 2,
+        "topic": "The Chandelier That Sparked a Revolution",
+        "hook": "Cathedral's Secret",
+        "upload_time": "2026-07-21T15:49:10.524404+00:00",
+        "check_time": "2026-07-22T15:49:10.524404+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "yg98oLBffR0",
+        "format": 3,
+        "topic": "Someone cuts you off in traffic, and you immediately think they're a reckless driver. But when you accidentally cut someone off, you rationalize it as an urgent situation or a momentary lapse.",
+        "hook": "Are they bad drivers?",
+        "upload_time": "2026-07-21T15:51:06.328189+00:00",
+        "check_time": "2026-07-22T15:51:06.328189+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "KaZ7qWfFpjE",
+        "format": 4,
+        "topic": "The 18-Year Airport Residency Loophole",
+        "hook": "Airport Home",
+        "upload_time": "2026-07-21T15:53:11.479625+00:00",
+        "check_time": "2026-07-22T15:53:11.479625+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
