@@ -22,6 +22,10 @@ from config import (VIDEO_WIDTH, VIDEO_HEIGHT, VIDEO_FPS,
 from video.audio_mixer import mix_audio
 
 _FONTS = [
+    # 0. Local Project Fonts (Highest Priority)
+    os.path.join(os.path.dirname(__file__), "..", "fonts", "Montserrat-ExtraBold.ttf"),
+    os.path.join(os.path.dirname(__file__), "..", "fonts", "BebasNeue-Regular.ttf"),
+
     # 1. Bebas Neue
     "/usr/local/share/fonts/BebasNeue-Regular.ttf",
     "/Library/Fonts/BebasNeue-Regular.ttf",
@@ -147,79 +151,28 @@ def _generate_thumbnail(video_path: str, hook_text: str, fmt: int):
             
         # Convert BGR to RGB
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        
-        # Color boost
-        frame = _apply_color_grade(frame, fmt)
-        
-        # Resize to 1280x720 (YouTube standard)
-        # Note: input is 1080x1920 (vertical). We should crop the center or resize and letterbox?
-        # A common shorts thumbnail trick is to take the vertical frame, crop the center 16:9 portion, and resize to 1280x720
         h, w = frame.shape[:2]
-        target_ratio = 1280 / 720
-        new_h = int(w / target_ratio)
-        y_start = (h - new_h) // 2
-        cropped = frame[y_start:y_start+new_h, :]
-        thumb_img = cv2.resize(cropped, (1280, 720))
         
-        # Overlay text using PIL
-        pil_img = Image.fromarray(thumb_img)
-        draw = ImageDraw.Draw(pil_img)
-        
-        # Use largest font
-        font = _load_font(100)
-        
-        # Measure text
-        lines = []
-        words = hook_text.upper().split()
-        current_line = []
-        for w in words:
-            current_line.append(w)
-            bbox = draw.textbbox((0, 0), " ".join(current_line), font=font)
-            if (bbox[2] - bbox[0]) > 1100: # Max width
-                current_line.pop()
-                lines.append(" ".join(current_line))
-                current_line = [w]
-        if current_line:
-            lines.append(" ".join(current_line))
+        if h > w:
+            # Vertical video (Shorts): Preserve 100% of Frame 0 with ambient blurred background
+            blurred_bg = cv2.resize(frame, (1280, 720))
+            blurred_bg = cv2.GaussianBlur(blurred_bg, (51, 51), 0)
             
-        multiline = "\n".join(lines)
-        bbox = draw.multiline_textbbox((0, 0), multiline, font=font, spacing=15)
-        text_w = bbox[2] - bbox[0]
-        text_h = bbox[3] - bbox[1]
-        
-        canvas_w = 1280
-        canvas_h = text_h + 80
-        
-        # Dark bar
-        cx = 1280 // 2
-        cy = 720 // 3 # Upper third
-        
-        bar_x0 = cx - (text_w // 2) - 40
-        bar_x1 = cx + (text_w // 2) + 40
-        bar_y0 = cy - (canvas_h // 2)
-        bar_y1 = bar_y0 + canvas_h
-        
-        overlay = Image.new("RGBA", (1280, 720), (0, 0, 0, 0))
-        overlay_draw = ImageDraw.Draw(overlay)
-        overlay_draw.rectangle([bar_x0, bar_y0, bar_x1, bar_y1], fill=(0, 0, 0, 150))
-        
-        overlay_draw.multiline_text(
-            (cx, cy),
-            multiline,
-            font=font,
-            fill="white",
-            stroke_width=10,
-            stroke_fill="black",
-            align="center",
-            spacing=15,
-            anchor="mm"
-        )
-        
-        final = Image.alpha_composite(pil_img.convert("RGBA"), overlay)
-        
+            scaled_h = 720
+            scaled_w = int(w * (720 / h))
+            fg_img = cv2.resize(frame, (scaled_w, scaled_h))
+            
+            x_offset = (1280 - scaled_w) // 2
+            blurred_bg[:, x_offset:x_offset+scaled_w] = fg_img
+            thumb_img = blurred_bg
+        else:
+            # Landscape video (Format 5 Widescreen): Resize Frame 0 directly
+            thumb_img = cv2.resize(frame, (1280, 720))
+            
+        pil_img = Image.fromarray(thumb_img)
         out_path = video_path.replace(".mp4", "_thumb.jpg")
-        final.convert("RGB").save(out_path, quality=90)
-        print(f"📸 Thumbnail generated: {os.path.basename(out_path)}")
+        pil_img.save(out_path, quality=95)
+        print(f"📸 First-Frame Thumbnail generated: {os.path.basename(out_path)}")
         
     except Exception as e:
         print(f"⚠️ Thumbnail generation failed: {e}")
@@ -447,19 +400,21 @@ def _build_title_card(hook: str, fmt: int, part: int, video_duration: float) -> 
         
     return layers
 
-def _build_caption_clips(captions: list[dict], video_duration: float, fmt: int, closing_question: str = None) -> list:
+def _build_caption_clips(captions: list[dict], video_clip, fmt: int, closing_question: str = None) -> list:
     if not captions:
         return []
+        
+    vw, vh = video_clip.size if hasattr(video_clip, 'size') else (VIDEO_WIDTH, VIDEO_HEIGHT)
 
-    # Position in the middle third (around 55%)
-    center_y = int(VIDEO_HEIGHT * 0.55)
+    # Position in the lower portion (around 80%)
+    center_y = int(vh * 0.80)
     font = _load_font(CAPTION_FONT_SIZE)
 
-    closing_start = (video_duration - CLOSING_Q_DURATION) if closing_question and fmt == 3 else video_duration
+    closing_start = (video_clip.duration - CLOSING_Q_DURATION) if closing_question and fmt == 3 else video_clip.duration
     
     clips = []
     for chunk in captions:
-        if chunk["start"] >= video_duration:
+        if chunk["start"] >= video_clip.duration:
             continue
         if chunk["start"] >= closing_start:
             continue 
@@ -467,80 +422,92 @@ def _build_caption_clips(captions: list[dict], video_duration: float, fmt: int, 
         words = chunk["words"]
         for active_idx, active_word in enumerate(words):
             start = active_word["start"]
-            if start >= video_duration or start >= closing_start:
+            if start >= video_clip.duration or start >= closing_start:
                 continue
 
             end = words[active_idx + 1]["start"] if active_idx < len(words) - 1 else chunk["end"]
-            end = min(end, video_duration, closing_start)
+            end = min(end, video_clip.duration, closing_start)
             dur = end - start
             if dur <= 0:
                 continue
 
-            img_clip = _render_word_frame(words, active_idx, font, center_y, fmt)
+            img_clip = _render_word_frame(words, active_idx, font, center_y, vw, fmt)
             if img_clip:
                 clips.append(img_clip.set_start(start).set_duration(dur))
 
     return clips
 
-def _render_word_frame(words, active_idx, font, center_y, fmt):
+def _render_word_frame(words, active_idx, font, center_y, vw, fmt):
     probe = Image.new("RGBA", (1, 1))
     probe_draw = ImageDraw.Draw(probe)
 
     texts = [w["text"].upper() for w in words]
     widths = [probe_draw.textbbox((0, 0), t, font=font)[2] - probe_draw.textbbox((0, 0), t, font=font)[0] for t in texts]
 
-    gap = 14
-    total_w = sum(widths) + gap * (len(widths) - 1)
-    max_allowed = VIDEO_WIDTH - 80
+    # Elegant cinematic letter/word tracking
+    gap = 20
+    max_allowed = vw - 80
 
-    render_font = font
-    render_widths = widths
-    render_gap = gap
+    # Line wrapping algorithm (Font size is strictly locked!)
+    lines = []
+    current_line_words = []
+    current_line_w = 0
+    
+    for i, (w_text, w_px) in enumerate(zip(texts, widths)):
+        if current_line_w + w_px + gap > max_allowed and current_line_words:
+            lines.append({"words": current_line_words, "width": current_line_w - gap})
+            current_line_words = []
+            current_line_w = 0
+            
+        current_line_words.append((i, w_text, w_px))
+        current_line_w += w_px + gap
+        
+    if current_line_words:
+        lines.append({"words": current_line_words, "width": current_line_w - gap})
 
-    if total_w > max_allowed:
-        scale = max_allowed / total_w
-        new_size = max(28, int(CAPTION_FONT_SIZE * scale))
-        render_font = _load_font(new_size)
-        render_widths = [probe_draw.textbbox((0, 0), t, font=render_font)[2] - probe_draw.textbbox((0, 0), t, font=render_font)[0] for t in texts]
-        render_gap = max(6, int(gap * scale))
-        total_w = sum(render_widths) + render_gap * (len(render_widths) - 1)
-
-    sample_bbox = probe_draw.textbbox((0, 0), "Ay", font=render_font)
+    sample_bbox = probe_draw.textbbox((0, 0), "Ay", font=font)
     text_h = sample_bbox[3] - sample_bbox[1]
+    line_spacing = int(text_h * 1.2)
 
-    pill_w = total_w + PILL_PADDING_X * 2
-    pill_h = text_h + PILL_PADDING_Y * 2
-
-    canvas_w = VIDEO_WIDTH
-    canvas_h = pill_h + CAPTION_STROKE_WIDTH * 2 + 4
+    total_h = line_spacing * len(lines)
+    canvas_w = vw
+    
+    shadow_offset = 6
+    blur_radius = 8
+    canvas_h = total_h + shadow_offset + blur_radius * 2 + 40
 
     img = Image.new("RGBA", (canvas_w, canvas_h), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
-
-    pill_x0 = (canvas_w - pill_w) // 2
-    pill_y0 = (canvas_h - pill_h) // 2
-    draw.rounded_rectangle(
-        [pill_x0, pill_y0, pill_x0 + pill_w, pill_y0 + pill_h],
-        radius=PILL_RADIUS,
-        fill=PILL_COLOR_RGBA,
-    )
-
-    x = pill_x0 + PILL_PADDING_X
-    y = pill_y0 + PILL_PADDING_Y
     
-    highlight_hex = HIGHLIGHT_COLOR.get(fmt, "#FFE600")
+    from PIL import ImageFilter
+    shadow_img = Image.new("RGBA", (canvas_w, canvas_h), (0, 0, 0, 0))
+    shadow_draw = ImageDraw.Draw(shadow_img)
 
-    for i, (word, w_px) in enumerate(zip(words, render_widths)):
-        color = highlight_hex if i == active_idx else "white"
-        draw.text(
-            (x, y),
-            word["text"].upper(),
-            font=render_font,
-            fill=color,
-            stroke_width=CAPTION_STROKE_WIDTH,
-            stroke_fill="black",
-        )
-        x += w_px + render_gap
+    start_y = (canvas_h - total_h) // 2
+
+    # Draw Drop Shadows
+    y = start_y
+    for line in lines:
+        x = (canvas_w - line["width"]) // 2
+        for _, w_text, w_px in line["words"]:
+            shadow_draw.text((x + shadow_offset, y + shadow_offset), w_text, font=font, fill=(0, 0, 0, 200))
+            x += w_px + gap
+        y += line_spacing
+
+    shadow_img = shadow_img.filter(ImageFilter.GaussianBlur(blur_radius))
+    img.alpha_composite(shadow_img)
+
+    # Draw Text
+    y = start_y
+    modern_cyan = (0, 229, 255, 255) # Modern 2026 High-Retention Cyan
+
+    for line in lines:
+        x = (canvas_w - line["width"]) // 2
+        for orig_idx, w_text, w_px in line["words"]:
+            color = modern_cyan if orig_idx == active_idx else (255, 255, 255, 255)
+            draw.text((x, y), w_text, font=font, fill=color)
+            x += w_px + gap
+        y += line_spacing
 
     np_img = np.array(img)
     top_y = center_y - canvas_h // 2

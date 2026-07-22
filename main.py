@@ -178,9 +178,12 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
         # Step 7 — Upload
         if upload:
             log("📤 Step 7/7: Uploading to YouTube...", fmt)
+            thumb_path = video_path.replace(".mp4", "_thumb.jpg")
             result = upload_video(
                 video_path, script_data["title"],
                 script_data["description"], script_data["hashtags"],
+                thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
+                is_short=True
             )
             log(f"   ✅ YouTube Live: {result['url']}", fmt)
             
@@ -314,9 +317,12 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
         # Step 7 — Upload
         if upload:
             log("📤 Step 7/7: Uploading to YouTube...", fmt)
+            thumb_path = video_path.replace(".mp4", "_thumb.jpg")
             result = upload_video(
                 video_path, script_data["title"],
                 script_data["description"], script_data["hashtags"],
+                thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
+                is_short=True
             )
             log(f"   ✅ Live: {result['url']}", fmt)
             
@@ -459,9 +465,12 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
         # Step 7 — Upload
         if upload:
             log("📤 Step 7/7: Uploading to YouTube...", fmt)
+            thumb_path = video_path.replace(".mp4", "_thumb.jpg")
             result = upload_video(
                 video_path, script_data["title"],
                 script_data["description"], script_data["hashtags"],
+                thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
+                is_short=True
             )
             log(f"   ✅ YouTube Live: {result['url']}", fmt)
             
@@ -593,9 +602,12 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
         # Step 7 — Upload
         if upload:
             log("📤 Step 7/7: Uploading to YouTube...", fmt)
+            thumb_path = video_path.replace(".mp4", "_thumb.jpg")
             result = upload_video(
                 video_path, script_data["title"],
                 script_data["description"], script_data["hashtags"],
+                thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
+                is_short=True
             )
             log(f"   ✅ YouTube Live: {result['url']}", fmt)
             
@@ -716,9 +728,11 @@ def run_format5(upload: bool = True, attempt: int = 1, resume: bool = False, moc
 
         if upload:
             log("📤 Step 7: Uploading to YouTube...", fmt)
+            thumb_path = video_path.replace(".mp4", "_thumb.jpg")
             result = upload_video(
                 video_path, script_data["title"],
                 script_data["description"], script_data["hashtags"],
+                thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
                 is_short=False
             )
             log(f"   ✅ YouTube Live: {result['url']}", fmt)
