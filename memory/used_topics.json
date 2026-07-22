@@ -59,6 +59,10 @@
         {
             "text": "There's a parasitic fungus that can infect ants, take control of their minds, force them to climb to a high point, and then explode from their bodies to spread spores, effectively creating zombie ants.",
             "date": "2026-07-21T15:47:05.356820"
+        },
+        {
+            "text": "The Apollo 11 guidance computer, which successfully landed humans on the Moon, had less processing power than a modern calculator, and its complex software was pioneered and largely hand-written by a single woman, Margaret Hamilton.",
+            "date": "2026-07-22T12:59:49.419287"
         }
     ],
     "format2_titles": [
@@ -117,6 +121,10 @@
         {
             "text": "In 1581, a young Galileo Galilei, bored during a sermon, noticed a chandelier swinging in Pisa Cathedral. His seemingly idle observation of its consistent, predictable rhythm ignited a lifelong fascination with motion and time, laying the groundwork for modern physics and kicking off the scientific revolution.",
             "date": "2026-07-21T15:49:10.525921"
+        },
+        {
+            "text": "In the 1870s, early typewriters often jammed. Inventor Christopher Latham Sholes deliberately designed the QWERTY keyboard to *slow down* typists, spacing out common letter pairs to prevent mechanical clashes. This counter-intuitive fix became the global standard, shaping how billions communicate with technology to this day.",
+            "date": "2026-07-22T13:02:17.606693"
         }
     ],
     "format3_dilemmas": [
@@ -195,6 +203,10 @@
         {
             "text": "Someone cuts you off in traffic, and you immediately think they're a reckless driver. But when you accidentally cut someone off, you rationalize it as an urgent situation or a momentary lapse.",
             "date": "2026-07-21T15:51:06.329317"
+        },
+        {
+            "text": "You're starting a new project or task and confidently estimate how quickly you'll finish. Despite past experiences proving you often run over, you believe this time will be different.",
+            "date": "2026-07-22T13:03:22.370622"
         }
     ],
     "format4_cases": [
@@ -249,6 +261,10 @@
         {
             "text": "Stranded in an international transit zone without a passport or country, a stateless man transforms Paris's Charles de Gaulle Airport into his ingenious home for 18 years. He legally exploits a diplomatic loophole, turning a bureaucratic nightmare into a surprisingly stable, albeit bizarre, existence.",
             "date": "2026-07-21T15:53:11.480970"
+        },
+        {
+            "text": "Facing the existential threat of rising sea levels and limited resources, the tiny Pacific island nation of Tuvalu discovered an extraordinary economic loophole in the digital age. They ingeniously leveraged their unique internet domain name, '.tv', transforming a bureaucratic technicality into a multi-million dollar revenue stream that secured their nation's future.",
+            "date": "2026-07-22T13:04:25.805921"
         }
     ]
 }
