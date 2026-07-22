@@ -300,6 +300,11 @@ def fetch_notebooklm_footage(script_data: dict, duration_needed: float, fmt: int
                 asyncio.run(_upscale_video(valid_video))
             except Exception as ue:
                 print(f"   [NotebookLM] Warning: Could not upscale existing video: {ue}")
+            try:
+                from video.editor import _generate_thumbnail
+                _generate_thumbnail(valid_video, script_data.get("hook", "") if script_data else "", fmt)
+            except Exception as te:
+                print(f"   [NotebookLM] Warning: Could not generate thumbnail: {te}")
             return [valid_video]
 
     try:
@@ -307,6 +312,11 @@ def fetch_notebooklm_footage(script_data: dict, duration_needed: float, fmt: int
         video_path = asyncio.run(_generate_and_download(script_data, fmt, resume))
         if video_path and os.path.exists(video_path):
             print(f"   ✅ NotebookLM Footage Ready: {os.path.basename(video_path)}")
+            try:
+                from video.editor import _generate_thumbnail
+                _generate_thumbnail(video_path, script_data.get("hook", "") if script_data else "", fmt)
+            except Exception as te:
+                print(f"   [NotebookLM] Warning: Could not generate thumbnail: {te}")
             return [video_path]
     except Exception as e:
         err_msg = str(e).lower()

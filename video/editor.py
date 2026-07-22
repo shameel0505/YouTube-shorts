@@ -139,7 +139,7 @@ def build_video(
     print(f"✅ Video exported: {output_path}")
     return output_path
 
-def _generate_thumbnail(video_path: str, hook_text: str, fmt: int):
+def _generate_thumbnail(video_path: str, hook_text: str = "", fmt: int = 1):
     try:
         cap = cv2.VideoCapture(video_path)
         ret, frame = cap.read()
