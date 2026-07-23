@@ -910,5 +910,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "CuN2GevrmWk",
+        "format": 1,
+        "topic": "The tardigrade, also known as the water bear, is virtually indestructible; it can survive the vacuum of space, extreme radiation, and temperatures from -272\u00b0C to 150\u00b0C, then reanimate.",
+        "hook": "Original",
+        "upload_time": "2026-07-23T11:31:24.199601+00:00",
+        "check_time": "2026-07-24T11:31:24.199601+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "8xBMhLi84-w",
+        "format": 2,
+        "topic": "The Chocolate Bar That Cooked the World",
+        "hook": "Melted Chocolate Bar",
+        "upload_time": "2026-07-23T11:33:26.357225+00:00",
+        "check_time": "2026-07-24T11:33:26.357225+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "QCuBKk9JjCM",
+        "format": 3,
+        "topic": "After a series of coin flips land on heads, you feel certain the next flip *must* be tails, even though each flip is independent. Your brain tries to find patterns in pure randomness.",
+        "hook": "Is randomness truly random?",
+        "upload_time": "2026-07-23T11:35:22.204111+00:00",
+        "check_time": "2026-07-24T11:35:22.204111+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "XhMTEHXJIPE",
+        "format": 4,
+        "topic": "He Sold Pixels For $1 Million",
+        "hook": "Pixel Millionaire",
+        "upload_time": "2026-07-23T11:37:22.745707+00:00",
+        "check_time": "2026-07-24T11:37:22.745707+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]

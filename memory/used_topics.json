@@ -63,6 +63,10 @@
         {
             "text": "The Apollo 11 guidance computer, which successfully landed humans on the Moon, had less processing power than a modern calculator, and its complex software was pioneered and largely hand-written by a single woman, Margaret Hamilton.",
             "date": "2026-07-22T12:59:49.419287"
+        },
+        {
+            "text": "The tardigrade, also known as the water bear, is virtually indestructible; it can survive the vacuum of space, extreme radiation, and temperatures from -272\u00b0C to 150\u00b0C, then reanimate.",
+            "date": "2026-07-23T11:31:24.200776"
         }
     ],
     "format2_titles": [
@@ -125,6 +129,10 @@
         {
             "text": "In the 1870s, early typewriters often jammed. Inventor Christopher Latham Sholes deliberately designed the QWERTY keyboard to *slow down* typists, spacing out common letter pairs to prevent mechanical clashes. This counter-intuitive fix became the global standard, shaping how billions communicate with technology to this day.",
             "date": "2026-07-22T13:02:17.606693"
+        },
+        {
+            "text": "While testing a new magnetron for radar in 1945, engineer Percy Spencer noticed a chocolate bar in his pocket had mysteriously melted. This tiny, accidental observation sparked his curiosity, leading him to realize that microwaves could rapidly cook food, and ultimately inventing the microwave oven that revolutionized kitchens worldwide.",
+            "date": "2026-07-23T11:33:26.359042"
         }
     ],
     "format3_dilemmas": [
@@ -207,6 +215,10 @@
         {
             "text": "You're starting a new project or task and confidently estimate how quickly you'll finish. Despite past experiences proving you often run over, you believe this time will be different.",
             "date": "2026-07-22T13:03:22.370622"
+        },
+        {
+            "text": "After a series of coin flips land on heads, you feel certain the next flip *must* be tails, even though each flip is independent. Your brain tries to find patterns in pure randomness.",
+            "date": "2026-07-23T11:35:22.205370"
         }
     ],
     "format4_cases": [
@@ -265,6 +277,10 @@
         {
             "text": "Facing the existential threat of rising sea levels and limited resources, the tiny Pacific island nation of Tuvalu discovered an extraordinary economic loophole in the digital age. They ingeniously leveraged their unique internet domain name, '.tv', transforming a bureaucratic technicality into a multi-million dollar revenue stream that secured their nation's future.",
             "date": "2026-07-22T13:04:25.805921"
+        },
+        {
+            "text": "A broke university student, facing tuition fees, devised an astonishingly simple yet brilliant online scheme: he created a website composed of one million pixels and sold them for $1 each, inventing a unique digital advertising space that became a global phenomenon and made him a millionaire.",
+            "date": "2026-07-23T11:37:22.747002"
         }
     ]
 }
