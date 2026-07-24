@@ -177,31 +177,40 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
 
         # Step 7 — Upload
         if upload:
-            log("📤 Step 7/7: Uploading to YouTube...", fmt)
-            thumb_path = video_path.replace(".mp4", "_thumb.jpg")
-            result = upload_video(
-                video_path, script_data["title"],
-                script_data["description"], script_data["hashtags"],
-                thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
-                is_short=True
-            )
-            log(f"   ✅ YouTube Live: {result['url']}", fmt)
-            
-            from analytics.tracker import log_upload
-            from memory.content_log import add_used_topic
-            if "video_id" in result:
-                log_upload(result["video_id"], 1, script_data.get("chosen_topic", ""), script_data.get("hook_angle", ""))
-            add_used_topic(script_data.get("chosen_topic", ""), 1)
-            
+            import json
+            yt_tracker = os.path.join(TEMP_DIR, f"../memory/yt_tracker_f{fmt}.json")
+            if os.path.exists(yt_tracker):
+                with open(yt_tracker, "r") as f:
+                    result = json.load(f)
+                log(f"⏭️ YouTube already uploaded: {result.get('url')}", fmt)
+            else:
+                log("📤 Step 7/7: Uploading to YouTube...", fmt)
+                thumb_path = video_path.replace(".mp4", "_thumb.jpg")
+                result = upload_video(
+                    video_path, script_data["title"],
+                    script_data["description"], script_data["hashtags"],
+                    thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
+                    is_short=True
+                )
+                log(f"   ✅ YouTube Live: {result['url']}", fmt)
+                
+                from analytics.tracker import log_upload
+                from memory.content_log import add_used_topic
+                if "video_id" in result:
+                    log_upload(result["video_id"], 1, script_data.get("chosen_topic", ""), script_data.get("hook_angle", ""))
+                add_used_topic(script_data.get("chosen_topic", ""), 1)
+                
+                with open(yt_tracker, "w") as f:
+                    json.dump(result, f)
+
             from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
             if IG_ACCESS_TOKEN and IG_ACCOUNT_ID:
-                try:
-                    log("📸 Uploading to Instagram Reels...", fmt)
-                    caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
-                    ig_post_id = upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
-                    result["ig_post_id"] = ig_post_id
-                except Exception as e:
-                    log(f"   ⚠️ IG Upload Failed: {e}", fmt)
+                log("📸 Uploading to Instagram Reels...", fmt)
+                caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
+                ig_post_id = upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
+                result["ig_post_id"] = ig_post_id
+            if os.path.exists(yt_tracker):
+                os.remove(yt_tracker)
             
         else:
             log("⏭️  Step 7/7: Upload skipped (dry run)", fmt)
@@ -316,32 +325,41 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
         # Step 7 — Upload
         if upload:
-            log("📤 Step 7/7: Uploading to YouTube...", fmt)
-            thumb_path = video_path.replace(".mp4", "_thumb.jpg")
-            result = upload_video(
-                video_path, script_data["title"],
-                script_data["description"], script_data["hashtags"],
-                thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
-                is_short=True
-            )
-            log(f"   ✅ Live: {result['url']}", fmt)
-            
-            # Post-upload tracking
-            from analytics.tracker import log_upload
-            from memory.content_log import add_used_topic
-            if "video_id" in result:
-                log_upload(result["video_id"], 2, script_data["title"], script_data["hook"])
-            add_used_topic(script_data.get("used_topic_seed", script_data["title"]), 2)
-            
+            import json
+            yt_tracker = os.path.join(TEMP_DIR, f"../memory/yt_tracker_f{fmt}.json")
+            if os.path.exists(yt_tracker):
+                with open(yt_tracker, "r") as f:
+                    result = json.load(f)
+                log(f"⏭️ YouTube already uploaded: {result.get('url')}", fmt)
+            else:
+                log("📤 Step 7/7: Uploading to YouTube...", fmt)
+                thumb_path = video_path.replace(".mp4", "_thumb.jpg")
+                result = upload_video(
+                    video_path, script_data["title"],
+                    script_data["description"], script_data["hashtags"],
+                    thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
+                    is_short=True
+                )
+                log(f"   ✅ Live: {result['url']}", fmt)
+                
+                # Post-upload tracking
+                from analytics.tracker import log_upload
+                from memory.content_log import add_used_topic
+                if "video_id" in result:
+                    log_upload(result["video_id"], 2, script_data["title"], script_data["hook"])
+                add_used_topic(script_data.get("used_topic_seed", script_data["title"]), 2)
+                
+                with open(yt_tracker, "w") as f:
+                    json.dump(result, f)
+
             from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
             if IG_ACCESS_TOKEN and IG_ACCOUNT_ID:
-                try:
-                    log("📸 Uploading to Instagram Reels...", fmt)
-                    caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
-                    ig_post_id = upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
-                    result["ig_post_id"] = ig_post_id
-                except Exception as e:
-                    log(f"   ⚠️ IG Upload Failed: {e}", fmt)
+                log("📸 Uploading to Instagram Reels...", fmt)
+                caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
+                ig_post_id = upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
+                result["ig_post_id"] = ig_post_id
+            if os.path.exists(yt_tracker):
+                os.remove(yt_tracker)
                 
         else:
             log("⏭️  Step 7/7: Upload skipped (dry run)", fmt)
@@ -464,31 +482,40 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
         # Step 7 — Upload
         if upload:
-            log("📤 Step 7/7: Uploading to YouTube...", fmt)
-            thumb_path = video_path.replace(".mp4", "_thumb.jpg")
-            result = upload_video(
-                video_path, script_data["title"],
-                script_data["description"], script_data["hashtags"],
-                thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
-                is_short=True
-            )
-            log(f"   ✅ YouTube Live: {result['url']}", fmt)
-            
-            from analytics.tracker import log_upload
-            from memory.content_log import add_used_topic
-            if "video_id" in result:
-                log_upload(result["video_id"], 3, script_data["dilemma_seed"], script_data.get("closing_question", ""))
-            add_used_topic(script_data["dilemma_seed"], 3)
-            
+            import json
+            yt_tracker = os.path.join(TEMP_DIR, f"../memory/yt_tracker_f{fmt}.json")
+            if os.path.exists(yt_tracker):
+                with open(yt_tracker, "r") as f:
+                    result = json.load(f)
+                log(f"⏭️ YouTube already uploaded: {result.get('url')}", fmt)
+            else:
+                log("📤 Step 7/7: Uploading to YouTube...", fmt)
+                thumb_path = video_path.replace(".mp4", "_thumb.jpg")
+                result = upload_video(
+                    video_path, script_data["title"],
+                    script_data["description"], script_data["hashtags"],
+                    thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
+                    is_short=True
+                )
+                log(f"   ✅ YouTube Live: {result['url']}", fmt)
+                
+                from analytics.tracker import log_upload
+                from memory.content_log import add_used_topic
+                if "video_id" in result:
+                    log_upload(result["video_id"], 3, script_data["dilemma_seed"], script_data.get("closing_question", ""))
+                add_used_topic(script_data["dilemma_seed"], 3)
+                
+                with open(yt_tracker, "w") as f:
+                    json.dump(result, f)
+
             from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
             if IG_ACCESS_TOKEN and IG_ACCOUNT_ID:
-                try:
-                    log("📸 Uploading to Instagram Reels...", fmt)
-                    caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
-                    ig_post_id = upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
-                    result["ig_post_id"] = ig_post_id
-                except Exception as e:
-                    log(f"   ⚠️ IG Upload Failed: {e}", fmt)
+                log("📸 Uploading to Instagram Reels...", fmt)
+                caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
+                ig_post_id = upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
+                result["ig_post_id"] = ig_post_id
+            if os.path.exists(yt_tracker):
+                os.remove(yt_tracker)
             
         else:
             log("⏭️  Step 7/7: Upload skipped (dry run)", fmt)
@@ -601,32 +628,41 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
         # Step 7 — Upload
         if upload:
-            log("📤 Step 7/7: Uploading to YouTube...", fmt)
-            thumb_path = video_path.replace(".mp4", "_thumb.jpg")
-            result = upload_video(
-                video_path, script_data["title"],
-                script_data["description"], script_data["hashtags"],
-                thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
-                is_short=True
-            )
-            log(f"   ✅ YouTube Live: {result['url']}", fmt)
-            
-            # Post-upload tracking
-            from analytics.tracker import log_upload
-            from memory.content_log import add_used_topic
-            if "video_id" in result:
-                log_upload(result["video_id"], 4, script_data["title"], script_data.get("hook", ""))
-            add_used_topic(script_data.get("used_topic_seed", script_data["title"]), 4)
-            
+            import json
+            yt_tracker = os.path.join(TEMP_DIR, f"../memory/yt_tracker_f{fmt}.json")
+            if os.path.exists(yt_tracker):
+                with open(yt_tracker, "r") as f:
+                    result = json.load(f)
+                log(f"⏭️ YouTube already uploaded: {result.get('url')}", fmt)
+            else:
+                log("📤 Step 7/7: Uploading to YouTube...", fmt)
+                thumb_path = video_path.replace(".mp4", "_thumb.jpg")
+                result = upload_video(
+                    video_path, script_data["title"],
+                    script_data["description"], script_data["hashtags"],
+                    thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
+                    is_short=True
+                )
+                log(f"   ✅ YouTube Live: {result['url']}", fmt)
+                
+                # Post-upload tracking
+                from analytics.tracker import log_upload
+                from memory.content_log import add_used_topic
+                if "video_id" in result:
+                    log_upload(result["video_id"], 4, script_data["title"], script_data.get("hook", ""))
+                add_used_topic(script_data.get("used_topic_seed", script_data["title"]), 4)
+                
+                with open(yt_tracker, "w") as f:
+                    json.dump(result, f)
+
             from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
             if IG_ACCESS_TOKEN and IG_ACCOUNT_ID:
-                try:
-                    log("📸 Uploading to Instagram Reels...", fmt)
-                    caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
-                    ig_post_id = upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
-                    result["ig_post_id"] = ig_post_id
-                except Exception as e:
-                    log(f"   ⚠️ IG Upload Failed: {e}", fmt)
+                log("📸 Uploading to Instagram Reels...", fmt)
+                caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
+                ig_post_id = upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
+                result["ig_post_id"] = ig_post_id
+            if os.path.exists(yt_tracker):
+                os.remove(yt_tracker)
                 
         else:
             log("⏭️  Step 7/7: Upload skipped (dry run)", fmt)
@@ -1091,11 +1127,8 @@ if __name__ == "__main__":
             memory_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "memory")
 
             # ── Priority 1: Check nblm_state files (primary truth for active renders)
-            # These files are created by notebooklm_footage.py when a render task is
-            # successfully submitted. Their existence = there is definitely a pending render.
             if has_active_nblm_state(memory_dir):
                 log("⏳ Active NotebookLM render state files detected. Resuming pipeline...")
-                # Ensure state manager is also set consistently
                 if state["status"] != "running":
                     start_fresh_run()
                 set_active_render(True)
@@ -1106,9 +1139,10 @@ if __name__ == "__main__":
                     if is_rendering:
                         set_active_render(True)
                     else:
-                        posted_any = any(res.get("result", {}).get("url") for res in results.values() if isinstance(res.get("result"), dict))
-                        if posted_any:
-                            mark_posted()
+                        posted_formats_this_run = [fmt_id for fmt_id, res in results.items() if res.get("result", {}).get("url")]
+                        if posted_formats_this_run:
+                            for pf in posted_formats_this_run:
+                                mark_posted(pf)
                         else:
                             mark_skipped("Resume completed but no format was uploaded.")
                 except Exception as e:
@@ -1128,9 +1162,10 @@ if __name__ == "__main__":
                     if is_rendering:
                         set_active_render(True)
                     else:
-                        posted_any = any(res.get("result", {}).get("url") for res in results.values() if isinstance(res.get("result"), dict))
-                        if posted_any:
-                            mark_posted()
+                        posted_formats_this_run = [fmt_id for fmt_id, res in results.items() if res.get("result", {}).get("url")]
+                        if posted_formats_this_run:
+                            for pf in posted_formats_this_run:
+                                mark_posted(pf)
                         else:
                             mark_skipped("Resume completed but no format was uploaded.")
                 except Exception as e:
@@ -1140,39 +1175,55 @@ if __name__ == "__main__":
                     log(traceback.format_exc())
                 exit(0)
 
-            # ── Priority 3: Fallback fresh run (missed 09:00 UTC or failed state with retries left)
+            # ── Priority 3: Time-Window Dispatcher
             utc_hour = datetime.now(timezone.utc).hour
+            posted_formats = state.get("posted_formats", [])
+            
+            target_fmt = None
+            if "1" not in posted_formats and utc_hour >= 9:
+                target_fmt = "1"
+            elif "2" not in posted_formats and utc_hour >= 13:
+                target_fmt = "2"
+            elif "3" not in posted_formats and utc_hour >= 17:
+                target_fmt = "3"
+            elif "4" not in posted_formats and utc_hour >= 21:
+                target_fmt = "4"
+                
             status_allows_retry = state["status"] in ("pending", "failed")
-            if status_allows_retry and utc_hour >= 9 and can_retry_today():
+            
+            if target_fmt and status_allows_retry and can_retry_today():
                 retry_num = state.get("retry_count", 0) + 1
                 if state["status"] == "failed":
-                    log(f"⚠️ Previous run failed. Retry attempt {retry_num}/3 for today...")
+                    log(f"⚠️ Previous run failed. Retry attempt {retry_num}/3 for Format {target_fmt} today...")
                 else:
-                    log("⚠️ Fallback triggered: Missed daily 09:00 UTC run. Starting fresh pipeline now.")
+                    log(f"⏰ Time window open! Starting fresh pipeline for Format {target_fmt}.")
+                
                 start_fresh_run()
-                notify_pipeline_started(f"Fresh Run (Fallback #{retry_num})", state["current_day"])
+                notify_pipeline_started(f"Fresh Run (Format {target_fmt})", state["current_day"])
                 try:
-                    fmt_list = ["1", "2", "3", "4"] if args.format == "all" else [args.format]
+                    fmt_list = [target_fmt]
                     results = run_all_formats(upload, niche=args.niche, manual=args.manual, resume=False, mock=args.mock, fmt_list=fmt_list, resume_only=False)
+                    
                     is_rendering = any(res.get("rendering") for res in results.values())
                     if is_rendering:
                         set_active_render(True)
                     else:
-                        posted_any = any(res.get("result", {}).get("url") for res in results.values() if isinstance(res.get("result"), dict))
-                        if posted_any:
-                            mark_posted()
+                        posted_formats_this_run = [fmt_id for fmt_id, res in results.items() if res.get("result", {}).get("url")]
+                        if posted_formats_this_run:
+                            for pf in posted_formats_this_run:
+                                mark_posted(pf)
                         else:
-                            mark_skipped("Pipeline finished but no format was uploaded.")
+                            mark_skipped(f"Pipeline finished but Format {target_fmt} was not uploaded.")
                 except Exception as e:
                     import traceback
                     mark_failed(str(e))
-                    notify_pipeline_failed(str(e), f"Retry #{retry_num} failed. Check logs.")
+                    notify_pipeline_failed(str(e), f"Format {target_fmt} failed. Check logs.")
                     log(traceback.format_exc())
                 exit(0)
 
             # ── No action needed
             if state["status"] == "posted":
-                log(f"✅ Already posted today ({state.get('posted_at', 'unknown time')}). Nothing to do.")
+                log(f"✅ All formats posted today ({state.get('posted_formats', [])}). Nothing to do.")
             elif state["status"] == "failed" and not can_retry_today():
                 log(f"❌ Max retries reached for today ({state.get('retry_count', 0)}/3). Manual intervention required.")
                 notify_pipeline_skipped(f"Max retries ({state.get('retry_count', 0)}/3) reached for today. Manual intervention required.")

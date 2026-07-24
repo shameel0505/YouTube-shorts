@@ -38,6 +38,7 @@ def _default_state() -> dict:
     return {
         "current_day": _get_current_utc_day(),
         "status": "pending",   # pending, running, posted, failed, skipped
+        "posted_formats": [],  # Track formats successfully posted today (e.g. ["1", "2"])
         "mode": None,          # fresh, resume
         "started_at": None,
         "posted_at": None,
@@ -77,12 +78,24 @@ def set_active_render(is_active: bool):
     _save_state(state)
 
 
-def mark_posted():
+def mark_posted(fmt: str = None):
     state = _load_state()
-    state["status"] = "posted"
+    
+    posted_formats = state.get("posted_formats", [])
+    if fmt and fmt not in posted_formats:
+        posted_formats.append(fmt)
+        state["posted_formats"] = posted_formats
+
+    if len(posted_formats) >= 4:
+        state["status"] = "posted"
+    else:
+        # Reset to pending so the next format's time window can trigger!
+        state["status"] = "pending"
+        
     state["posted_at"] = _get_current_utc_time()
     state["last_updated"] = _get_current_utc_time()
     state["active_render"] = False
+    state["last_error"] = None
     _save_state(state)
 
 
@@ -95,7 +108,7 @@ def mark_failed(error: str):
     _save_state(state)
 
 
-def mark_skipped(reason: str = ""):
+def mark_skipped(reason: str = "", fmt: str = None):
     state = _load_state()
     state["status"] = "skipped"
     if reason:
