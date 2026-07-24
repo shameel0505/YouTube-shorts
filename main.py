@@ -44,7 +44,7 @@ def log(msg: str, fmt: str = ""):
     ts     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     prefix = f"[FORMAT {fmt}] " if fmt else ""
     line   = f"[{ts}] {prefix}{msg}"
-    print(line)
+    print(line, flush=True)
     try:
         with open("./logs/pipeline.log", "a", encoding="utf-8") as f:
             f.write(line + "\n")

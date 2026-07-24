@@ -83,11 +83,11 @@ class HealthCheckHandler(BaseHTTPRequestHandler):
 def run_http_server():
     port = int(os.environ.get("PORT", 10000))
     server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
-    print(f"✅ Starting Render health check server on port {port}...")
+    print(f"✅ Starting Render health check server on port {port}...", flush=True)
     server.serve_forever()
 
 def run_bot():
-    print("🤖 Starting bot scheduler...")
+    print("🤖 Starting bot scheduler...", flush=True)
     subprocess.run(["python", "main.py", "schedule"])
 
 if __name__ == "__main__":
