@@ -1154,6 +1154,18 @@ if __name__ == "__main__":
                     log(traceback.format_exc())
                 exit(0)
 
+            # ── Zombie State Timeout Check ──
+            if state["status"] == "running" and state.get("last_updated"):
+                try:
+                    last_updated = datetime.fromisoformat(state["last_updated"])
+                    minutes_since_update = (datetime.now(timezone.utc) - last_updated).total_seconds() / 60
+                    if minutes_since_update > 60:
+                        log(f"🧟 Zombie State Detected! Process has been 'running' for {minutes_since_update:.1f} minutes without updates. Resetting to failed...")
+                        mark_failed("Zombie State Timeout (Hard Crash)")
+                        state = get_state() # Reload state so Priority 3 can retry it
+                except Exception as e:
+                    pass
+
             # ── Priority 3: Time-Window Dispatcher
             utc_hour = datetime.now(timezone.utc).hour
             completed_formats = state.get("posted_formats", []) + state.get("exhausted_formats", [])

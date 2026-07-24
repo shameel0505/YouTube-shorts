@@ -29,7 +29,11 @@ def init_secrets():
             
     print("✅ Secrets initialized from environment variables.")
 
-class HealthCheckHandler(BaseHTTPRequestHandler):
+class HealthCheckHandler(SimpleHTTPRequestHandler):
+    def address_string(self):
+        # FAST: Bypass Python's incredibly slow reverse DNS lookup
+        return self.client_address[0]
+
     def do_HEAD(self):
         if self.path in ['/health', '/']:
             self.send_response(200)
@@ -98,10 +102,6 @@ class HealthCheckHandler(BaseHTTPRequestHandler):
         else:
             self.send_response(404)
             self.end_headers()
-            
-    def log_message(self, format, *args):
-        # Suppress log messages for health checks to keep logs clean
-        pass
 
 def run_http_server():
     port = int(os.environ.get("PORT", 10000))
