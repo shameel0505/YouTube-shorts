@@ -21,8 +21,8 @@ def init_secrets():
     # 3. NotebookLM Storage State
     nblm_state = os.environ.get("NOTEBOOKLM_STORAGE_STATE_RAW")
     if nblm_state:
-        # Docker runs as root, so home is /root
-        profile_dir = "/root/.notebooklm/profiles/default"
+        from pathlib import Path
+        profile_dir = Path.home() / ".notebooklm" / "profiles" / "default"
         os.makedirs(profile_dir, exist_ok=True)
         with open(os.path.join(profile_dir, "storage_state.json"), "w") as f:
             f.write(nblm_state)
