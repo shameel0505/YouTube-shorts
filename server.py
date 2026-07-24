@@ -3,6 +3,32 @@ import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import subprocess
 
+def init_secrets():
+    # Render doesn't easily support editable secret files, so we read JSON from env vars and write them to disk.
+    
+    # 1. YouTube Client Secret
+    yt_secret = os.environ.get("YOUTUBE_CLIENT_SECRET_RAW")
+    if yt_secret:
+        with open("client_secret.json", "w") as f:
+            f.write(yt_secret)
+            
+    # 2. YouTube Token
+    yt_token = os.environ.get("YOUTUBE_TOKEN_RAW")
+    if yt_token:
+        with open("token.json", "w") as f:
+            f.write(yt_token)
+            
+    # 3. NotebookLM Storage State
+    nblm_state = os.environ.get("NOTEBOOKLM_STORAGE_STATE_RAW")
+    if nblm_state:
+        # Docker runs as root, so home is /root
+        profile_dir = "/root/.notebooklm/profiles/default"
+        os.makedirs(profile_dir, exist_ok=True)
+        with open(os.path.join(profile_dir, "storage_state.json"), "w") as f:
+            f.write(nblm_state)
+            
+    print("✅ Secrets initialized from environment variables.")
+
 class HealthCheckHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
@@ -25,6 +51,8 @@ def run_bot():
     subprocess.run(["python", "main.py", "schedule"])
 
 if __name__ == "__main__":
+    init_secrets()
+    
     # Start the HTTP server in a separate thread to satisfy Render and UptimeRobot
     server_thread = threading.Thread(target=run_http_server, daemon=True)
     server_thread.start()
