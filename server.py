@@ -31,11 +31,20 @@ def init_secrets():
 
 class HealthCheckHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
-        self.wfile.write(b"Bot is alive and running! Health check passed.")
-        
+        if self.path == '/health':
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(b'{"status": "healthy", "service": "youtube-shorts-bot"}')
+        elif self.path == '/':
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            self.wfile.write(b"YouTube Shorts Bot is online.")
+        else:
+            self.send_response(404)
+            self.end_headers()
+            
     def log_message(self, format, *args):
         # Suppress log messages for health checks to keep logs clean
         pass
