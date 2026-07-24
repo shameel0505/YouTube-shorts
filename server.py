@@ -86,7 +86,7 @@ class HealthCheckHandler(BaseHTTPRequestHandler):
             
             # Run the dispatcher in the background so the HTTP request completes instantly
             print("🚀 MANUAL TRIGGER RECEIVED! Spawning dispatcher...", flush=True)
-            subprocess.Popen(["python", "main.py", "resume-check"])
+            subprocess.Popen(["python", "main.py", "run", "--resume-check"])
             
             self.wfile.write(b"<h2>Success!</h2><p>Manual trigger received. The dispatcher is now running in the background.</p><p>Check the Render logs to watch it work!</p>")
             

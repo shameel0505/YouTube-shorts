@@ -956,7 +956,7 @@ def run_scheduler():
     def tick_dispatcher():
         import subprocess
         print("⏰ Scheduler Tick: Triggering Dispatcher Check...")
-        subprocess.run(["python", "main.py", "resume-check"])
+        subprocess.run(["python", "main.py", "run", "--resume-check"])
 
     scheduler.add_job(
         func=tick_dispatcher,
