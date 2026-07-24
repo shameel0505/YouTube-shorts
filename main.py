@@ -936,6 +936,14 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
                     break
 
     log(f"✅ All-format run complete. {quota_tracker.status()}")
+    
+    # 💾 Save Memory State to GitHub to prevent Render Amnesia!
+    try:
+        from memory.saver import push_memory_to_github
+        push_memory_to_github()
+    except Exception as e:
+        log(f"⚠️ Failed to push memory to GitHub: {e}")
+        
     if pipeline_has_errors:
         raise RuntimeError("One or more formats failed completely.")
     return results
