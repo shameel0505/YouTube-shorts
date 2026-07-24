@@ -67,6 +67,29 @@ class HealthCheckHandler(BaseHTTPRequestHandler):
             
             import json
             self.wfile.write(json.dumps(response, indent=4).encode("utf-8"))
+            
+        elif self.path.startswith('/force-trigger'):
+            # Simple security: require the Telegram bot token as a password
+            from urllib.parse import urlparse, parse_qs
+            query = parse_qs(urlparse(self.path).query)
+            token = query.get('token', [''])[0]
+            
+            if token != os.environ.get("TELEGRAM_BOT_TOKEN", "NO_TOKEN"):
+                self.send_response(401)
+                self.end_headers()
+                self.wfile.write(b"Unauthorized. Please provide the correct ?token=... in the URL.")
+                return
+                
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            
+            # Run the dispatcher in the background so the HTTP request completes instantly
+            print("🚀 MANUAL TRIGGER RECEIVED! Spawning dispatcher...", flush=True)
+            subprocess.Popen(["python", "main.py", "resume-check"])
+            
+            self.wfile.write(b"<h2>Success!</h2><p>Manual trigger received. The dispatcher is now running in the background.</p><p>Check the Render logs to watch it work!</p>")
+            
         elif self.path == '/':
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
