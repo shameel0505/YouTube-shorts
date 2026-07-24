@@ -177,7 +177,6 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
 
         # Step 7 — Upload
         if upload:
-            import json
             yt_tracker = os.path.join(TEMP_DIR, f"yt_tracker_f{fmt}.json")
             if os.path.exists(yt_tracker):
                 with open(yt_tracker, "r") as f:
@@ -325,7 +324,6 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
         # Step 7 — Upload
         if upload:
-            import json
             yt_tracker = os.path.join(TEMP_DIR, f"yt_tracker_f{fmt}.json")
             if os.path.exists(yt_tracker):
                 with open(yt_tracker, "r") as f:
@@ -482,7 +480,6 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
         # Step 7 — Upload
         if upload:
-            import json
             yt_tracker = os.path.join(TEMP_DIR, f"yt_tracker_f{fmt}.json")
             if os.path.exists(yt_tracker):
                 with open(yt_tracker, "r") as f:
@@ -628,7 +625,6 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
         # Step 7 — Upload
         if upload:
-            import json
             yt_tracker = os.path.join(TEMP_DIR, f"yt_tracker_f{fmt}.json")
             if os.path.exists(yt_tracker):
                 with open(yt_tracker, "r") as f:
