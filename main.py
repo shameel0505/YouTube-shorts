@@ -951,28 +951,17 @@ def run_scheduler():
     from apscheduler.schedulers.blocking import BlockingScheduler
     scheduler = BlockingScheduler(timezone="UTC")
 
+    # Run the powerful Time-Window Dispatcher every 15 minutes
+    # It will automatically detect if it's time for a new format, or if it needs to retry a failed one!
+    def tick_dispatcher():
+        import subprocess
+        print("⏰ Scheduler Tick: Triggering Dispatcher Check...")
+        subprocess.run(["python", "main.py", "resume-check"])
+
     scheduler.add_job(
-        func=lambda: run_format1(upload=True),
-        trigger="cron", hour=FORMAT1_SCHEDULE_HOUR, minute=0,
-        id="format1_daily", name="Format 1 — Facts",
-        misfire_grace_time=3600,
-    )
-    scheduler.add_job(
-        func=lambda: run_format2(upload=True),
-        trigger="cron", hour=FORMAT2_SCHEDULE_HOUR, minute=0,
-        id="format2_daily", name="Format 2 — Thriller",
-        misfire_grace_time=3600,
-    )
-    scheduler.add_job(
-        func=lambda: run_format3(upload=True),
-        trigger="cron", hour=FORMAT3_SCHEDULE_HOUR, minute=0,
-        id="format3_daily", name="Format 3 — Dilemma",
-        misfire_grace_time=3600,
-    )
-    scheduler.add_job(
-        func=lambda: run_format4(upload=True),
-        trigger="cron", hour=FORMAT3_SCHEDULE_HOUR, minute=30,
-        id="format4_daily", name="Format 4 — Genius Loopholes",
+        func=tick_dispatcher,
+        trigger="cron", minute="*/15",
+        id="dispatcher_tick", name="15-Minute Dispatcher Tick",
         misfire_grace_time=3600,
     )
     
@@ -991,13 +980,7 @@ def run_scheduler():
         id="purge_topics", name="Purge old topics"
     )
 
-    log(
-        f"⏰ Scheduler active — "
-        f"F1@{FORMAT1_SCHEDULE_HOUR:02d}:00 UTC  "
-        f"F2@{FORMAT2_SCHEDULE_HOUR:02d}:00 UTC  "
-        f"F3@{FORMAT3_SCHEDULE_HOUR:02d}:00 UTC  "
-        f"F4@{FORMAT3_SCHEDULE_HOUR:02d}:30 UTC"
-    )
+    log("⏰ Scheduler active — Dispatcher ticking every 15 minutes to manage time windows.")
     try:
         scheduler.start()
     except KeyboardInterrupt:

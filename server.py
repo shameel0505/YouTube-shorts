@@ -35,7 +35,30 @@ class HealthCheckHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.end_headers()
-            self.wfile.write(b'{"status": "healthy", "service": "youtube-shorts-bot"}')
+            
+            # Read comprehensive pipeline state
+            state_data = {}
+            try:
+                import json
+                state_file = os.path.join(os.path.dirname(__file__), "memory", "pipeline_state.json")
+                if os.path.exists(state_file):
+                    with open(state_file, "r") as f:
+                        state_data = json.load(f)
+            except Exception as e:
+                state_data = {"error": f"Could not read state: {e}"}
+                
+            from datetime import datetime, timezone
+            utc_now = datetime.now(timezone.utc)
+            
+            response = {
+                "status": "healthy",
+                "service": "youtube-shorts-bot",
+                "server_time_utc": utc_now.strftime("%Y-%m-%d %H:%M:%S UTC"),
+                "pipeline_state": state_data
+            }
+            
+            import json
+            self.wfile.write(json.dumps(response, indent=4).encode("utf-8"))
         elif self.path == '/':
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
