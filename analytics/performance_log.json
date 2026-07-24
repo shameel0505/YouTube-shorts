@@ -958,5 +958,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "C8Rr7hmn9xU",
+        "format": 1,
+        "topic": "If you could fold a standard piece of paper in half 42 times, its thickness would be enough to reach the Moon. The exponential growth is mind-boggling.",
+        "hook": "Original (Mathematical Concept)",
+        "upload_time": "2026-07-24T12:57:05.588779+00:00",
+        "check_time": "2026-07-25T12:57:05.588779+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "6Tngn19WHCQ",
+        "format": 2,
+        "topic": "Unwashed Hands, Sweet Revolution",
+        "hook": "Accidental Sweetness",
+        "upload_time": "2026-07-24T12:59:51.480664+00:00",
+        "check_time": "2026-07-25T12:59:51.480664+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "Icx56HSXMfw",
+        "format": 3,
+        "topic": "You're focused intently on a task, like finding your misplaced keys, and completely miss an obvious object right in front of you. Or, during a conversation, you fail to notice a significant change in your environment or the person's appearance.",
+        "hook": "Did you see that change?",
+        "upload_time": "2026-07-24T13:02:00.751906+00:00",
+        "check_time": "2026-07-25T13:02:00.751906+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "Pq6SOXGPxnU",
+        "format": 4,
+        "topic": "Mohawk Nation's Brilliant 'War' Strategy",
+        "hook": "Declared War?",
+        "upload_time": "2026-07-24T13:03:59.138307+00:00",
+        "check_time": "2026-07-25T13:03:59.138307+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
