@@ -37,15 +37,16 @@ def _get_current_utc_time() -> str:
 def _default_state() -> dict:
     return {
         "current_day": _get_current_utc_day(),
-        "status": "pending",   # pending, running, posted, failed, skipped
-        "posted_formats": [],  # Track formats successfully posted today (e.g. ["1", "2"])
-        "mode": None,          # fresh, resume
+        "status": "pending",   
+        "posted_formats": [],  
+        "exhausted_formats": [], # Formats that failed 3 times and were skipped
+        "mode": None,          
         "started_at": None,
         "posted_at": None,
         "last_updated": _get_current_utc_time(),
         "active_render": False,
         "last_error": None,
-        "retry_count": 0,      # How many fresh runs attempted today
+        "retry_counts": {},      # {"1": 0, "2": 0}
     }
 
 
@@ -53,13 +54,13 @@ def get_state() -> dict:
     return _load_state()
 
 
-def can_retry_today() -> bool:
-    """Returns True if we haven't exceeded today's max retry attempts."""
+def can_retry_today(fmt: str) -> bool:
+    """Returns True if we haven't exceeded today's max retry attempts for this format."""
     state = _load_state()
-    return state.get("retry_count", 0) < MAX_DAILY_RETRIES
+    return state.get("retry_counts", {}).get(str(fmt), 0) < MAX_DAILY_RETRIES
 
 
-def start_fresh_run():
+def start_fresh_run(fmt: str = None):
     state = _load_state()
     state["status"] = "running"
     state["mode"] = "fresh"
@@ -67,7 +68,12 @@ def start_fresh_run():
     state["last_updated"] = _get_current_utc_time()
     state["active_render"] = False
     state["last_error"] = None
-    state["retry_count"] = state.get("retry_count", 0) + 1
+    
+    if fmt:
+        counts = state.get("retry_counts", {})
+        counts[str(fmt)] = counts.get(str(fmt), 0) + 1
+        state["retry_counts"] = counts
+        
     _save_state(state)
 
 
@@ -81,15 +87,15 @@ def set_active_render(is_active: bool):
 def mark_posted(fmt: str = None):
     state = _load_state()
     
-    posted_formats = state.get("posted_formats", [])
-    if fmt and fmt not in posted_formats:
-        posted_formats.append(fmt)
-        state["posted_formats"] = posted_formats
+    posted = state.get("posted_formats", [])
+    if fmt and str(fmt) not in posted:
+        posted.append(str(fmt))
+        state["posted_formats"] = posted
 
-    if len(posted_formats) >= 4:
+    exhausted = state.get("exhausted_formats", [])
+    if len(posted) + len(exhausted) >= 4:
         state["status"] = "posted"
     else:
-        # Reset to pending so the next format's time window can trigger!
         state["status"] = "pending"
         
     state["posted_at"] = _get_current_utc_time()
@@ -108,9 +114,41 @@ def mark_failed(error: str):
     _save_state(state)
 
 
+def mark_exhausted(fmt: str, error: str = ""):
+    """Marks a format as permanently failed for the day so the dispatcher can move on."""
+    state = _load_state()
+    
+    exhausted = state.get("exhausted_formats", [])
+    if fmt and str(fmt) not in exhausted:
+        exhausted.append(str(fmt))
+        state["exhausted_formats"] = exhausted
+        
+    posted = state.get("posted_formats", [])
+    if len(posted) + len(exhausted) >= 4:
+        state["status"] = "posted"
+    else:
+        state["status"] = "pending"
+        
+    state["last_error"] = f"Format {fmt} exhausted retries: {error}"
+    state["last_updated"] = _get_current_utc_time()
+    state["active_render"] = False
+    _save_state(state)
+
+
 def mark_skipped(reason: str = "", fmt: str = None):
     state = _load_state()
-    state["status"] = "skipped"
+    
+    posted = state.get("posted_formats", [])
+    if fmt and str(fmt) not in posted:
+        posted.append(str(fmt))
+        state["posted_formats"] = posted
+
+    exhausted = state.get("exhausted_formats", [])
+    if len(posted) + len(exhausted) >= 4:
+        state["status"] = "skipped"
+    else:
+        state["status"] = "pending"
+        
     if reason:
         state["last_error"] = reason
     state["last_updated"] = _get_current_utc_time()
