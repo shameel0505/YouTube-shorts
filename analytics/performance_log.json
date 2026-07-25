@@ -1006,5 +1006,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "dM0jbwEwbPY",
+        "format": 1,
+        "topic": "What if our entire universe, everything you see, feel, and experience, is just a sophisticated computer simulation? Many scientists and philosophers seriously argue that the odds are actually in favor of us living in a simulated reality right now.",
+        "hook": "Original",
+        "upload_time": "2026-07-25T10:47:53.066628+00:00",
+        "check_time": "2026-07-26T10:47:53.066628+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "iZKsmmUjHLI",
+        "format": 2,
+        "topic": "The Missed Train That Changed Time Itself",
+        "hook": "Time's Architect",
+        "upload_time": "2026-07-25T10:52:07.431644+00:00",
+        "check_time": "2026-07-26T10:52:07.431644+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "TjYwX9yBaGE",
+        "format": 3,
+        "topic": "You perform a ritual, like knocking on wood or wearing a specific item, before an important event. You genuinely feel it increases your chances of a positive outcome.",
+        "hook": "Do rituals control outcomes?",
+        "upload_time": "2026-07-25T10:55:14.674490+00:00",
+        "check_time": "2026-07-26T10:55:14.674490+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "cdW1vjuAF9I",
+        "format": 4,
+        "topic": "The Quiet Gardener Who Claimed a City Block",
+        "hook": "Plot Twist",
+        "upload_time": "2026-07-25T10:57:18.779141+00:00",
+        "check_time": "2026-07-26T10:57:18.779141+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
