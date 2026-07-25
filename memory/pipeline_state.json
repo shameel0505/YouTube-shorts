@@ -1,11 +1,11 @@
 {
-    "current_day": "2026-07-24",
-    "status": "posted",
+    "current_day": "2026-07-25",
+    "status": "running",
     "mode": "fresh",
-    "started_at": "2026-07-24T12:36:11.296968+00:00",
-    "posted_at": "2026-07-24T13:05:11.306707+00:00",
-    "last_updated": "2026-07-24T13:05:11.306720+00:00",
-    "active_render": false,
+    "started_at": "2026-07-25T09:08:18.778133+00:00",
+    "posted_at": null,
+    "last_updated": "2026-07-25T09:11:24.125989+00:00",
+    "active_render": true,
     "last_error": null,
     "retry_count": 1
 }
