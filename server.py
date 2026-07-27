@@ -119,11 +119,13 @@ class HealthCheckHandler(SimpleHTTPRequestHandler):
                 
                 # Try to forcefully write it again just in case
                 state_raw = os.environ.get("NOTEBOOKLM_STORAGE_STATE_RAW")
+                wrote = False
                 if state_raw and not exists:
                     os.makedirs(os.path.dirname(expected), exist_ok=True)
                     with open(expected, "w") as f:
                         f.write(state_raw)
                     exists = os.path.exists(expected)
+                    wrote = True
                 
                 from notebooklm import NotebookLMClient
                 async def _check():
@@ -131,9 +133,9 @@ class HealthCheckHandler(SimpleHTTPRequestHandler):
                         notebooks = await client.notebooks.list()
                         return {"success": True, "notebooks_count": len(notebooks), "message": "✅ NotebookLM login is working on Render!"}
                 result = asyncio.run(_check())
-                result["debug"] = {"home": home_path, "expand": os_expand, "file_exists": exists}
+                result["debug"] = {"home": home_path, "expand": os_expand, "file_exists": exists, "has_state_raw": bool(state_raw), "wrote_now": wrote}
             except Exception as e:
-                result = {"success": False, "error": str(e), "message": "❌ NotebookLM login FAILED on Render", "debug": {"home": str(Path.home()), "exists": os.path.exists(str(Path.home() / ".notebooklm" / "profiles" / "default" / "storage_state.json"))}}
+                result = {"success": False, "error": str(e), "message": "❌ NotebookLM login FAILED on Render", "debug": {"home": str(Path.home()), "exists": os.path.exists(str(Path.home() / ".notebooklm" / "profiles" / "default" / "storage_state.json")), "has_state_raw": "NOTEBOOKLM_STORAGE_STATE_RAW" in os.environ}}
             self.wfile.write(json.dumps(result, indent=4).encode("utf-8"))
             
 
