@@ -13,6 +13,16 @@ def push_memory_to_github():
     print("💾 Auto-saving memory to GitHub...")
     
     try:
+        # Check if it's a git repo, if not init
+        try:
+            subprocess.run(["git", "status"], check=True, capture_output=True)
+        except subprocess.CalledProcessError:
+            print("   Not a git repository. Initializing...")
+            subprocess.run(["git", "init"], check=True)
+            subprocess.run(["git", "remote", "add", "origin", f"https://{token}@github.com/shameel0505/YouTube-shorts.git"], check=True)
+            subprocess.run(["git", "fetch", "origin", "feature/spacing-logic"], check=True)
+            subprocess.run(["git", "reset", "--mixed", "origin/feature/spacing-logic"], check=True)
+
         # 1. Configure git user (required to commit)
         subprocess.run(["git", "config", "--global", "user.name", "Render Bot"], check=True)
         subprocess.run(["git", "config", "--global", "user.email", "bot@render.com"], check=True)

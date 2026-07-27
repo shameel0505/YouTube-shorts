@@ -99,10 +99,12 @@ def check_performance():
         _save_log(data)
         
         # Determine best performing format historically
-        format_views = {1: [], 2: [], 3: []}
+        format_views = {1: [], 2: [], 3: [], 4: [], 5: []}
         for entry in data:
-            if entry.get("metrics_retrieved"):
-                format_views[entry["format"]].append(entry["views"])
+            fmt = entry.get("format")
+            v = entry.get("views", 0)
+            if fmt in format_views and v > 0:
+                format_views[fmt].append(v)
                 
         print("\n🏆 Historical Performance Summary (Avg Views):")
         for fmt, views in format_views.items():

@@ -94,22 +94,6 @@ class HealthCheckHandler(SimpleHTTPRequestHandler):
             
             self.wfile.write(b"<h2>Success!</h2><p>Manual trigger received. The dispatcher is now running in the background.</p><p>Check the Render logs to watch it work!</p>")
             
-        elif self.path == '/test-auth':
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
-            import json, asyncio
-            result = {}
-            try:
-                from notebooklm import NotebookLMClient
-                async def _check():
-                    async with NotebookLMClient.from_storage() as client:
-                        notebooks = await client.notebooks.list()
-                        return {"success": True, "notebooks_count": len(notebooks), "message": "✅ NotebookLM login is working!"}
-                result = asyncio.run(_check())
-            except Exception as e:
-                result = {"success": False, "error": str(e), "message": "❌ NotebookLM login FAILED"}
-            self.wfile.write(json.dumps(result, indent=4).encode("utf-8"))
 
         elif self.path == '/':
             self.send_response(200)

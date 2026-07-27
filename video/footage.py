@@ -29,7 +29,8 @@ def fetch_footage(keyword: str = None, duration_needed: float = 0.0, fmt: int = 
         clips = [os.path.join(GAMEPLAY_DIR, f) for f in os.listdir(GAMEPLAY_DIR) if f.endswith(".mp4")]
     
     if not clips:
-        raise RuntimeError("No gameplay MP4 files found in the gameplay directory. B-roll fallback failed.")
+        print("   ⚠️ No gameplay MP4 files found in the gameplay directory. B-roll fallback skipped.")
+        return []
         
     chosen = random.choice(clips)
     print(f"   ✅ Selected: {os.path.basename(chosen)}")
