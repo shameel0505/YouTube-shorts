@@ -2,10 +2,10 @@ name: Auto Pipeline
 
 on:
   schedule:
-    # Runs once a day at 06:00 UTC (10:00 AM UAE time).
-    # NOTE: You MUST update the storage_state.json secret BEFORE this time!
-    # Otherwise, you can just trigger it manually via workflow_dispatch.
+    # Runs once a day at 06:00 UTC (10:00 AM UAE time) for Batch Generation.
     - cron: '0 6 * * *'
+    # Runs every 15 minutes to check for scheduled Instagram posts in pending_ig.json
+    - cron: '*/15 * * * *'
   workflow_dispatch:        # Allows manual trigger from the GitHub UI
 
 jobs:
@@ -44,11 +44,26 @@ jobs:
         mkdir -p ~/.notebooklm/profiles/default/
         echo "$STORAGE_STATE_CONTENT" > ~/.notebooklm/profiles/default/storage_state.json
 
-    - name: Run Batch Generation
+    - name: Run Pipeline (Batch or IG Scheduler)
       run: |
         source .env
-        echo "🚀 Starting daily batch generation..."
-        python -u main.py run --batch
+        
+        # We determine which task to run based on the hour.
+        # If it's around 06:00 UTC (batch generation time), we run the heavy batch.
+        # Otherwise, we just run the lightweight IG scheduler.
+        
+        current_hour=$(date -u +"%H")
+        current_minute=$(date -u +"%M")
+        
+        # If manually triggered via workflow_dispatch, we assume they want the batch generation.
+        # Or if it's the exact 06:00 UTC cron trigger.
+        if [ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ] || [ "$current_hour" == "06" ] && [ "$current_minute" -lt "15" ]; then
+            echo "🚀 Starting daily batch generation..."
+            python -u main.py run --batch
+        else
+            echo "⏰ Running lightweight Instagram Scheduler..."
+            python -u main.py run --ig-scheduler
+        fi
 
     - name: Commit & Push Updated State
       if: always()

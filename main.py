@@ -16,6 +16,7 @@ import argparse
 import os
 import json
 import traceback
+import sys
 import time
 from datetime import datetime
 from pathlib import Path
@@ -36,6 +37,39 @@ from video.editor import build_video
 from uploader.youtube import upload_video
 from uploader.instagram import upload_reel
 import quota_tracker
+def handle_ig_upload(script_data: dict, video_path: str, schedule_time, fmt: str) -> str:
+    from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
+    if not (IG_ACCESS_TOKEN and IG_ACCOUNT_ID):
+        return None
+        
+    log("📸 Processing Instagram Reels...", fmt)
+    caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
+    
+    if schedule_time:
+        from uploader.instagram import get_public_url
+        public_url = get_public_url(video_path)
+        
+        pending_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "memory", "pending_ig.json")
+        pending = []
+        if os.path.exists(pending_file):
+            with open(pending_file, "r") as pf:
+                try: pending = json.load(pf)
+                except: pass
+                
+        pending.append({
+            "url": public_url,
+            "caption": caption,
+            "schedule_time": schedule_time.isoformat(),
+            "fmt": fmt
+        })
+        with open(pending_file, "w") as pf:
+            json.dump(pending, pf)
+            
+        log(f"   ✅ Saved to pending_ig.json for {schedule_time.isoformat()} via {public_url}", fmt)
+        return f"scheduled_{int(time.time())}"
+    else:
+        from uploader.instagram import upload_reel
+        return upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
 
 
 # ── Logging ───────────────────────────────────────────────────────────────────
@@ -204,10 +238,8 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
 
             from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
             if IG_ACCESS_TOKEN and IG_ACCOUNT_ID:
-                log("📸 Uploading to Instagram Reels...", fmt)
-                caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
-                ig_post_id = upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
-                result["ig_post_id"] = ig_post_id
+                ig_post_id = handle_ig_upload(script_data, video_path, schedule_time, fmt)
+                if ig_post_id: result["ig_post_id"] = ig_post_id
             if os.path.exists(yt_tracker):
                 os.remove(yt_tracker)
             
@@ -352,10 +384,8 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
             from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
             if IG_ACCESS_TOKEN and IG_ACCOUNT_ID:
-                log("📸 Uploading to Instagram Reels...", fmt)
-                caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
-                ig_post_id = upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
-                result["ig_post_id"] = ig_post_id
+                ig_post_id = handle_ig_upload(script_data, video_path, schedule_time, fmt)
+                if ig_post_id: result["ig_post_id"] = ig_post_id
             if os.path.exists(yt_tracker):
                 os.remove(yt_tracker)
                 
@@ -507,10 +537,8 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
             from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
             if IG_ACCESS_TOKEN and IG_ACCOUNT_ID:
-                log("📸 Uploading to Instagram Reels...", fmt)
-                caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
-                ig_post_id = upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
-                result["ig_post_id"] = ig_post_id
+                ig_post_id = handle_ig_upload(script_data, video_path, schedule_time, fmt)
+                if ig_post_id: result["ig_post_id"] = ig_post_id
             if os.path.exists(yt_tracker):
                 os.remove(yt_tracker)
             
@@ -653,10 +681,8 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
             from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
             if IG_ACCESS_TOKEN and IG_ACCOUNT_ID:
-                log("📸 Uploading to Instagram Reels...", fmt)
-                caption = f"{script_data['title']}\n\n{script_data.get('description', '')}\n\n" + " ".join(script_data['hashtags'])
-                ig_post_id = upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
-                result["ig_post_id"] = ig_post_id
+                ig_post_id = handle_ig_upload(script_data, video_path, schedule_time, fmt)
+                if ig_post_id: result["ig_post_id"] = ig_post_id
             if os.path.exists(yt_tracker):
                 os.remove(yt_tracker)
                 
@@ -1017,6 +1043,7 @@ def parse_args():
     parser.add_argument("--resume-check", action="store_true", help="Resume pending render enforcing state logic")
     parser.add_argument("--mock", action="store_true", help="Use static mock scripts instead of live research during dry-run")
     parser.add_argument("--batch", action="store_true", help="Generate all formats at once and schedule them on YouTube using publishAt")
+    parser.add_argument("--ig-scheduler", action="store_true", help="Run the Instagram scheduler to post pending reels")
     return parser.parse_args()
 
 
@@ -1070,7 +1097,80 @@ if __name__ == "__main__":
         run_scheduler()
 
     elif args.mode in ("run", "dry-run"):
-        if args.fresh:
+        if args.batch:
+            from datetime import datetime, timezone, timedelta
+            
+            # Set the base schedule times for the current day in UTC
+            now = datetime.now(timezone.utc)
+            base_date = now.replace(minute=0, second=0, microsecond=0)
+            
+            # Format 1: 09:00 UTC, Format 2: 13:00 UTC, Format 3: 17:00 UTC, Format 4: 21:00 UTC
+            schedule_times = {}
+            for fmt_num, hour in [("1", 9), ("2", 13), ("3", 17), ("4", 21)]:
+                target_time = base_date.replace(hour=hour)
+                if target_time < now:
+                    target_time += timedelta(days=1)
+                schedule_times[fmt_num] = target_time
+                
+            log(f"🚀 Starting BATCH MODE. Generating and scheduling {len(schedule_times)} formats.")
+            for fmt_num, stime in schedule_times.items():
+                log(f"   Format {fmt_num} -> Scheduled for {stime.isoformat()}")
+            
+            try:
+                fmt_list = ["1", "2", "3", "4"] if args.format == "all" else [args.format]
+                run_all_formats(upload, niche=args.niche, manual=args.manual, resume=args.resume, mock=args.mock, fmt_list=fmt_list, resume_only=args.resume_only, schedule_times=schedule_times)
+            except Exception as e:
+                import traceback
+                log(f"❌ Batch run failed: {e}")
+                log(traceback.format_exc())
+                exit(1)
+            exit(0)
+            
+        elif args.ig_scheduler:
+            from datetime import datetime, timezone
+            from config import IG_ACCESS_TOKEN, IG_ACCOUNT_ID
+            from uploader.instagram import publish_from_url
+            
+            log("⏰ Running IG Scheduler...")
+            pending_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "memory", "pending_ig.json")
+            if not os.path.exists(pending_file):
+                log("   ⏭️ No pending_ig.json found.")
+                exit(0)
+                
+            with open(pending_file, "r") as pf:
+                pending = json.load(pf)
+                
+            now = datetime.now(timezone.utc)
+            remaining = []
+            uploaded_any = False
+            
+            for post in pending:
+                target_time = datetime.fromisoformat(post["schedule_time"])
+                if now >= target_time:
+                    log(f"   🚀 Publishing scheduled IG post for Format {post.get('fmt')} (Scheduled: {target_time.isoformat()})")
+                    try:
+                        post_id = publish_from_url(post["url"], post["caption"], IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
+                        log(f"   ✅ Successfully posted! ID: {post_id}")
+                        uploaded_any = True
+                    except Exception as e:
+                        log(f"   ❌ Failed to publish IG post: {e}")
+                        remaining.append(post) # Keep in queue if failed
+                else:
+                    remaining.append(post)
+                    
+            with open(pending_file, "w") as pf:
+                json.dump(remaining, pf)
+                
+            if uploaded_any:
+                try:
+                    from memory.saver import push_memory_to_github
+                    push_memory_to_github()
+                except Exception as e:
+                    log(f"⚠️ Failed to push updated IG queue to GitHub: {e}")
+                    
+            exit(0)
+            
+        elif args.fresh:
             from memory.state_manager import get_state, start_fresh_run, set_active_render, mark_posted, mark_skipped, mark_failed
             from telegram.approver import notify_pipeline_started, notify_pipeline_skipped, notify_pipeline_failed
             

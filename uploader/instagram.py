@@ -114,12 +114,14 @@ class MetaInstagramAPI:
         )
         return status, str(result["id"])
 
-def upload_reel(video_path: str, caption: str, access_token: str, account_id: str) -> str:
+def get_public_url(video_path: str) -> str:
     print("   ↑ Uploading MP4 to temporary public host...")
     uploader = MultiProviderUploader()
     public_url = uploader.upload(Path(video_path))
-    
     print(f"   ⬡ Public URL ready: {public_url}")
+    return public_url
+
+def publish_from_url(public_url: str, caption: str, access_token: str, account_id: str) -> str:
     api = MetaInstagramAPI(access_token, account_id)
     
     print("   ⬡ Creating Reels container...")
@@ -145,3 +147,7 @@ def upload_reel(video_path: str, caption: str, access_token: str, account_id: st
     _, post_id = api.publish(container_id)
     print(f"   ✅ Successfully posted to Instagram Reels! ID = {post_id}")
     return post_id
+
+def upload_reel(video_path: str, caption: str, access_token: str, account_id: str) -> str:
+    public_url = get_public_url(video_path)
+    return publish_from_url(public_url, caption, access_token, account_id)
