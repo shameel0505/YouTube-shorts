@@ -90,7 +90,7 @@ async def _upscale_video(file_path: str):
     except Exception as e:
         print(f"   [NotebookLM] Warning: Could not upscale video: {e}")
 
-async def _generate_and_download(script_data: dict, fmt: int, resume: bool) -> str:
+async def _generate_and_download(script_data: dict, fmt: int, resume: bool, batch_mode: bool = False) -> str:
     """Async worker to interact with NotebookLM API with State Resume & Retry."""
     state = {}
     if resume:
@@ -234,13 +234,18 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool) -> s
                     "output_file": output_file,
                     "script_data": script_data
                 })
-                print("   [NotebookLM] Task triggered successfully. Exiting to run other formats in parallel.")
-                raise Exception("Task rendering in background")
+                
+                if not batch_mode:
+                    print("   [NotebookLM] Task triggered successfully. Exiting to run other formats in parallel.")
+                    raise Exception("Task rendering in background")
+                else:
+                    print("   [NotebookLM] Task triggered. Batch mode active, blocking and waiting for render...")
 
-            # 4. Wait for completion (Short 5s poll check to prevent billing actions minutes)
-            print(f"   [NotebookLM] Checking task {task_id} status (timeout 5s)...")
+            # 4. Wait for completion
+            poll_timeout = 600.0 if batch_mode else 5.0
+            print(f"   [NotebookLM] Checking task {task_id} status (timeout {poll_timeout}s)...")
             try:
-                await client.artifacts.wait_for_completion(notebook_id, task_id, timeout=5.0)
+                await client.artifacts.wait_for_completion(notebook_id, task_id, timeout=poll_timeout)
             except Exception as e:
                 err_msg = str(e).lower()
                 if "timeout" in err_msg or "deadline" in err_msg:
@@ -280,7 +285,9 @@ def fetch_notebooklm_footage(script_data: dict, duration_needed: float, fmt: int
     """
     Synchronous wrapper to fetch NotebookLM cinematic B-roll with state resume and retries.
     """
-    print(f"🎬 Requesting AI Cinematic Footage from NotebookLM (Format {fmt}, Resume={resume})...")
+    import sys
+    batch_mode = "--batch" in sys.argv
+    print(f"🎬 Requesting AI Cinematic Footage from NotebookLM (Format {fmt}, Resume={resume}, BatchMode={batch_mode})...")
     
     # Force resume if a saved state file exists in memory/
     state_file = os.path.join(os.path.dirname(TEMP_DIR), "memory", f"nblm_state_f{fmt}.json")
@@ -309,7 +316,7 @@ def fetch_notebooklm_footage(script_data: dict, duration_needed: float, fmt: int
 
     try:
         # Run the async generation block
-        video_path = asyncio.run(_generate_and_download(script_data, fmt, resume))
+        video_path = asyncio.run(_generate_and_download(script_data, fmt, resume, batch_mode))
         if video_path and os.path.exists(video_path):
             print(f"   ✅ NotebookLM Footage Ready: {os.path.basename(video_path)}")
             try:
