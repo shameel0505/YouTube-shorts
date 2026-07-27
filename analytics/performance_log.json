@@ -958,5 +958,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "m0g63DWmCt0",
+        "format": 1,
+        "topic": "AI companies are reportedly shredding rare, invaluable books to digitize their contents and train artificial intelligence models.",
+        "hook": "Hacker News",
+        "upload_time": "2026-07-27T13:18:04.392489+00:00",
+        "check_time": "2026-07-28T13:18:04.392489+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "lEZx7xz3tfs",
+        "format": 2,
+        "topic": "The Purple Residue That Changed Everything",
+        "hook": "Purple Revolution",
+        "upload_time": "2026-07-27T13:19:30.602833+00:00",
+        "check_time": "2026-07-28T13:19:30.602833+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "boK2uXa3X3o",
+        "format": 3,
+        "topic": "You meet someone attractive and instantly assume they are also intelligent, kind, and trustworthy. Your brain makes broad judgments based on one positive trait, influencing your overall perception of them.",
+        "hook": "Judge a book's cover?",
+        "upload_time": "2026-07-27T13:20:58.479098+00:00",
+        "check_time": "2026-07-28T13:20:58.479098+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "iKOAvx2aN0E",
+        "format": 4,
+        "topic": "The Librarian Who Grew His Own Land",
+        "hook": "Legal Green Thumb!",
+        "upload_time": "2026-07-27T13:22:38.931266+00:00",
+        "check_time": "2026-07-28T13:22:38.931266+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
