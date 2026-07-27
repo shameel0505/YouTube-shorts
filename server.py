@@ -94,6 +94,33 @@ class HealthCheckHandler(SimpleHTTPRequestHandler):
             
             self.wfile.write(b"<h2>Success!</h2><p>Manual trigger received. The dispatcher is now running in the background.</p><p>Check the Render logs to watch it work!</p>")
             
+        elif self.path.startswith('/test-auth'):
+            from urllib.parse import urlparse, parse_qs
+            query = parse_qs(urlparse(self.path).query)
+            token = query.get("token", [""])[0]
+            
+            if token != os.environ.get("TELEGRAM_BOT_TOKEN", "NO_TOKEN"):
+                self.send_response(401)
+                self.end_headers()
+                self.wfile.write(b"Unauthorized. Please provide the correct ?token=... in the URL.")
+                return
+                
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            import json, asyncio
+            result = {}
+            try:
+                from notebooklm import NotebookLMClient
+                async def _check():
+                    async with NotebookLMClient.from_storage() as client:
+                        notebooks = await client.notebooks.list()
+                        return {"success": True, "notebooks_count": len(notebooks), "message": "✅ NotebookLM login is working on Render!"}
+                result = asyncio.run(_check())
+            except Exception as e:
+                result = {"success": False, "error": str(e), "message": "❌ NotebookLM login FAILED on Render"}
+            self.wfile.write(json.dumps(result, indent=4).encode("utf-8"))
+            
 
         elif self.path == '/':
             self.send_response(200)
