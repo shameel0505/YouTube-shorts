@@ -2,7 +2,10 @@ name: Auto Pipeline
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # Runs every 15 minutes
+    # Runs once a day at 06:00 UTC (10:00 AM UAE time).
+    # NOTE: You MUST update the storage_state.json secret BEFORE this time!
+    # Otherwise, you can just trigger it manually via workflow_dispatch.
+    - cron: '0 6 * * *'
   workflow_dispatch:        # Allows manual trigger from the GitHub UI
 
 jobs:
@@ -41,11 +44,11 @@ jobs:
         mkdir -p ~/.notebooklm/profiles/default/
         echo "$STORAGE_STATE_CONTENT" > ~/.notebooklm/profiles/default/storage_state.json
 
-    - name: Run Resume Check
+    - name: Run Batch Generation
       run: |
         source .env
-        echo "⏳ Checking for active renders to resume..."
-        python -u main.py run --resume-check --format all
+        echo "🚀 Starting daily batch generation..."
+        python -u main.py run --batch
 
     - name: Commit & Push Updated State
       if: always()

@@ -76,7 +76,7 @@ def _load_audio_duration(path: str) -> float:
 
 # ── FORMAT 1: Mind-Blowing Facts ─────────────────────────────────────────────
 
-def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False) -> dict:
+def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False, schedule_time=None) -> dict:
     fmt = "1"
     log("━" * 50, fmt)
     
@@ -189,7 +189,7 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
                     video_path, script_data["title"],
                     script_data["description"], script_data["hashtags"],
                     thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
-                    is_short=True
+                    is_short=True, schedule_time=schedule_time
                 )
                 log(f"   ✅ YouTube Live: {result['url']}", fmt)
                 
@@ -233,7 +233,7 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
 
 # ── FORMAT 2: Serialized Thriller ─────────────────────────────────────────────
 
-def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False) -> dict:
+def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False, schedule_time=None) -> dict:
     from generator.script import generate_thriller
     from generator.researcher import research_thriller
     
@@ -336,7 +336,7 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
                     video_path, script_data["title"],
                     script_data["description"], script_data["hashtags"],
                     thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
-                    is_short=True
+                    is_short=True, schedule_time=schedule_time
                 )
                 log(f"   ✅ Live: {result['url']}", fmt)
                 
@@ -382,7 +382,7 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
 # ── FORMAT 3: Moral Dilemma ───────────────────────────────────────────────────
 
-def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False) -> dict:
+def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False, schedule_time=None) -> dict:
     fmt = "3"
     log("━" * 50, fmt)
     
@@ -492,7 +492,7 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
                     video_path, script_data["title"],
                     script_data["description"], script_data["hashtags"],
                     thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
-                    is_short=True
+                    is_short=True, schedule_time=schedule_time
                 )
                 log(f"   ✅ YouTube Live: {result['url']}", fmt)
                 
@@ -536,7 +536,7 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
 # ── FORMAT 4: Dark Psychology & Insane Real-Life Cases ────────────────────────
 
-def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False) -> dict:
+def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False, schedule_time=None) -> dict:
     from generator.script import generate_psychology
     from generator.researcher import research_psychology
     
@@ -637,7 +637,7 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
                     video_path, script_data["title"],
                     script_data["description"], script_data["hashtags"],
                     thumbnail_path=thumb_path if os.path.exists(thumb_path) else None,
-                    is_short=True
+                    is_short=True, schedule_time=schedule_time
                 )
                 log(f"   ✅ YouTube Live: {result['url']}", fmt)
                 
@@ -807,23 +807,25 @@ def run_format5(upload: bool = True, attempt: int = 1, resume: bool = False, moc
 
 # ── All Formats ───────────────────────────────────────────────────────────────
 
-def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False, resume: bool = False, mock: bool = False, fmt_list=["1", "2", "3", "4"], resume_only: bool = False):
+def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False, resume: bool = False, mock: bool = False, fmt_list=["1", "2", "3", "4"], resume_only: bool = False, schedule_times: dict = None):
     """
     Run all formats in quota-priority order (F1 → F2 → F3 → F4).
     Skips remaining formats if Gemini quota runs out.
     """
     log("━" * 50)
     log(f"▶▶ Running formats | {quota_tracker.status()}")
+    
+    schedule_times = schedule_times or {}
 
     runners = []
     if "all" in fmt_list or "1" in fmt_list:
-        runners.append(("1", lambda attempt=1: run_format1(upload=upload, niche=niche, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only)))
+        runners.append(("1", lambda attempt=1: run_format1(upload=upload, niche=niche, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=schedule_times.get("1"))))
     if "all" in fmt_list or "2" in fmt_list:
-        runners.append(("2", lambda attempt=1: run_format2(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only)))
+        runners.append(("2", lambda attempt=1: run_format2(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=schedule_times.get("2"))))
     if "all" in fmt_list or "3" in fmt_list:
-        runners.append(("3", lambda attempt=1: run_format3(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only)))
+        runners.append(("3", lambda attempt=1: run_format3(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=schedule_times.get("3"))))
     if "all" in fmt_list or "4" in fmt_list:
-        runners.append(("4", lambda attempt=1: run_format4(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only)))
+        runners.append(("4", lambda attempt=1: run_format4(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=schedule_times.get("4"))))
 
     # ── 2-Day Scheduling Logic for Format 5 ──
     try:
@@ -1014,6 +1016,7 @@ def parse_args():
     parser.add_argument("--fresh", action="store_true", help="Start a daily fresh run enforcing state logic")
     parser.add_argument("--resume-check", action="store_true", help="Resume pending render enforcing state logic")
     parser.add_argument("--mock", action="store_true", help="Use static mock scripts instead of live research during dry-run")
+    parser.add_argument("--batch", action="store_true", help="Generate all formats at once and schedule them on YouTube using publishAt")
     return parser.parse_args()
 
 
