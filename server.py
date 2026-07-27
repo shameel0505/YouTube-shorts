@@ -112,7 +112,6 @@ class HealthCheckHandler(SimpleHTTPRequestHandler):
             result = {}
             try:
                 from pathlib import Path
-                import os
                 home_path = str(Path.home())
                 os_expand = os.path.expanduser("~")
                 expected = os.path.join(home_path, ".notebooklm", "profiles", "default", "storage_state.json")
