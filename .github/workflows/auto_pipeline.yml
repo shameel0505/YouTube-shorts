@@ -56,9 +56,12 @@ jobs:
         current_minute=$(date -u +"%M")
         
         # If manually triggered via workflow_dispatch, we assume they want the batch generation.
-        # Or if it's the exact 06:00 UTC cron trigger.
-        if [ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ] || [ "$current_hour" == "06" ] && [ "$current_minute" -lt "15" ]; then
-            echo "🚀 Starting daily batch generation..."
+        if [ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]; then
+            echo "🚀 Starting daily batch generation (Manual Trigger)..."
+            python -u main.py run --batch
+        # Or if it's the exact 06:00 UTC cron trigger (allowing a 15 min window for runner delays)
+        elif [ "$current_hour" == "06" ] && [ "$current_minute" -lt "15" ]; then
+            echo "🚀 Starting daily batch generation (Scheduled)..."
             python -u main.py run --batch
         else
             echo "⏰ Running lightweight Instagram Scheduler..."
