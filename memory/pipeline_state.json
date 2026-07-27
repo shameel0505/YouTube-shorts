@@ -1,13 +1,15 @@
 {
-    "current_day": "2026-07-23",
-    "status": "posted",
+    "current_day": "2026-07-27",
+    "status": "running",
+    "posted_formats": [],
+    "exhausted_formats": [],
     "mode": "fresh",
-    "started_at": "2026-07-23T09:34:09.287561+00:00",
-    "posted_at": "2026-07-23T11:38:34.109636+00:00",
-    "last_updated": "2026-07-23T11:38:34.109650+00:00",
+    "started_at": "2026-07-27T09:32:41.053563+00:00",
+    "posted_at": null,
+    "last_updated": "2026-07-27T09:32:41.053565+00:00",
     "active_render": false,
     "last_error": null,
-    "retry_counts": {},
-    "exhausted_formats": [],
-    "posted_formats": []
+    "retry_counts": {
+        "1": 1
+    }
 }
