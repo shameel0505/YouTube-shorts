@@ -172,9 +172,6 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
             fmt=1,
             resume=resume or resume_only
         )
-        if not footage_paths:
-            log("⚠️ No footage available (NotebookLM and gameplay both failed). Skipping format.", fmt)
-            return {"format": 1, "skipped": True}
         video_path = footage_paths[0]
         log(f"   ✅ Saved: {video_path}", fmt)
 
@@ -322,9 +319,6 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
             fmt=2,
             resume=resume or resume_only
         )
-        if not footage_paths:
-            log("⚠️ No footage available (NotebookLM and gameplay both failed). Skipping format.", fmt)
-            return {"format": 2, "skipped": True}
         video_path = footage_paths[0]
         log(f"   ✅ Saved: {video_path}", fmt)
 
@@ -481,9 +475,6 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
             fmt=3,
             resume=resume or resume_only
         )
-        if not footage_paths:
-            log("⚠️ No footage available (NotebookLM and gameplay both failed). Skipping format.", fmt)
-            return {"format": 3, "skipped": True}
         video_path = footage_paths[0]
         log(f"   ✅ Saved: {video_path}", fmt)
 
@@ -629,9 +620,6 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
             fmt=4,
             resume=resume or resume_only
         )
-        if not footage_paths:
-            log("⚠️ No footage available (NotebookLM and gameplay both failed). Skipping format.", fmt)
-            return {"format": 4, "skipped": True}
         video_path = footage_paths[0]
         log(f"   ✅ Saved: {video_path}", fmt)
 
@@ -767,9 +755,6 @@ def run_format5(upload: bool = True, attempt: int = 1, resume: bool = False, moc
             fmt=5,
             resume=resume or resume_only
         )
-        if not footage_paths:
-            log("⚠️ No footage available (NotebookLM and gameplay both failed). Skipping format.", fmt)
-            return {"format": 5, "skipped": True}
         video_path = footage_paths[0]
         log(f"   ✅ Saved: {video_path}", fmt)
 
