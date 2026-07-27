@@ -4,10 +4,10 @@
     "posted_formats": [],
     "exhausted_formats": [],
     "mode": "fresh",
-    "started_at": "2026-07-27T09:40:46.679618+00:00",
+    "started_at": "2026-07-27T10:00:08.404009+00:00",
     "posted_at": null,
-    "last_updated": "2026-07-27T09:48:50.074574+00:00",
-    "active_render": true,
+    "last_updated": "2026-07-27T10:00:08.404015+00:00",
+    "active_render": false,
     "last_error": null,
     "retry_counts": {
         "1": 1
