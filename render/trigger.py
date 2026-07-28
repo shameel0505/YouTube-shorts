@@ -90,6 +90,7 @@ scheduler.start()
 
 @app.route("/")
 @app.route("/ping")
+@app.route("/health")
 def ping():
     return "Pong! Alarm clock is running.", 200
 
