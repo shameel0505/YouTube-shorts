@@ -1018,5 +1018,41 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "R3khnB25guk",
+        "format": 1,
+        "topic": "There's a fascinating phenomenon called the Mandela Effect, where large groups of people confidently remember facts or events that never actually happened, revealing how easily collective memory can be warped.",
+        "hook": "Original",
+        "upload_time": "2026-07-28T05:20:22.187528+00:00",
+        "check_time": "2026-07-29T05:20:22.187528+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "DaMrlJiuF88",
+        "format": 2,
+        "topic": "The Art of War: A Brush with Destiny",
+        "hook": "Artist Rejected!",
+        "upload_time": "2026-07-28T05:21:39.556433+00:00",
+        "check_time": "2026-07-29T05:21:39.556433+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "IDI2MUui1cA",
+        "format": 3,
+        "topic": "You learn a new word or buy a new car, and suddenly you see it absolutely everywhere. It feels like a simulation glitch, but it's actually the Baader-Meinhof phenomenon.",
+        "hook": "Have you experienced this?",
+        "upload_time": "2026-07-28T05:25:06.098338+00:00",
+        "check_time": "2026-07-29T05:25:06.098338+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
