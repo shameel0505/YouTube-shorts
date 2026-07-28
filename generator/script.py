@@ -387,6 +387,9 @@ def generate_dilemma(research: dict = None, retries: int = 3) -> dict:
         ["title", "script", "closing_question", "values_in_conflict"],
         retries,
     )
+    if not data:
+        raise RuntimeError("Gemini API failed to generate a response (likely rate limited on all keys).")
+        
     print(f"✅ [FORMAT 3] Comprehensive Dilemma Case Study: '{data['title']}'")
     return data
 
