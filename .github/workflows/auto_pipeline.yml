@@ -1,6 +1,9 @@
 name: Auto Pipeline
 
 on:
+  schedule:
+    - cron: '0 6 * * *'
+    - cron: '*/15 * * * *'
   workflow_dispatch:
     inputs:
       task:
@@ -56,12 +59,24 @@ jobs:
       run: |
         source .env
         
+        current_hour=$(date -u +"%H")
+        current_minute=$(date -u +"%M")
+
         if [ "${{ github.event.inputs.task }}" == "ig-scheduler" ]; then
             echo "⏰ Running lightweight Instagram Scheduler (Render Trigger)..."
             python -u main.py run --ig-scheduler
-        else
+            
+        elif [ "${{ github.event.inputs.task }}" == "batch" ]; then
             echo "🚀 Starting daily batch generation (Render or UI Trigger)..."
             python -u main.py run --batch
+            
+        elif [ "$GITHUB_EVENT_NAME" == "schedule" ] && [ "$current_hour" == "06" ] && [ "$current_minute" -lt "15" ]; then
+            echo "🚀 Starting daily batch generation (Scheduled)..."
+            python -u main.py run --batch
+            
+        else
+            echo "⏰ Running lightweight Instagram Scheduler (Scheduled)..."
+            python -u main.py run --ig-scheduler
         fi
 
     - name: Commit & Push Updated State

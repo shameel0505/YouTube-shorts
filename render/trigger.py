@@ -44,24 +44,47 @@ def trigger_github(task: str):
 # Scheduler setup
 scheduler = BackgroundScheduler()
 
-# Cron: Every 15 minutes trigger ig-scheduler
-scheduler.add_job(
-    func=trigger_github,
-    trigger="cron",
-    minute="*/15",
-    args=["ig-scheduler"],
-    id="ig_scheduler_job"
-)
-
-# Cron: Once a day at 06:00 UTC trigger batch
+# === BATCH GENERATION TRIGGERS ===
+# 1. Initial Generation at 06:00 UTC (10:00 AM UAE)
 scheduler.add_job(
     func=trigger_github,
     trigger="cron",
     hour="06",
     minute="00",
     args=["batch"],
-    id="batch_job"
+    id="batch_job_1"
 )
+# 2. First Resume Check at 06:20 UTC (10:20 AM UAE)
+scheduler.add_job(
+    func=trigger_github,
+    trigger="cron",
+    hour="06",
+    minute="20",
+    args=["batch"],
+    id="batch_job_2"
+)
+# 3. Second Resume Check at 06:40 UTC (10:40 AM UAE)
+scheduler.add_job(
+    func=trigger_github,
+    trigger="cron",
+    hour="06",
+    minute="40",
+    args=["batch"],
+    id="batch_job_3"
+)
+
+# === INSTAGRAM POST TRIGGERS ===
+# Trigger exactly 1 minute after the scheduled post time
+post_hours = ["09", "13", "17", "21"]
+for i, hr in enumerate(post_hours):
+    scheduler.add_job(
+        func=trigger_github,
+        trigger="cron",
+        hour=hr,
+        minute="01",  # 1 minute after the post time just in case
+        args=["ig-scheduler"],
+        id=f"ig_scheduler_job_{i}"
+    )
 
 scheduler.start()
 
