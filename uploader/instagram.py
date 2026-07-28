@@ -40,8 +40,8 @@ class MultiProviderUploader:
 
     def upload(self, path: Path, raise_on_failure: bool = True) -> str:
         providers = [
-            ("uguu.se", self._upload_uguu),
             ("litterbox", self._upload_litterbox),
+            ("uguu.se", self._upload_uguu),
         ]
         last_exc = None
         for name, fn in providers:
