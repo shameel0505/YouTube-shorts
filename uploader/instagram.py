@@ -8,19 +8,19 @@ log = logging.getLogger(__name__)
 class MultiProviderUploader:
     HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; NewsBot/1.0)"}
 
-    def _upload_uguu(self, path: Path) -> str:
+    def _upload_catbox(self, path: Path) -> str:
         with open(path, "rb") as f:
             resp = requests.post(
-                "https://uguu.se/upload",
-                files={"files[]": f},
+                "https://catbox.moe/user/api.php",
+                data={"reqtype": "fileupload"},
+                files={"fileToUpload": f},
                 headers=self.HEADERS,
-                timeout=300, # Large timeout for video files
+                timeout=300,
             )
         resp.raise_for_status()
-        data = resp.json()
-        url = data.get("files", [{}])[0].get("url", "")
+        url = resp.text.strip()
         if not url.startswith("http"):
-            raise RuntimeError(f"uguu.se returned no URL: {data}")
+            raise RuntimeError(f"catbox.moe returned no URL: {url}")
         return url
 
     def _upload_litterbox(self, path: Path) -> str:
@@ -41,7 +41,7 @@ class MultiProviderUploader:
     def upload(self, path: Path, raise_on_failure: bool = True) -> str:
         providers = [
             ("litterbox", self._upload_litterbox),
-            ("uguu.se", self._upload_uguu),
+            ("catbox.moe", self._upload_catbox),
         ]
         last_exc = None
         for name, fn in providers:
