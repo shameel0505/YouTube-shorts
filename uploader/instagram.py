@@ -1,12 +1,49 @@
 import time
 import requests
 import logging
+import os
+import datetime
 from pathlib import Path
+from google.cloud import storage
 
 log = logging.getLogger(__name__)
 
 class MultiProviderUploader:
     HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; NewsBot/1.0)"}
+
+    def _upload_gcs(self, path: Path) -> str:
+        # Load bucket name from env (default to the user's bucket)
+        bucket_name = os.environ.get("GCS_BUCKET", "shameel-ai-shorts-bucket")
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service-account.json"
+        
+        client = storage.Client()
+        bucket = client.bucket(bucket_name)
+        
+        # Ensure bucket exists and has 3-day deletion lifecycle (idempotent)
+        try:
+            if not bucket.lifecycle_rules:
+                rule = {"action": {"type": "Delete"}, "condition": {"age": 3}}
+                bucket.lifecycle_rules = [rule]
+                bucket.patch()
+                log.info(f"Applied 3-day deletion lifecycle to {bucket_name}")
+        except Exception as e:
+            log.warning(f"Could not verify bucket lifecycle: {e}")
+            
+        blob_name = f"video_{int(time.time())}.mp4"
+        blob = bucket.blob(blob_name)
+        
+        log.info(f"Uploading {path.name} to GCS ({bucket_name}/{blob_name})...")
+        blob.upload_from_filename(str(path))
+        
+        # Generate Signed URL valid for 7 days
+        signed_url = blob.generate_signed_url(
+            version="v4",
+            expiration=datetime.timedelta(days=7),
+            method="GET"
+        )
+        
+        log.info(f"GCS Upload complete. Signed URL generated.")
+        return signed_url
 
     def _upload_catbox(self, path: Path) -> str:
         with open(path, "rb") as f:
@@ -40,6 +77,7 @@ class MultiProviderUploader:
 
     def upload(self, path: Path, raise_on_failure: bool = True) -> str:
         providers = [
+            ("gcs", self._upload_gcs),
             ("litterbox", self._upload_litterbox),
             ("catbox.moe", self._upload_catbox),
         ]
