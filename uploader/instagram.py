@@ -13,7 +13,7 @@ class MultiProviderUploader:
 
     def _upload_gcs(self, path: Path) -> str:
         # Load bucket name from env (default to the user's bucket)
-        bucket_name = os.environ.get("GCS_BUCKET", "shameel-ai-shorts-bucket")
+        bucket_name = os.environ.get("GCS_BUCKET", "shameel-shorts-free-tier-bucket")
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service-account.json"
         
         client = storage.Client()
