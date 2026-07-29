@@ -1066,5 +1066,41 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "cw4ooJHSH4Y",
+        "format": 1,
+        "topic": "Lake Kivu, on the border of Rwanda, is one of only three known 'exploding lakes' in the world. It contains vast amounts of dissolved methane and carbon dioxide deep beneath its surface, and a sudden release could trigger a limnic eruption, suffocating millions.",
+        "hook": "Original",
+        "upload_time": "2026-07-29T06:02:49.889989+00:00",
+        "check_time": "2026-07-30T06:02:49.889989+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "YuqyNNzp7cI",
+        "format": 3,
+        "topic": "When recalling past experiences like a vacation or a difficult task, we often only remember the most intense moment and how it ended, not the overall duration or average feeling.",
+        "hook": "Is your memory accurate?",
+        "upload_time": "2026-07-29T06:05:44.339125+00:00",
+        "check_time": "2026-07-30T06:05:44.339125+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "9dM0K6z5Mpc",
+        "format": 4,
+        "topic": "The Balloon Escape: Defying the Iron Curtain",
+        "hook": "DIY Freedom Flight",
+        "upload_time": "2026-07-29T06:07:09.857400+00:00",
+        "check_time": "2026-07-30T06:07:09.857400+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
