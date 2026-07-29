@@ -242,7 +242,7 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool, batc
                     print("   [NotebookLM] Task triggered. Batch mode active, blocking and waiting for render...")
 
             # 4. Wait for completion
-            poll_timeout = 600.0 if batch_mode else 5.0
+            poll_timeout = 5.0
             print(f"   [NotebookLM] Checking task {task_id} status (timeout {poll_timeout}s)...")
             try:
                 await client.artifacts.wait_for_completion(notebook_id, task_id, timeout=poll_timeout)

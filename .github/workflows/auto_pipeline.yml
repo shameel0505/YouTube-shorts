@@ -40,7 +40,22 @@ jobs:
         sudo apt-get update && sudo apt-get install -y ffmpeg
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        python -m playwright install chromium
+        
+        current_hour=$(date -u +"%H")
+        current_minute=$(date -u +"%M")
+        
+        is_batch="false"
+        if [ "${{ github.event.inputs.task }}" == "batch" ]; then
+            is_batch="true"
+        elif [ "$GITHUB_EVENT_NAME" == "schedule" ] && [ "$current_hour" == "06" ] && [ "$current_minute" -lt "15" ]; then
+            is_batch="true"
+        fi
+        
+        if [ "$is_batch" == "true" ]; then
+            python -m playwright install chromium
+        else
+            echo "Skipping playwright install for lightweight scheduler."
+        fi
 
     - name: Restore Credentials from Secrets
       env:
