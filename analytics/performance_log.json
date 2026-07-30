@@ -1102,5 +1102,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "qc65UIIO0WA",
+        "format": 1,
+        "topic": "In 1518, hundreds of people in Strasbourg inexplicably began dancing uncontrollably for days, some even to their death, in one of history's most bizarre and unsolved mass hysterias.",
+        "hook": "Original",
+        "upload_time": "2026-07-30T06:03:47.540239+00:00",
+        "check_time": "2026-07-31T06:03:47.540239+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "Q005L_8Heok",
+        "format": 2,
+        "topic": "The Dare That Unlocked a Global Flavor",
+        "hook": "Deadly 'Wolfpeaches'?",
+        "upload_time": "2026-07-30T06:05:06.907021+00:00",
+        "check_time": "2026-07-31T06:05:06.907021+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "qYg0DeUBMro",
+        "format": 3,
+        "topic": "You're looking for an item that's right in front of you, or miss a huge, obvious change in your environment. Our brain filters out far more than we consciously perceive.",
+        "hook": "Where did it go?",
+        "upload_time": "2026-07-30T06:06:31.008341+00:00",
+        "check_time": "2026-07-31T06:06:31.008341+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "RCjcc0oRz08",
+        "format": 4,
+        "topic": "Journalist's Tiny Triumph: How He Conjured a Park",
+        "hook": "Tiny Park, Big Win",
+        "upload_time": "2026-07-30T06:07:42.231950+00:00",
+        "check_time": "2026-07-31T06:07:42.231950+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
