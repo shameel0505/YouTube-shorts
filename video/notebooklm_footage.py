@@ -4,8 +4,6 @@ import json
 import time
 from notebooklm import NotebookLMClient
 from config import TEMP_DIR
-from video.footage import fetch_footage as fallback_fetch_footage
-
 def _get_state_path(fmt: int) -> str:
     # Save states to the git-tracked memory folder to persist across serverless VM runs
     return os.path.join(os.path.dirname(TEMP_DIR), "memory", f"nblm_state_f{fmt}.json")
@@ -299,20 +297,25 @@ def fetch_notebooklm_footage(script_data: dict, duration_needed: float, fmt: int
     import glob
     existing_videos = glob.glob(os.path.join(os.path.dirname(TEMP_DIR), "memory", f"notebooklm_f{fmt}_*.mp4"))
     if existing_videos:
-        existing_videos.sort(key=os.path.getmtime)
-        valid_video = existing_videos[-1]
-        if os.path.exists(valid_video) and os.path.getsize(valid_video) > 1024 * 1024:
-            print(f"   [NotebookLM] Found existing generated video on disk: {os.path.basename(valid_video)}. Skipping regeneration.")
-            try:
-                asyncio.run(_upscale_video(valid_video))
-            except Exception as ue:
-                print(f"   [NotebookLM] Warning: Could not upscale existing video: {ue}")
-            try:
-                from video.editor import _generate_thumbnail
-                _generate_thumbnail(valid_video, script_data.get("hook", "") if script_data else "", fmt)
-            except Exception as te:
-                print(f"   [NotebookLM] Warning: Could not generate thumbnail: {te}")
-            return [valid_video]
+        if resume:
+            existing_videos.sort(key=os.path.getmtime)
+            valid_video = existing_videos[-1]
+            if os.path.exists(valid_video) and os.path.getsize(valid_video) > 1024 * 1024:
+                print(f"   [NotebookLM] Found existing generated video on disk: {os.path.basename(valid_video)}. Skipping regeneration.")
+                
+                # Check for upscaled version
+                upscaled_path = valid_video.replace(".mp4", "_upscaled.mp4")
+                if os.path.exists(upscaled_path) and os.path.getsize(upscaled_path) > 1024 * 1024:
+                    print(f"   [NotebookLM] Found upscaled version on disk. Returning it.")
+                    return [upscaled_path]
+                return [valid_video]
+        else:
+            for old_vid in existing_videos:
+                try:
+                    os.remove(old_vid)
+                    print(f"   [NotebookLM] Deleted old video file: {os.path.basename(old_vid)}")
+                except Exception:
+                    pass
 
     try:
         # Run the async generation block
@@ -335,13 +338,7 @@ def fetch_notebooklm_footage(script_data: dict, duration_needed: float, fmt: int
             print(f"   [NotebookLM] Task is still processing: {e}")
             raise e
         print(f"   [NotebookLM] Fatal error in fetch_notebooklm_footage: {e}")
-        
-    print("   ⚠️ NotebookLM footage generation failed. Falling back to classic gameplay B-roll...")
-    return fallback_fetch_footage(
-        keyword=script_data.get("pexels_keyword", ""),
-        duration_needed=duration_needed,
-        fmt=fmt
-    )
+        raise e
 
 def cleanup_notebooklm_state(fmt: int):
     """

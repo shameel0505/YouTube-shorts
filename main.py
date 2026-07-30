@@ -130,7 +130,7 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
     if attempt == 1 and not resume:
         _clean_temp_for_format(1)
 
-    script_path  = os.path.join(TEMP_DIR, "script_f1.json")
+    script_path  = os.path.join(os.path.dirname(TEMP_DIR), "memory", "script_f1.json")
     caption_path = os.path.join(TEMP_DIR, "captions_f1.json")
     voice_path   = os.path.join(TEMP_DIR, "voiceover_f1.mp3")
 
@@ -288,7 +288,7 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
     if attempt == 1 and not resume:
         _clean_temp_for_format(2)
 
-    script_path  = os.path.join(TEMP_DIR, "script_f2.json")
+    script_path  = os.path.join(os.path.dirname(TEMP_DIR), "memory", "script_f2.json")
     caption_path = os.path.join(TEMP_DIR, "captions_f2.json")
     voice_path   = os.path.join(TEMP_DIR, "voiceover_f2.mp3")
 
@@ -432,7 +432,7 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
     if attempt == 1 and not resume:
         _clean_temp_for_format(3)
 
-    script_path  = os.path.join(TEMP_DIR, "script_f3.json")
+    script_path  = os.path.join(os.path.dirname(TEMP_DIR), "memory", "script_f3.json")
     caption_path = os.path.join(TEMP_DIR, "captions_f3.json")
     voice_path   = os.path.join(TEMP_DIR, "voiceover_f3.mp3")
 
@@ -587,7 +587,7 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
     if attempt == 1 and not resume:
         _clean_temp_for_format(4)
 
-    script_path  = os.path.join(TEMP_DIR, "script_f4.json")
+    script_path  = os.path.join(os.path.dirname(TEMP_DIR), "memory", "script_f4.json")
 
     try:
         # If resume_only and nblm state exists, load script from nblm state and jump straight to Step 4
@@ -733,7 +733,7 @@ def run_format5(upload: bool = True, attempt: int = 1, resume: bool = False, moc
     if attempt == 1 and not resume:
         _clean_temp_for_format(5)
 
-    script_path  = os.path.join(TEMP_DIR, "script_f5.json")
+    script_path  = os.path.join(os.path.dirname(TEMP_DIR), "memory", "script_f5.json")
 
     try:
         if resume_only and os.path.exists(state_path):
