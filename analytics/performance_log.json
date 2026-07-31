@@ -1150,5 +1150,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "ENQ1kvaNJ4s",
+        "format": 1,
+        "topic": "There's a rare psychiatric condition called Capgras Delusion, where individuals genuinely believe that a close family member or friend has been replaced by an identical imposter.",
+        "hook": "Original",
+        "upload_time": "2026-07-31T06:22:25.834575+00:00",
+        "check_time": "2026-08-01T06:22:25.834575+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "8BCekgwd29c",
+        "format": 2,
+        "topic": "The 4'8.5\" Secret That Shaped Our World",
+        "hook": "Track to Future",
+        "upload_time": "2026-07-31T06:23:18.117710+00:00",
+        "check_time": "2026-08-01T06:23:18.117710+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "klNTJDWPKNo",
+        "format": 3,
+        "topic": "You repeatedly encounter something you initially disliked, like a new song on the radio or a company logo. Over time, without consciously trying, you find yourself liking it more, or even humming along.",
+        "hook": "Why do we like it?",
+        "upload_time": "2026-07-31T06:24:14.441798+00:00",
+        "check_time": "2026-08-01T06:24:14.441798+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "xJ0zyee-71E",
+        "format": 4,
+        "topic": "The Man Who Turned Himself Into a Walking Billboard",
+        "hook": "Living Ad Canvas",
+        "upload_time": "2026-07-31T06:25:07.891006+00:00",
+        "check_time": "2026-08-01T06:25:07.891006+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
