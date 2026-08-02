@@ -1198,5 +1198,53 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "4f-CPZorq1w",
+        "format": 1,
+        "topic": "The Mantis Shrimp possesses the fastest punch in the animal kingdom, accelerating its club-like appendage faster than a .22 caliber bullet, creating a superheated cavitation bubble that literally boils water, and its incredible eyes can see polarized light and even detect cancer cells.",
+        "hook": "Original",
+        "upload_time": "2026-08-02T06:02:06.737640+00:00",
+        "check_time": "2026-08-03T06:02:06.737640+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "LkB80NwTVCY",
+        "format": 2,
+        "topic": "Sweet Oversight: The Unwashed Hand That Changed Diet",
+        "hook": "Sweet Accident",
+        "upload_time": "2026-08-02T06:02:48.180109+00:00",
+        "check_time": "2026-08-03T06:02:48.180109+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "zSkyAdAlGuo",
+        "format": 3,
+        "topic": "You receive ten positive comments and one negative criticism. Despite the praise, the single negative comment lingers in your mind and ruins your mood.",
+        "hook": "Why bad feelings linger?",
+        "upload_time": "2026-08-02T06:03:38.034930+00:00",
+        "check_time": "2026-08-03T06:03:38.034930+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "28lyl3h3s3g",
+        "format": 4,
+        "topic": "The Geode: A City's Hidden Legal Dimension",
+        "hook": "Subterranean Genius",
+        "upload_time": "2026-08-02T06:04:21.833895+00:00",
+        "check_time": "2026-08-03T06:04:21.833895+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
