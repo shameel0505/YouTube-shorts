@@ -198,7 +198,7 @@ def research_topic(niche: str = None) -> dict:
     print(f"🔍 [FORMAT 1] Researching trending topics for: '{niche}'")
 
     print("   📡 Fetching Reddit trending posts...")
-    reddit_data = get_reddit_trending(niche, limit=8)
+    reddit_data = get_reddit_trending(niche, limit=25)
     reddit_str = (
         "\n".join([f"- [{p['score']} upvotes] {p['title']}" for p in reddit_data])
         if reddit_data else "None found"
@@ -301,7 +301,7 @@ def research_thriller() -> dict:
         subreddits=["AskHistorians", "todayilearned", "HistoryMemes", "UnresolvedMysteries", "CatastrophicFailure", "AlternateHistory", "MorbidReality"],
         sort="top",
         time_filter="week",
-        limit=10,
+        limit=25,
         min_score=100,
     )
     posts_str = (

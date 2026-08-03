@@ -100,6 +100,14 @@ def _clean_temp_for_format(fmt_num: int):
             except Exception:
                 pass
 
+    # Also wipe the cached script in the memory folder to force a new topic
+    script_path = os.path.join(os.path.dirname(TEMP_DIR), "memory", f"script_f{fmt_num}.json")
+    if os.path.exists(script_path):
+        try:
+            os.remove(script_path)
+        except Exception:
+            pass
+
 
 def _load_audio_duration(path: str) -> float:
     try:
@@ -199,13 +207,7 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
                 with open(script_path, "w") as f:
                     json.dump(script_data, f)
                 from memory.content_log import add_used_topic
-                add_used_topic(script_data.get("used_topic_seed", script_data["title"]), int(base_fmt))
-                from memory.content_log import add_used_topic
-                add_used_topic(script_data["dilemma_seed"], int(base_fmt))
-                from memory.content_log import add_used_topic
-                add_used_topic(script_data.get("used_topic_seed", script_data["title"]), int(base_fmt))
-                from memory.content_log import add_used_topic
-                add_used_topic(script_data.get("chosen_topic", ""), int(base_fmt))
+                add_used_topic(script_data.get("chosen_topic", script_data.get("title", "")), int(base_fmt))
 
         # Step 4 — Footage (Direct video delivery)
         log("🎬 Step 4/7: Generating NotebookLM video (voiceover & subtitles built-in)...", fmt)
@@ -350,6 +352,8 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
                 with open(script_path, "w") as f:
                     json.dump(script_data, f)
+                from memory.content_log import add_used_topic
+                add_used_topic(script_data.get("title", ""), int(base_fmt))
 
         # Step 4 — Footage (Direct video delivery)
         log("🎬 Step 4/7: Generating NotebookLM video (voiceover & subtitles built-in)...", fmt)
@@ -504,6 +508,8 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
                 with open(script_path, "w") as f:
                     json.dump(script_data, f)
+                from memory.content_log import add_used_topic
+                add_used_topic(script_data.get("dilemma_seed", script_data.get("title", "")), int(base_fmt))
 
         # Step 4 — Footage (Direct video delivery)
         log("🎬 Step 4/7: Generating NotebookLM video (voiceover & subtitles built-in)...", fmt)
@@ -646,6 +652,8 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
                 with open(script_path, "w") as f:
                     json.dump(script_data, f)
+                from memory.content_log import add_used_topic
+                add_used_topic(script_data.get("used_topic_seed", script_data.get("title", "")), int(base_fmt))
 
         # Step 4 — Footage (Direct video delivery)
         log("🎬 Step 4/7: Generating NotebookLM video (voiceover & subtitles built-in)...", fmt)
@@ -779,6 +787,8 @@ def run_format5(upload: bool = True, attempt: int = 1, resume: bool = False, moc
 
                 with open(script_path, "w") as f:
                     json.dump(script_data, f)
+                from memory.content_log import add_used_topic
+                add_used_topic(script_data.get("used_topic_seed", script_data.get("title", "")), int(base_fmt))
 
         log("🎬 Step 4: Generating NotebookLM 16:9 video...", fmt)
         footage_paths = fetch_notebooklm_footage(
