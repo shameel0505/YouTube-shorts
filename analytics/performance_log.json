@@ -1270,5 +1270,29 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "YKc-iOLvM78",
+        "format": 1,
+        "topic": "Astronauts who view Earth from space often experience a profound cognitive shift, feeling an overwhelming sense of awe, unity, and responsibility for our planet, a phenomenon known as the 'Overview Effect'.",
+        "hook": "Original",
+        "upload_time": "2026-08-03T06:42:29.774350+00:00",
+        "check_time": "2026-08-04T06:42:29.774350+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "ea1P4zzcRkg",
+        "format": 2,
+        "topic": "The Forest's Whispers: Rome's Fatal Shortcut",
+        "hook": "Fatal Shortcut",
+        "upload_time": "2026-08-03T06:44:34.038872+00:00",
+        "check_time": "2026-08-04T06:44:34.038872+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
