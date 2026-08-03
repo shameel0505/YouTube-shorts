@@ -844,14 +844,22 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
     schedule_times = schedule_times or {}
 
     runners = []
-    if "all" in fmt_list or "1" in fmt_list:
-        runners.append(("1", lambda attempt=1: run_format1(upload=upload, niche=niche, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=schedule_times.get("1"))))
-    if "all" in fmt_list or "2" in fmt_list:
-        runners.append(("2", lambda attempt=1: run_format2(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=schedule_times.get("2"))))
-    if "all" in fmt_list or "3" in fmt_list:
-        runners.append(("3", lambda attempt=1: run_format3(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=schedule_times.get("3"))))
-    if "all" in fmt_list or "4" in fmt_list:
-        runners.append(("4", lambda attempt=1: run_format4(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=schedule_times.get("4"))))
+    
+    # Expand "all" to the standard 4 formats
+    expanded_fmt_list = ["1", "2", "3", "4"] if "all" in fmt_list else fmt_list
+    
+    for fmt_name in expanded_fmt_list:
+        base_fmt = fmt_name.split("_")[0]
+        st = schedule_times.get(fmt_name)
+        
+        if base_fmt == "1":
+            runners.append((fmt_name, lambda attempt=1, t=st: run_format1(upload=upload, niche=niche, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=t)))
+        elif base_fmt == "2":
+            runners.append((fmt_name, lambda attempt=1, t=st: run_format2(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=t)))
+        elif base_fmt == "3":
+            runners.append((fmt_name, lambda attempt=1, t=st: run_format3(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=t)))
+        elif base_fmt == "4":
+            runners.append((fmt_name, lambda attempt=1, t=st: run_format4(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=t)))
 
     # ── 2-Day Scheduling Logic for Format 5 ──
     try:
@@ -979,6 +987,44 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
 
 # ── Scheduler ─────────────────────────────────────────────────────────────────
 
+def get_schedule_mapping(num_reels):
+    """
+    Returns a list of (format_id, target_hour) based on daily requested reels (1-6).
+    Uses a round-robin approach for formats: 1 -> 2 -> 3 -> 4 -> 1...
+    Hours are spaced out as much as possible across a 24-hour period.
+    """
+    if num_reels == 1:
+        hours = [15]
+    elif num_reels == 2:
+        hours = [8, 20] # 12 hours apart
+    elif num_reels == 3:
+        hours = [7, 15, 23] # 8 hours apart
+    elif num_reels == 4:
+        hours = [6, 12, 18, 23] # ~6 hours apart
+    elif num_reels == 5:
+        hours = [5, 10, 15, 19, 23] # ~4.5 hours apart
+    elif num_reels >= 6:
+        hours = [4, 8, 12, 16, 20, 23] # ~4 hours apart
+        num_reels = 6 # Cap at 6 for now
+    else:
+        # Default to N=4 (Current Behavior)
+        hours = [9, 13, 17, 21]
+        num_reels = 4
+
+    mapping = []
+    base_formats = ["1", "2", "3", "4"]
+    format_counts = {"1": 0, "2": 0, "3": 0, "4": 0}
+
+    for i in range(num_reels):
+        base_fmt = base_formats[i % len(base_formats)]
+        format_counts[base_fmt] += 1
+        
+        # Suffix with _N if repeated to ensure unique ID in run_all_formats
+        fmt_id = base_fmt if format_counts[base_fmt] == 1 else f"{base_fmt}_{format_counts[base_fmt]}"
+        mapping.append((fmt_id, hours[i]))
+        
+    return mapping
+
 def run_scheduler():
     from apscheduler.schedulers.blocking import BlockingScheduler
     scheduler = BlockingScheduler(timezone="UTC")
@@ -1044,6 +1090,7 @@ def parse_args():
     parser.add_argument("--mock", action="store_true", help="Use static mock scripts instead of live research during dry-run")
     parser.add_argument("--batch", action="store_true", help="Generate all formats at once and schedule them on YouTube using publishAt")
     parser.add_argument("--ig-scheduler", action="store_true", help="Run the Instagram scheduler to post pending reels")
+    parser.add_argument("--daily-reels", type=int, default=None, help="Number of reels to post today (1-6) (overrides config)")
     return parser.parse_args()
 
 
@@ -1099,25 +1146,36 @@ if __name__ == "__main__":
     elif args.mode in ("run", "dry-run"):
         if args.batch:
             from datetime import datetime, timezone, timedelta
+            from config import DAILY_REELS
+            
+            # Use CLI arg if provided, otherwise config, capped at 6
+            reels_count = args.daily_reels if args.daily_reels is not None else DAILY_REELS
+            reels_count = max(1, min(6, reels_count))
             
             # Set the base schedule times for the current day in UTC
             now = datetime.now(timezone.utc)
             base_date = now.replace(minute=0, second=0, microsecond=0)
             
-            # Format 1: 09:00 UTC, Format 2: 13:00 UTC, Format 3: 17:00 UTC, Format 4: 21:00 UTC
+            schedule_mapping = get_schedule_mapping(reels_count)
             schedule_times = {}
-            for fmt_num, hour in [("1", 9), ("2", 13), ("3", 17), ("4", 21)]:
+            fmt_list = []
+            
+            for fmt_id, hour in schedule_mapping:
                 target_time = base_date.replace(hour=hour)
                 if target_time < now:
                     target_time += timedelta(days=1)
-                schedule_times[fmt_num] = target_time
+                schedule_times[fmt_id] = target_time
+                fmt_list.append(fmt_id)
                 
             log(f"🚀 Starting BATCH MODE. Generating and scheduling {len(schedule_times)} formats.")
-            for fmt_num, stime in schedule_times.items():
-                log(f"   Format {fmt_num} -> Scheduled for {stime.isoformat()}")
+            for fmt_id, stime in schedule_times.items():
+                log(f"   Format {fmt_id.split('_')[0]} -> Scheduled for {stime.isoformat()}")
             
             try:
-                fmt_list = ["1", "2", "3", "4"] if args.format == "all" else [args.format]
+                # If specific format requested, override the batch cycle
+                if args.format != "all":
+                    fmt_list = [args.format]
+                    # We might want to retain schedule time if it was part of mapping, else pass None
                 run_all_formats(upload, niche=args.niche, manual=args.manual, resume=args.resume, mock=args.mock, fmt_list=fmt_list, resume_only=args.resume_only, schedule_times=schedule_times)
             except Exception as e:
                 import traceback
@@ -1281,15 +1339,17 @@ if __name__ == "__main__":
             utc_hour = datetime.now(timezone.utc).hour
             completed_formats = state.get("posted_formats", []) + state.get("exhausted_formats", [])
             
+            from config import DAILY_REELS
+            reels_count = args.daily_reels if args.daily_reels is not None else DAILY_REELS
+            reels_count = max(1, min(6, reels_count))
+            schedule_mapping = get_schedule_mapping(reels_count)
+            
             target_fmt = None
-            if "1" not in completed_formats and utc_hour >= 9:
-                target_fmt = "1"
-            elif "2" not in completed_formats and utc_hour >= 13:
-                target_fmt = "2"
-            elif "3" not in completed_formats and utc_hour >= 17:
-                target_fmt = "3"
-            elif "4" not in completed_formats and utc_hour >= 21:
-                target_fmt = "4"
+            for fmt_id, target_hour in schedule_mapping:
+                # E.g. "1" or "1_2"
+                if fmt_id not in completed_formats and utc_hour >= target_hour:
+                    target_fmt = fmt_id
+                    break
                 
             status_allows_retry = state["status"] in ("pending", "failed")
             

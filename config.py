@@ -113,6 +113,7 @@ YT_PRIVACY            = os.getenv("YT_PRIVACY", "public")
 GEMINI_MODEL          = "gemini-2.5-flash"
 
 # ── Scheduler — posting times in UTC ─────────────────────────────────────────
+DAILY_REELS           = int(os.getenv("DAILY_REELS", "2"))
 FORMAT1_SCHEDULE_HOUR = int(os.getenv("FORMAT1_SCHEDULE_HOUR", "9"))   # Facts
 FORMAT2_SCHEDULE_HOUR = int(os.getenv("FORMAT2_SCHEDULE_HOUR", "13"))  # Thriller
 FORMAT3_SCHEDULE_HOUR = int(os.getenv("FORMAT3_SCHEDULE_HOUR", "17"))  # Dilemma
