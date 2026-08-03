@@ -275,7 +275,7 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
 
 # ── FORMAT 2: Serialized Thriller ─────────────────────────────────────────────
 
-def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False, schedule_time=None) -> dict:
+def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False, schedule_time=None, fmt_id: str = "2") -> dict:
     from generator.script import generate_thriller
     from generator.researcher import research_thriller
     
@@ -577,7 +577,7 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
 # ── FORMAT 4: Dark Psychology & Insane Real-Life Cases ────────────────────────
 
-def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False, schedule_time=None) -> dict:
+def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False, schedule_time=None, fmt_id: str = "4") -> dict:
     from generator.script import generate_psychology
     from generator.researcher import research_psychology
     
@@ -720,7 +720,7 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
         raise
 
 
-def run_format5(upload: bool = True, attempt: int = 1, resume: bool = False, mock: bool = False, resume_only: bool = False):
+def run_format5(upload: bool = True, attempt: int = 1, resume: bool = False, mock: bool = False, resume_only: bool = False, schedule_time=None, fmt_id: str = "5"):
     """
     Format 5: Long-Form Cinematic Widescreen Video.
     Generated on a 2-day schedule.
