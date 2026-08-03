@@ -110,8 +110,9 @@ def _load_audio_duration(path: str) -> float:
 
 # ── FORMAT 1: Mind-Blowing Facts ─────────────────────────────────────────────
 
-def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False, schedule_time=None) -> dict:
-    fmt = "1"
+def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False, schedule_time=None, fmt_id: str = "1") -> dict:
+    fmt = fmt_id
+    base_fmt = str(fmt).split("_")[0]
     log("━" * 50, fmt)
     
     state_path = os.path.join(os.path.dirname(TEMP_DIR), "memory", f"nblm_state_f{fmt}.json")
@@ -121,14 +122,14 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
 
     if upload:
         from analytics.tracker import was_format_uploaded_today
-        if was_format_uploaded_today(1):
+        if was_format_uploaded_today(fmt):
             log("⏭️  Format 1 already uploaded today. Skipping.", fmt)
             return {"format": 1, "skipped": True}
 
     log(f"🚀 Starting | niche: {niche or NICHE} | upload: {upload} | attempt: {attempt}", fmt)
 
     if attempt == 1 and not resume:
-        _clean_temp_for_format(1)
+        _clean_temp_for_format(fmt)
 
     script_path  = os.path.join(os.path.dirname(TEMP_DIR), "memory", "script_f1.json")
     caption_path = os.path.join(TEMP_DIR, "captions_f1.json")
@@ -153,7 +154,7 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
                 from memory.content_log import is_topic_used
                 if is_topic_used(cached_data.get("chosen_topic", ""), 1):
                     log("♻️  Cached script is stale (already uploaded previously). Wiping temp to recreate...", fmt)
-                    _clean_temp_for_format(1)
+                    _clean_temp_for_format(fmt)
                 else:
                     log("📝 Steps 1 & 2: Loading cached script...", fmt)
                     script_data = cached_data
@@ -197,6 +198,14 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
                     log(f"   {quota_tracker.status()}", fmt)
                 with open(script_path, "w") as f:
                     json.dump(script_data, f)
+                from memory.content_log import add_used_topic
+                add_used_topic(script_data.get("used_topic_seed", script_data["title"]), int(base_fmt))
+                from memory.content_log import add_used_topic
+                add_used_topic(script_data["dilemma_seed"], int(base_fmt))
+                from memory.content_log import add_used_topic
+                add_used_topic(script_data.get("used_topic_seed", script_data["title"]), int(base_fmt))
+                from memory.content_log import add_used_topic
+                add_used_topic(script_data.get("chosen_topic", ""), int(base_fmt))
 
         # Step 4 — Footage (Direct video delivery)
         log("🎬 Step 4/7: Generating NotebookLM video (voiceover & subtitles built-in)...", fmt)
@@ -231,7 +240,6 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
                 from memory.content_log import add_used_topic
                 if "video_id" in result:
                     log_upload(result["video_id"], 1, script_data.get("chosen_topic", ""), script_data.get("hook_angle", ""))
-                add_used_topic(script_data.get("chosen_topic", ""), 1)
                 
                 with open(yt_tracker, "w") as f:
                     json.dump(result, f)
@@ -248,7 +256,7 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
             result = {"video_path": video_path}
 
         from video.notebooklm_footage import cleanup_notebooklm_state
-        cleanup_notebooklm_state(1)
+        cleanup_notebooklm_state(fmt)
         
         log("🎉 Format 1 completed successfully!", fmt)
         return {"format": 1, "script": script_data, "video_path": video_path, "result": result}
@@ -279,14 +287,14 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
     if upload:
         from analytics.tracker import was_format_uploaded_today
-        if was_format_uploaded_today(2):
+        if was_format_uploaded_today(fmt):
             log("⏭️  Format 2 already uploaded today. Skipping.", fmt)
             return {"format": 2, "skipped": True}
 
     log(f"🚀 Starting The Butterfly Effect | upload: {upload} | attempt: {attempt}", fmt)
 
     if attempt == 1 and not resume:
-        _clean_temp_for_format(2)
+        _clean_temp_for_format(fmt)
 
     script_path  = os.path.join(os.path.dirname(TEMP_DIR), "memory", "script_f2.json")
     caption_path = os.path.join(TEMP_DIR, "captions_f2.json")
@@ -311,7 +319,7 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
                 from memory.content_log import is_topic_used
                 if is_topic_used(cached_data.get("used_topic_seed", cached_data.get("title", "")), 2):
                     log("♻️  Cached script is stale (already uploaded previously). Wiping temp to recreate...", fmt)
-                    _clean_temp_for_format(2)
+                    _clean_temp_for_format(fmt)
                 else:
                     log("📝 Steps 1 & 2: Loading cached script...", fmt)
                     script_data = cached_data
@@ -377,7 +385,6 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
                 from memory.content_log import add_used_topic
                 if "video_id" in result:
                     log_upload(result["video_id"], 2, script_data["title"], script_data["hook"])
-                add_used_topic(script_data.get("used_topic_seed", script_data["title"]), 2)
                 
                 with open(yt_tracker, "w") as f:
                     json.dump(result, f)
@@ -394,7 +401,7 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
             result = {"video_path": video_path}
 
         from video.notebooklm_footage import cleanup_notebooklm_state
-        cleanup_notebooklm_state(2)
+        cleanup_notebooklm_state(fmt)
 
         log("🎉 Format 2 completed successfully!", fmt)
         return {"format": 2, "script": script_data, "video_path": video_path, "result": result}
@@ -412,8 +419,9 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
 # ── FORMAT 3: Moral Dilemma ───────────────────────────────────────────────────
 
-def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False, schedule_time=None) -> dict:
-    fmt = "3"
+def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, resume: bool = False, mock: bool = False, resume_only: bool = False, schedule_time=None, fmt_id: str = "3") -> dict:
+    fmt = fmt_id
+    base_fmt = str(fmt).split("_")[0]
     log("━" * 50, fmt)
     
     state_path = os.path.join(os.path.dirname(TEMP_DIR), "memory", f"nblm_state_f{fmt}.json")
@@ -423,14 +431,14 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
     if upload:
         from analytics.tracker import was_format_uploaded_today
-        if was_format_uploaded_today(3):
+        if was_format_uploaded_today(fmt):
             log("⏭️  Format 3 already uploaded today. Skipping.", fmt)
             return {"format": 3, "skipped": True}
 
     log(f"🚀 Starting Everyday Brain Glitches | upload: {upload} | attempt: {attempt}", fmt)
 
     if attempt == 1 and not resume:
-        _clean_temp_for_format(3)
+        _clean_temp_for_format(fmt)
 
     script_path  = os.path.join(os.path.dirname(TEMP_DIR), "memory", "script_f3.json")
     caption_path = os.path.join(TEMP_DIR, "captions_f3.json")
@@ -455,7 +463,7 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
                 from memory.content_log import is_topic_used
                 if is_topic_used(cached_data.get("dilemma_seed", ""), 3):
                     log("♻️  Cached script is stale (already uploaded previously). Wiping temp to recreate...", fmt)
-                    _clean_temp_for_format(3)
+                    _clean_temp_for_format(fmt)
                 else:
                     log("📝 Steps 1 & 2: Loading cached dilemma script...", fmt)
                     script_data = cached_data
@@ -530,7 +538,6 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
                 from memory.content_log import add_used_topic
                 if "video_id" in result:
                     log_upload(result["video_id"], 3, script_data["dilemma_seed"], script_data.get("closing_question", ""))
-                add_used_topic(script_data["dilemma_seed"], 3)
                 
                 with open(yt_tracker, "w") as f:
                     json.dump(result, f)
@@ -547,7 +554,7 @@ def run_format3(upload: bool = True, attempt: int = 1, manual: bool = False, res
             result = {"video_path": video_path}
 
         from video.notebooklm_footage import cleanup_notebooklm_state
-        cleanup_notebooklm_state(3)
+        cleanup_notebooklm_state(fmt)
 
         log("🎉 Format 3 completed successfully!", fmt)
         return {"format": 3, "script": script_data, "video_path": video_path, "result": result}
@@ -578,14 +585,14 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
 
     if upload:
         from analytics.tracker import was_format_uploaded_today
-        if was_format_uploaded_today(4):
+        if was_format_uploaded_today(fmt):
             log("⏭️  Format 4 already uploaded today. Skipping.", fmt)
             return {"format": 4, "skipped": True}
 
     log(f"🚀 Starting Genius Loopholes Case study | upload: {upload} | attempt: {attempt}", fmt)
 
     if attempt == 1 and not resume:
-        _clean_temp_for_format(4)
+        _clean_temp_for_format(fmt)
 
     script_path  = os.path.join(os.path.dirname(TEMP_DIR), "memory", "script_f4.json")
 
@@ -608,7 +615,7 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
                 from memory.content_log import is_topic_used
                 if is_topic_used(cached_data.get("used_topic_seed", cached_data.get("title", "")), 4):
                     log("♻️  Cached script is stale (already uploaded previously). Wiping temp to recreate...", fmt)
-                    _clean_temp_for_format(4)
+                    _clean_temp_for_format(fmt)
                 else:
                     log("📝 Steps 1 & 2: Loading cached script...", fmt)
                     script_data = cached_data
@@ -674,7 +681,6 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
                 from memory.content_log import add_used_topic
                 if "video_id" in result:
                     log_upload(result["video_id"], 4, script_data["title"], script_data.get("hook", ""))
-                add_used_topic(script_data.get("used_topic_seed", script_data["title"]), 4)
                 
                 with open(yt_tracker, "w") as f:
                     json.dump(result, f)
@@ -691,7 +697,7 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
             result = {"video_path": video_path}
 
         from video.notebooklm_footage import cleanup_notebooklm_state
-        cleanup_notebooklm_state(4)
+        cleanup_notebooklm_state(fmt)
 
         log("🎉 Format 4 completed successfully!", fmt)
         return {"format": 4, "script": script_data, "video_path": video_path, "result": result}
@@ -731,7 +737,7 @@ def run_format5(upload: bool = True, attempt: int = 1, resume: bool = False, moc
     log(f"🚀 Starting Long-Form Video | upload: {upload} | attempt: {attempt}", fmt)
 
     if attempt == 1 and not resume:
-        _clean_temp_for_format(5)
+        _clean_temp_for_format(fmt)
 
     script_path  = os.path.join(os.path.dirname(TEMP_DIR), "memory", "script_f5.json")
 
@@ -752,7 +758,7 @@ def run_format5(upload: bool = True, attempt: int = 1, resume: bool = False, moc
                 from memory.content_log import is_topic_used
                 if is_topic_used(cached_data.get("used_topic_seed", cached_data.get("title", "")), 5):
                     log("♻️  Cached script is stale (already uploaded previously). Wiping temp to recreate...", fmt)
-                    _clean_temp_for_format(5)
+                    _clean_temp_for_format(fmt)
                 else:
                     log("📝 Loading cached script...", fmt)
                     script_data = cached_data
@@ -817,7 +823,7 @@ def run_format5(upload: bool = True, attempt: int = 1, resume: bool = False, moc
             result = {"video_path": video_path}
 
         from video.notebooklm_footage import cleanup_notebooklm_state
-        cleanup_notebooklm_state(5)
+        cleanup_notebooklm_state(fmt)
 
         log("🎉 Format 5 completed successfully!", fmt)
         return {"format": 5, "script": script_data, "video_path": video_path, "result": result}
@@ -853,13 +859,13 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
         st = schedule_times.get(fmt_name)
         
         if base_fmt == "1":
-            runners.append((fmt_name, lambda attempt=1, t=st: run_format1(upload=upload, niche=niche, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=t)))
+            runners.append((fmt_name, lambda attempt=1, t=st, f=fmt_name: run_format1(upload=upload, niche=niche, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=t, fmt_id=f)))
         elif base_fmt == "2":
-            runners.append((fmt_name, lambda attempt=1, t=st: run_format2(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=t)))
+            runners.append((fmt_name, lambda attempt=1, t=st, f=fmt_name: run_format2(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=t, fmt_id=f)))
         elif base_fmt == "3":
-            runners.append((fmt_name, lambda attempt=1, t=st: run_format3(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=t)))
+            runners.append((fmt_name, lambda attempt=1, t=st, f=fmt_name: run_format3(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=t, fmt_id=f)))
         elif base_fmt == "4":
-            runners.append((fmt_name, lambda attempt=1, t=st: run_format4(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=t)))
+            runners.append((fmt_name, lambda attempt=1, t=st, f=fmt_name: run_format4(upload=upload, manual=manual, attempt=attempt, resume=resume, mock=mock, resume_only=resume_only, schedule_time=t, fmt_id=f)))
 
     # ── 2-Day Scheduling Logic for Format 5 ──
     try:
@@ -909,10 +915,11 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
                     break
                 if res.get("rendering"):
                     title = res.get('script', {}).get('title', 'Unknown')
-                    try:
-                        from telegram.approver import notify_pipeline_running
-                        notify_pipeline_running(fmt_name, title)
-                    except: pass
+                    if not resume_only:
+                        try:
+                            from telegram.approver import notify_pipeline_running
+                            notify_pipeline_running(fmt_name, title)
+                        except: pass
                     break
 
                 if "result" in res and res.get("result", {}).get("url"):
