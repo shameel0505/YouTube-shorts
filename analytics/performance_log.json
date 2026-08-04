@@ -1294,5 +1294,29 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "8BqYbgc6p1g",
+        "format": 1,
+        "topic": "If the universe is truly infinite, then it's statistically certain that somewhere out there, an identical version of Earth exists, along with another 'you' living an identical life, and every other possible variation of your existence.",
+        "hook": "Original",
+        "upload_time": "2026-08-04T06:22:37.764858+00:00",
+        "check_time": "2026-08-05T06:22:37.764858+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "do4zuj8Go6U",
+        "format": 2,
+        "topic": "The Humble Box That Launched Globalization",
+        "hook": "Boxed Brilliance",
+        "upload_time": "2026-08-04T06:23:58.218919+00:00",
+        "check_time": "2026-08-05T06:23:58.218919+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
