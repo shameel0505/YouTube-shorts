@@ -353,7 +353,7 @@ def run_format2(upload: bool = True, attempt: int = 1, manual: bool = False, res
                 with open(script_path, "w") as f:
                     json.dump(script_data, f)
                 from memory.content_log import add_used_topic
-                add_used_topic(script_data.get("title", ""), int(base_fmt))
+                add_used_topic(script_data.get("title", ""), int(fmt))
 
         # Step 4 — Footage (Direct video delivery)
         log("🎬 Step 4/7: Generating NotebookLM video (voiceover & subtitles built-in)...", fmt)
