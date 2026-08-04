@@ -100,11 +100,22 @@ def _clean_temp_for_format(fmt_num: int):
             except Exception:
                 pass
 
-    # Also wipe the cached script in the memory folder to force a new topic
-    script_path = os.path.join(os.path.dirname(TEMP_DIR), "memory", f"script_f{fmt_num}.json")
-    if os.path.exists(script_path):
+    # Also wipe the cached script and NotebookLM state in the memory folder to force a new topic
+    mem_dir = os.path.join(os.path.dirname(TEMP_DIR), "memory")
+    script_path = os.path.join(mem_dir, f"script_f{fmt_num}.json")
+    state_path = os.path.join(mem_dir, f"nblm_state_f{fmt_num}.json")
+    for file_path in [script_path, state_path]:
+        if os.path.exists(file_path):
+            try:
+                os.remove(file_path)
+            except Exception:
+                pass
+                
+    # Wipe any cached notebooklm videos for this format
+    import glob
+    for vid in glob.glob(os.path.join(mem_dir, f"notebooklm_f{fmt_num}_*.mp4")):
         try:
-            os.remove(script_path)
+            os.remove(vid)
         except Exception:
             pass
 
