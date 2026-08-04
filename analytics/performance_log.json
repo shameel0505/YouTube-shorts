@@ -1318,5 +1318,29 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "Dcnx1ov3aWU",
+        "format": 1,
+        "topic": "Archaeologists have discovered remnants of a vast, previously unknown ancient civilization in the Amazon, suggesting millions of people lived in complex cities, challenging the long-held belief that the rainforest couldn't support such large-scale societies.",
+        "hook": "Hacker News (derived from discussion about Amazonian civilization)",
+        "upload_time": "2026-08-04T09:25:39.775084+00:00",
+        "check_time": "2026-08-05T09:25:39.775084+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "6CITPC-5um8",
+        "format": 2,
+        "topic": "The \u00a310k Tea That Sparked a Revolution",
+        "hook": "Tea's Price",
+        "upload_time": "2026-08-04T09:26:34.824275+00:00",
+        "check_time": "2026-08-05T09:26:34.824275+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]

@@ -1,0 +1,16 @@
+{
+    "current_day": "2026-08-04",
+    "status": "pending",
+    "posted_formats": [
+        "1",
+        "2"
+    ],
+    "exhausted_formats": [],
+    "mode": "fresh",
+    "started_at": "2026-08-04T09:24:44.738414+00:00",
+    "posted_at": "2026-08-04T09:26:38.768289+00:00",
+    "last_updated": "2026-08-04T09:26:38.768295+00:00",
+    "active_render": false,
+    "last_error": null,
+    "retry_counts": {}
+}
