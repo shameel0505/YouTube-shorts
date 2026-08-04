@@ -1200,13 +1200,42 @@ if __name__ == "__main__":
                 log(f"   Format {fmt_id.split('_')[0]} -> Scheduled for {stime.isoformat()}")
             
             try:
+                import os
+                from memory.state_manager import has_active_nblm_state, get_state, set_active_render, start_fresh_run, mark_posted, mark_skipped, mark_failed
+                
+                memory_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "memory")
+                
                 # If specific format requested, override the batch cycle
                 if args.format != "all":
                     fmt_list = [args.format]
-                    # We might want to retain schedule time if it was part of mapping, else pass None
-                run_all_formats(upload, niche=args.niche, manual=args.manual, resume=args.resume, mock=args.mock, fmt_list=fmt_list, resume_only=args.resume_only, schedule_times=schedule_times)
+                
+                # --- NEW: Smart Resume Check ---
+                # If batch is triggered but there are already active renders, automatically switch to RESUME MODE
+                if has_active_nblm_state(memory_dir):
+                    log("⏳ Active NotebookLM render state files detected during Batch Run. Automatically switching to RESUME MODE...")
+                    state = get_state()
+                    if state["status"] != "running":
+                        start_fresh_run()
+                    set_active_render(True)
+                    
+                    results = run_all_formats(upload, niche=args.niche, manual=args.manual, resume=True, mock=args.mock, fmt_list=fmt_list, resume_only=True, schedule_times=schedule_times)
+                else:
+                    results = run_all_formats(upload, niche=args.niche, manual=args.manual, resume=args.resume, mock=args.mock, fmt_list=fmt_list, resume_only=args.resume_only, schedule_times=schedule_times)
+                
+                is_rendering = any(res.get("rendering") for res in results.values() if isinstance(res, dict))
+                if is_rendering:
+                    set_active_render(True)
+                else:
+                    posted_formats_this_run = [f_id for f_id, res in results.items() if isinstance(res, dict) and res.get("result", {}).get("url")]
+                    if posted_formats_this_run:
+                        for pf in posted_formats_this_run: mark_posted(pf)
+                    else:
+                        mark_skipped("Pipeline completed but no format was uploaded.")
             except Exception as e:
                 import traceback
+                from memory.state_manager import mark_failed
+                try: mark_failed(str(e))
+                except: pass
                 log(f"❌ Batch run failed: {e}")
                 log(traceback.format_exc())
                 exit(1)
