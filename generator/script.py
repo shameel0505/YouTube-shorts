@@ -309,6 +309,8 @@ def generate_thriller(research: dict = None, retries: int = 3) -> dict:
         ["title", "description", "hashtags", "script", "hook", "pexels_keyword"],
         retries=retries
     )
+    if not data:
+        raise RuntimeError("Gemini API failed to generate a response (likely rate limited on all keys).")
     
     # Save the premise/title to prevent repetition in future runs
     data["used_topic_seed"] = premise
@@ -467,6 +469,8 @@ def generate_psychology(research: dict = None, retries: int = 3) -> dict:
         ["title", "script", "hook", "pexels_keyword"],
         retries=retries
     )
+    if not data:
+        raise RuntimeError("Gemini API failed to generate a response (likely rate limited on all keys).")
     
     # Save the premise/title to prevent repetition in future runs
     data["used_topic_seed"] = premise
@@ -550,6 +554,8 @@ def generate_long_video(retries: int = 3) -> dict:
         ["topic", "title", "description", "hashtags", "script", "notebooklm_instructions"],
         retries=retries
     )
+    if not data:
+        raise RuntimeError("Gemini API failed to generate a response (likely rate limited on all keys).")
     
     # Save the chosen topic to prevent repetition in future runs
     data["used_topic_seed"] = data.get("topic")
