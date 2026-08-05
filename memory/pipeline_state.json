@@ -6,8 +6,8 @@
     "mode": null,
     "started_at": null,
     "posted_at": null,
-    "last_updated": "2026-08-05T06:17:39.912061+00:00",
-    "active_render": false,
+    "last_updated": "2026-08-05T06:21:48.810767+00:00",
+    "active_render": true,
     "last_error": "One or more formats failed completely.",
     "retry_counts": {}
 }
