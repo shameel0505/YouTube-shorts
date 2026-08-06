@@ -20,8 +20,8 @@ def push_memory_to_github():
             print("   Not a git repository. Initializing...")
             subprocess.run(["git", "init"], check=True)
             subprocess.run(["git", "remote", "add", "origin", f"https://{token}@github.com/shameel0505/YouTube-shorts.git"], check=True)
-            subprocess.run(["git", "fetch", "origin", "feature/spacing-logic"], check=True)
-            subprocess.run(["git", "reset", "--mixed", "origin/feature/spacing-logic"], check=True)
+            subprocess.run(["git", "fetch", "origin", "main"], check=True)
+            subprocess.run(["git", "reset", "--mixed", "origin/main"], check=True)
 
         # 1. Configure git user (required to commit)
         subprocess.run(["git", "config", "--global", "user.name", "Render Bot"], check=True)
@@ -43,8 +43,8 @@ def push_memory_to_github():
         # 5. Commit
         subprocess.run(["git", "commit", "-m", "chore: auto-save bot memory [skip ci]"], check=True)
         
-        # 6. Push to the feature branch
-        subprocess.run(["git", "push", "origin", "HEAD:feature/spacing-logic"], check=True)
+        # 6. Push to the main branch
+        subprocess.run(["git", "push", "origin", "HEAD:main"], check=True)
         
         print("   ✅ Memory successfully pushed to GitHub!")
         return True
