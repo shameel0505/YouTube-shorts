@@ -1378,5 +1378,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "TVwmCZIfJb0",
+        "format": 2,
+        "topic": "The Handwash That Changed the World",
+        "hook": "Invisible Killers",
+        "upload_time": "2026-08-07T12:05:25.822475+00:00",
+        "check_time": "2026-08-08T12:05:25.822475+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
