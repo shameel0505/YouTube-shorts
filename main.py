@@ -1184,14 +1184,45 @@ if __name__ == "__main__":
             now = datetime.now(timezone.utc)
             base_date = now.replace(minute=0, second=0, microsecond=0)
             
+            # --- ADAPTIVE SCHEDULING LOGIC ---
+            import json, os
+            last_pending_time = None
+            memory_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "memory")
+            pending_ig_path = os.path.join(memory_dir, "pending_ig.json")
+            if os.path.exists(pending_ig_path):
+                try:
+                    with open(pending_ig_path, "r") as f:
+                        pending_data = json.load(f)
+                        for item in pending_data:
+                            if "schedule_time" in item:
+                                dt = datetime.fromisoformat(item["schedule_time"])
+                                if last_pending_time is None or dt > last_pending_time:
+                                    last_pending_time = dt
+                except Exception:
+                    pass
+            
+            last_assigned_time = last_pending_time
+            min_gap_hours = max(2, min(4, 24 // (reels_count + 1)))
+            # ----------------------------------
+            
             schedule_mapping = get_schedule_mapping(reels_count)
             schedule_times = {}
             fmt_list = []
             
             for fmt_id, hour in schedule_mapping:
                 target_time = base_date.replace(hour=hour)
+                
+                # Adaptive logic: if target time passed, bring it up to now + 15 mins
                 if target_time < now:
-                    target_time += timedelta(days=1)
+                    target_time = now + timedelta(minutes=15)
+                
+                # Prevent clumping: must be at least min_gap_hours after previously assigned post
+                if last_assigned_time is not None:
+                    min_acceptable_time = last_assigned_time + timedelta(hours=min_gap_hours)
+                    if target_time < min_acceptable_time:
+                        target_time = min_acceptable_time
+                
+                last_assigned_time = target_time
                 schedule_times[fmt_id] = target_time
                 fmt_list.append(fmt_id)
                 
