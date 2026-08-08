@@ -1402,5 +1402,29 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "r1D0zqJnfQs",
+        "format": 1,
+        "topic": "Some sea slugs possess an astonishing ability: they can decapitate themselves, allowing their head to crawl away and regenerate an entirely new body, including a heart and other vital organs.",
+        "hook": "Original",
+        "upload_time": "2026-08-08T12:36:58.887939+00:00",
+        "check_time": "2026-08-09T12:36:58.887939+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "xspxpkH_qL0",
+        "format": 2,
+        "topic": "The Faint Glow That Revealed the Invisible",
+        "hook": "Hidden Glow",
+        "upload_time": "2026-08-08T12:37:53.186566+00:00",
+        "check_time": "2026-08-09T12:37:53.186566+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
