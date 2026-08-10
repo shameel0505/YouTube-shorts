@@ -1426,5 +1426,29 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "nfB8NCuKoII",
+        "format": 1,
+        "topic": "In roughly 5 billion years, our Sun will swell into a massive red giant, incinerating Mercury and Venus, and quite possibly consuming Earth, before shrinking into a cold, dense white dwarf, marking the ultimate end of our solar system.",
+        "hook": "Original (Astrophysical fact)",
+        "upload_time": "2026-08-10T14:47:07.217798+00:00",
+        "check_time": "2026-08-11T14:47:07.217798+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "EPxcrBcDXck",
+        "format": 2,
+        "topic": "A Scorching Spill, A World Transformed",
+        "hook": "Hot Stove Spill",
+        "upload_time": "2026-08-10T14:48:15.041577+00:00",
+        "check_time": "2026-08-11T14:48:15.041577+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
