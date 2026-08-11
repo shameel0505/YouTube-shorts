@@ -200,9 +200,11 @@ def notify_pipeline_success(format_num: str, title: str, yt_url: str, ig_id: str
     return send_telegram_notification(text)
 
 def notify_pipeline_failed(error_summary: str, action_needed: str) -> bool:
-    text = f"❌ <b>Pipeline Failed</b>\nReason: <code>{error_summary}</code>\nNext Action: {action_needed}"
+    safe_error = error_summary.replace("<", "&lt;").replace(">", "&gt;")
+    text = f"❌ <b>Pipeline Failed</b>\nReason: <code>{safe_error}</code>\nNext Action: {action_needed}"
     return send_telegram_notification(text)
 
 def notify_pipeline_skipped(reason: str) -> bool:
-    text = f"⏭️ <b>Pipeline Run Skipped</b>\nReason: <i>{reason}</i>"
+    safe_reason = reason.replace("<", "&lt;").replace(">", "&gt;")
+    text = f"⏭️ <b>Pipeline Run Skipped</b>\nReason: <i>{safe_reason}</i>"
     return send_telegram_notification(text)
