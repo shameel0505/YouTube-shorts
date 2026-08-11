@@ -1242,15 +1242,22 @@ if __name__ == "__main__":
                 
                 # --- NEW: Smart Resume Check ---
                 # If batch is triggered but there are already active renders, automatically switch to RESUME MODE
-                if has_active_nblm_state(memory_dir):
+                state = get_state()
+                has_active = has_active_nblm_state(memory_dir)
+                
+                if not has_active and state.get("status") == "posted":
+                    log("⏭️ Pipeline is already 'posted' for today. Skipping new batch generation.")
+                    results = {}
+                elif has_active:
                     log("⏳ Active NotebookLM render state files detected during Batch Run. Automatically switching to RESUME MODE...")
-                    state = get_state()
-                    if state["status"] != "running":
+                    if state.get("status") != "running":
                         start_fresh_run()
                     set_active_render(True)
                     
                     results = run_all_formats(upload, niche=args.niche, manual=args.manual, resume=True, mock=args.mock, fmt_list=fmt_list, resume_only=True, schedule_times=schedule_times)
                 else:
+                    if state.get("status") != "running":
+                        start_fresh_run()
                     results = run_all_formats(upload, niche=args.niche, manual=args.manual, resume=args.resume, mock=args.mock, fmt_list=fmt_list, resume_only=args.resume_only, schedule_times=schedule_times)
                 
                 is_rendering = any(res.get("rendering") for res in results.values() if isinstance(res, dict))
@@ -1260,7 +1267,7 @@ if __name__ == "__main__":
                     posted_formats_this_run = [f_id for f_id, res in results.items() if isinstance(res, dict) and res.get("result", {}).get("url")]
                     if posted_formats_this_run:
                         for pf in posted_formats_this_run: mark_posted(pf)
-                    else:
+                    elif not has_active and state.get("status") != "posted":
                         mark_skipped("Pipeline completed but no format was uploaded.")
             except Exception as e:
                 import traceback
