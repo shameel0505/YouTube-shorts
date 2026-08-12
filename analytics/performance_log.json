@@ -1474,5 +1474,29 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "5VjvDwckFZc",
+        "format": 1,
+        "topic": "In the 1800s, 'mummy unwrapping parties' were a popular social event among the European elite, where ancient Egyptian mummies were publicly unraveled for entertainment and to harvest body parts for alleged medicinal purposes.",
+        "hook": "Original",
+        "upload_time": "2026-08-12T07:25:38.405911+00:00",
+        "check_time": "2026-08-13T07:25:38.405911+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
+    },
+    {
+        "video_id": "EGdpDjnQjPc",
+        "format": 2,
+        "topic": "The Iron Rod That Unlocked the Brain's Secrets",
+        "hook": "Brain's Secret Key",
+        "upload_time": "2026-08-12T07:26:30.558854+00:00",
+        "check_time": "2026-08-13T07:26:30.558854+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
