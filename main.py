@@ -1264,7 +1264,7 @@ if __name__ == "__main__":
                 if is_rendering:
                     set_active_render(True)
                 else:
-                    posted_formats_this_run = [f_id for f_id, res in results.items() if isinstance(res, dict) and res.get("result", {}).get("url")]
+                    posted_formats_this_run = [f_id for f_id, res in results.items() if isinstance(res, dict) and (res.get("result", {}).get("url") or res.get("result", {}).get("ig_post_id"))]
                     if posted_formats_this_run:
                         for pf in posted_formats_this_run: mark_posted(pf)
                     elif not has_active and state.get("status") != "posted":
@@ -1382,7 +1382,7 @@ if __name__ == "__main__":
                     if is_rendering:
                         set_active_render(True)
                     else:
-                        posted_formats_this_run = [fmt_id for fmt_id, res in results.items() if res.get("result", {}).get("url")]
+                        posted_formats_this_run = [fmt_id for fmt_id, res in results.items() if res.get("result", {}).get("url") or res.get("result", {}).get("ig_post_id")]
                         if posted_formats_this_run:
                             for pf in posted_formats_this_run:
                                 mark_posted(pf)
@@ -1405,7 +1405,7 @@ if __name__ == "__main__":
                     if is_rendering:
                         set_active_render(True)
                     else:
-                        posted_formats_this_run = [fmt_id for fmt_id, res in results.items() if res.get("result", {}).get("url")]
+                        posted_formats_this_run = [fmt_id for fmt_id, res in results.items() if res.get("result", {}).get("url") or res.get("result", {}).get("ig_post_id")]
                         if posted_formats_this_run:
                             for pf in posted_formats_this_run:
                                 mark_posted(pf)
@@ -1468,7 +1468,7 @@ if __name__ == "__main__":
                         if is_rendering:
                             set_active_render(True)
                         else:
-                            posted_formats_this_run = [fmt_id for fmt_id, res in results.items() if res.get("result", {}).get("url")]
+                            posted_formats_this_run = [fmt_id for fmt_id, res in results.items() if res.get("result", {}).get("url") or res.get("result", {}).get("ig_post_id")]
                             if posted_formats_this_run:
                                 for pf in posted_formats_this_run:
                                     mark_posted(pf)
