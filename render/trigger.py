@@ -75,7 +75,7 @@ scheduler.add_job(
 
 # === INSTAGRAM POST TRIGGERS ===
 # Trigger exactly 1 minute after the scheduled post time
-post_hours = ["09", "13", "17", "21"]
+post_hours = ["09", "13", "15", "17", "21"]
 for i, hr in enumerate(post_hours):
     scheduler.add_job(
         func=trigger_github,
