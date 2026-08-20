@@ -1546,5 +1546,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "tfWWHcrO_-w",
+        "format": 1,
+        "topic": "Imagine never feeling pain: some people are born with a rare condition called CIPA that makes them completely immune to physical pain, which sounds like a superpower but is incredibly dangerous, leading to severe injuries and often tragically shorter lifespans.",
+        "hook": "Original",
+        "upload_time": "2026-08-20T06:22:02.180293+00:00",
+        "check_time": "2026-08-21T06:22:02.180293+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
