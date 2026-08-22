@@ -1594,5 +1594,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "NISZWhFfbkg",
+        "format": 1,
+        "topic": "According to Einstein's theory of relativity and the 'block universe' concept, all moments in time\u2014past, present, and future\u2014might already exist simultaneously, making our journey through time more like navigating a pre-existing landscape, challenging the very notion of free will.",
+        "hook": "Original (based on established physics theories)",
+        "upload_time": "2026-08-22T06:41:58.474625+00:00",
+        "check_time": "2026-08-23T06:41:58.474625+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
