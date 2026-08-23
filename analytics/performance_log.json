@@ -1606,5 +1606,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "l9EcvCIoKoU",
+        "format": 1,
+        "topic": "Ancient Greeks built the Antikythera Mechanism over 2,000 years ago, a complex astronomical calculator with dozens of bronze gears, baffling historians with its sophistication and suggesting lost ancient technological knowledge.",
+        "hook": "Original",
+        "upload_time": "2026-08-23T06:21:58.480485+00:00",
+        "check_time": "2026-08-24T06:21:58.480485+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
