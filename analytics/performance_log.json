@@ -1618,5 +1618,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "QZP10_WT0J0",
+        "format": 1,
+        "topic": "Imagine a rare genetic disease where you progressively lose the ability to sleep, leading to paranoia, hallucinations, and eventually, death\u2014all within months, showing how vital sleep is for our very survival.",
+        "hook": "Original",
+        "upload_time": "2026-08-24T06:05:01.143472+00:00",
+        "check_time": "2026-08-25T06:05:01.143472+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
