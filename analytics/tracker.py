@@ -39,11 +39,11 @@ def log_upload(video_id: str, fmt: int, topic: str, hook: str):
     _save_log(data)
     print(f"📊 Analytics tracker: Logged upload for video {video_id}. Scheduled check at {check_time.isoformat()}")
 
-def was_format_uploaded_today(fmt: int) -> bool:
+def was_format_uploaded_today(fmt) -> bool:
     data = _load_log()
     now = datetime.now(timezone.utc).date()
     for entry in reversed(data):
-        if entry.get("format") == fmt:
+        if str(entry.get("format")) == str(fmt):
             try:
                 dt = datetime.fromisoformat(entry["upload_time"]).date()
                 if dt == now:
