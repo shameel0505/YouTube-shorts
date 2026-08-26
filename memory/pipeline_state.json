@@ -1,6 +1,6 @@
 {
     "current_day": "2026-08-26",
-    "status": "running",
+    "status": "pending",
     "posted_formats": [
         "1"
     ],
@@ -8,8 +8,8 @@
     "mode": "fresh",
     "started_at": "2026-08-26T06:40:58.246353+00:00",
     "posted_at": "2026-08-26T06:22:04.396510+00:00",
-    "last_updated": "2026-08-26T06:40:58.246358+00:00",
+    "last_updated": "2026-08-26T06:40:59.970664+00:00",
     "active_render": false,
-    "last_error": null,
+    "last_error": "Pipeline completed but no format was uploaded.",
     "retry_counts": {}
 }
