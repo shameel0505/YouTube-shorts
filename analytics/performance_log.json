@@ -1654,5 +1654,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "VyerwiFuTbA",
+        "format": 1,
+        "topic": "An astonishing 95% of our universe is made up of mysterious 'dark matter' and 'dark energy' that we cannot see, touch, or directly detect, meaning everything we perceive, all the stars and planets, constitutes only 5% of reality.",
+        "hook": "Original",
+        "upload_time": "2026-08-27T06:42:05.083201+00:00",
+        "check_time": "2026-08-28T06:42:05.083201+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
