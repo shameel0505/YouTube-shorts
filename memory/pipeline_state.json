@@ -1,14 +1,12 @@
 {
-    "current_day": "2026-08-27",
-    "status": "pending",
-    "posted_formats": [
-        "1"
-    ],
+    "current_day": "2026-08-28",
+    "status": "running",
+    "posted_formats": [],
     "exhausted_formats": [],
     "mode": "fresh",
-    "started_at": "2026-08-27T06:01:24.139639+00:00",
-    "posted_at": "2026-08-27T06:42:08.540828+00:00",
-    "last_updated": "2026-08-27T06:42:08.540843+00:00",
+    "started_at": "2026-08-28T06:01:12.873018+00:00",
+    "posted_at": null,
+    "last_updated": "2026-08-28T06:01:12.873020+00:00",
     "active_render": false,
     "last_error": null,
     "retry_counts": {}
