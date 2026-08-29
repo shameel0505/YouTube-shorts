@@ -1678,5 +1678,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "IV7dlrKhVPc",
+        "format": 1,
+        "topic": "Your brain removes your nose from your field of vision entirely. While it's always there, you never consciously see it unless you specifically focus on it, demonstrating your brain's selective filtering of reality.",
+        "hook": "Original",
+        "upload_time": "2026-08-29T06:21:44.507870+00:00",
+        "check_time": "2026-08-30T06:21:44.507870+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
