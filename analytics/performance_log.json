@@ -1702,5 +1702,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "IpOVsdm6VXY",
+        "format": 1,
+        "topic": "Imagine a court where pigs wear wigs: in the Middle Ages, animals could be put on trial and even executed for crimes like destroying crops or attacking humans, complete with lawyers and judicial proceedings.",
+        "hook": "Original",
+        "upload_time": "2026-08-31T04:24:44.986613+00:00",
+        "check_time": "2026-09-01T04:24:44.986613+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
