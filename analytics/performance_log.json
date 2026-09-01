@@ -1714,5 +1714,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "V4gZngx5dnM",
+        "format": 1,
+        "topic": "Your body constantly develops and destroys microscopic cancer cells; it's estimated you fight off hundreds or thousands of these potential threats every single day without even realizing it.",
+        "hook": "Original",
+        "upload_time": "2026-09-01T06:21:43.755921+00:00",
+        "check_time": "2026-09-02T06:21:43.755921+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
