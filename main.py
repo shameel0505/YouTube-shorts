@@ -71,6 +71,46 @@ def handle_ig_upload(script_data: dict, video_path: str, schedule_time, fmt: str
         from uploader.instagram import upload_reel
         return upload_reel(video_path, caption, IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
 
+def check_ig_token_expiry():
+    """Tracks IG_ACCESS_TOKEN and sends a warning 10 days before its 60-day lifespan ends."""
+    from config import IG_ACCESS_TOKEN
+    if not IG_ACCESS_TOKEN: return
+    
+    token_prefix = IG_ACCESS_TOKEN[:15]
+    tracker_file = os.path.join(Path(__file__).parent, "memory", "ig_token_monitor.json")
+    
+    state = {"token_prefix": "", "expires_at": "", "warning_sent": False}
+    if os.path.exists(tracker_file):
+        try:
+            with open(tracker_file, "r") as f:
+                state = json.load(f)
+        except Exception: pass
+        
+    if state["token_prefix"] != token_prefix:
+        from datetime import timedelta, timezone
+        now = datetime.now(timezone.utc)
+        expires = now + timedelta(days=60)
+        state = {
+            "token_prefix": token_prefix,
+            "expires_at": expires.isoformat(),
+            "warning_sent": False
+        }
+        with open(tracker_file, "w") as f:
+            json.dump(state, f)
+        log("🔄 New Instagram token detected. 60-day expiry timer reset.")
+    else:
+        from datetime import timezone, timedelta
+        now = datetime.now(timezone.utc)
+        if state["expires_at"]:
+            expires_at = datetime.fromisoformat(state["expires_at"])
+            if (expires_at - now).days <= 10 and not state["warning_sent"]:
+                from telegram.approver import notify_pipeline_failed
+                msg = f"⚠️ Your Instagram Access Token will expire in {(expires_at - now).days} days! Please generate a new one at developers.facebook.com and update the ENV_FILE secret."
+                notify_pipeline_failed("Instagram Token Expiry Warning", msg)
+                state["warning_sent"] = True
+                with open(tracker_file, "w") as f:
+                    json.dump(state, f)
+
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 
@@ -1124,6 +1164,7 @@ def parse_args():
 
 if __name__ == "__main__":
     args   = parse_args()
+    check_ig_token_expiry()
     upload = args.mode not in ("dry-run", "test-script", "test-voice")
 
     if args.reset_story:
@@ -1307,6 +1348,8 @@ if __name__ == "__main__":
                         uploaded_any = True
                     except Exception as e:
                         log(f"   ❌ Failed to publish IG post: {e}")
+                        from telegram.approver import notify_pipeline_failed
+                        notify_pipeline_failed("Instagram Upload Failed", f"Format {post.get('fmt')} failed to post to Instagram. Error: {str(e)[:200]}")
                         remaining.append(post) # Keep in queue if failed
                 else:
                     remaining.append(post)
