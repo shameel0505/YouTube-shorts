@@ -1786,5 +1786,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "iUiQ6Ie_w6I",
+        "format": 1,
+        "topic": "There are black holes so incomprehensibly vast that they could literally swallow our entire solar system\u2014planets, asteroid belts, and all\u2014with enough room left over for thousands more stars, dwarfing even supermassive black holes.",
+        "hook": "Original",
+        "upload_time": "2026-09-07T06:22:07.072222+00:00",
+        "check_time": "2026-09-08T06:22:07.072222+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
