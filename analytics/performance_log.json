@@ -1834,5 +1834,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "0NqAVZRNZsY",
+        "format": 1,
+        "topic": "The deepest parts of the ocean have pressures so immense that if you placed a human hand there, every cell in your body would burst, instantly turning you into a mush.",
+        "hook": "Original",
+        "upload_time": "2026-09-12T06:21:50.464386+00:00",
+        "check_time": "2026-09-13T06:21:50.464386+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
