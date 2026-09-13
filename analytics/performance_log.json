@@ -1846,5 +1846,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "-RAq5nnM6jg",
+        "format": 1,
+        "topic": "The universe is destined for 'heat death', an unimaginable future where all stars have burned out, black holes have evaporated, and the cosmos becomes a cold, dark, empty expanse. This will take quadrillions upon quadrillions of years, making our entire current existence a fleeting flash in an almost infinite, chillingly silent future.",
+        "hook": "Original",
+        "upload_time": "2026-09-13T06:22:01.309027+00:00",
+        "check_time": "2026-09-14T06:22:01.309027+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
