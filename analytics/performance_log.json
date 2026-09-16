@@ -1882,5 +1882,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "FwmaAjKw6Ac",
+        "format": 1,
+        "topic": "Imagine waking up, completely conscious, but unable to move or speak, often seeing terrifying hallucinations. This is 'sleep paralysis,' a chilling phenomenon where your mind is awake, but your body is still caught in sleep.",
+        "hook": "Original",
+        "upload_time": "2026-09-16T06:21:48.774224+00:00",
+        "check_time": "2026-09-17T06:21:48.774224+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
