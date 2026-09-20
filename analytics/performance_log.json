@@ -1930,5 +1930,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "LI7zIr-XEyg",
+        "format": 1,
+        "topic": "The sound of Krakatoa's 1883 eruption was so loud it ruptured eardrums 40 miles away, traveled around the world four times, and was distinctly heard over 3,000 miles away, making it the loudest sound ever recorded in modern history.",
+        "hook": "Original",
+        "upload_time": "2026-09-20T06:22:24.402508+00:00",
+        "check_time": "2026-09-21T06:22:24.402508+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
