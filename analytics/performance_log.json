@@ -1942,5 +1942,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "KukV98uDoW4",
+        "format": 1,
+        "topic": "The 'blue' you see might be completely different from the 'blue' another person sees; our brains interpret light wavelengths uniquely, meaning we could be experiencing entirely different visual realities.",
+        "hook": "Original",
+        "upload_time": "2026-09-21T06:41:43.804174+00:00",
+        "check_time": "2026-09-22T06:41:43.804174+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
