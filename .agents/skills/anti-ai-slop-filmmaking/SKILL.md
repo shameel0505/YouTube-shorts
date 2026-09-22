@@ -54,25 +54,26 @@ The goal is simple: **Eliminate every trace of "AI slop"** (plastic glowing face
 
 ### A. Lens & Camera Lexicon (Use These Exact Patterns)
 
-* **Host A-Roll (The Studio Anchor)**:
-  > `"Medium close-up slow push-in speaking directly into the lens in a minimalist creator studio, warm 3200K key light, subtle cyan edge rim, 50mm f/1.4 shallow depth of field, sharp cinematic 4k."`
-  *(Note: The prompt contains pure camera/studio direction; the automated runner handles `@` + `Enter` to lock the host avatar chip in Google Flow).*
+* **Host A-Roll (The Studio Anchor - Professional YouTuber Standard)**:
+  > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Medium waist-up shot at sleek minimalist timber creator desk, host wearing the tailored matte charcoal overshirt over crisp crewneck with generous headroom, opens leaning forward over desk and snaps eyeline up to the lens with an energetic hand gesture holding up two fingers, speaking with sharp conviction saying: \"[Complete spoken sentence, 12-16 words max]\", warm 3200K key light, subtle practical lamp glow, acoustic wood panel depth, 35mm f/2.0 lens, sharp 4k."`
+  *(Note: NEVER use tight close-ups or aggressive push-ins. Always open on an active physical movement before speaking to eliminate dead puppet poses. Repeat the verbatim wardrobe token in every prompt).*
 
-* **Macro Science / Proof B-Roll**:
-  > `"Macro slow-motion tracking shot of a glowing microchip circuit with electrical pulses moving through copper pathways, frosted glass refraction, soft volumetric lighting, sharp focus."`
+* **Macro Science & High-Speed Physics B-Roll**:
+  > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. High-speed Phantom 4K macro capture at 20,000 frames per second: heavy industrial hydraulic steel press crushes a teardrop of clear solid glass with zero deflection, heavy steel textures, microscopic dust particles, directional tungsten spotlight, sharp cinematic 4k."`
 
 * **Historical / Archival Visual Essay B-Roll**:
-  > `"Slow cinematic crane reveal over an antique library table covered in handwritten blue ink architectural schematics, brass compass, warm desk lamp glow, high-end documentary aesthetic."`
+  > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Slow cinematic crane reveal over an antique mahogany table covered in handwritten blue ink architectural schematics on yellowed parchment, brass compass, warm desk lamp glow, high-end documentary aesthetic."`
 
 * **Epic Landscape / Cosmic B-Roll**:
-  > `"Wide cinematic drone orbit around an isolated deep-space telescope perched on a snowy mountain ridge under a vibrant milky way galaxy, atmospheric fog, sharp 4k."`
+  > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Wide cinematic drone orbit around an isolated deep-space telescope perched on a snowy mountain ridge under a vibrant milky way galaxy, atmospheric fog, sharp 4k."`
 
 ### B. Prompt Blacklist (NEVER Use These Words)
 
 ❌ **Forbidden Terms**:
 - `photorealistic`, `hyperrealistic`, `8k resolution`, `masterpiece`, `trending on artstation`, `unreal engine 5`
+- Abstract CGI terms (`cinematic visualization`, `3d render`, `vector fields`) — forces cartoon CGI shaders. Use real physical materials instead.
 - Numeric ages (`27-year-old`) — triggers safety filters. Use stage nouns like `young adult creator`.
-- Film stocks (`35mm film`, `IMAX 70mm`) — triggers policy flags on some models. Use optical descriptors like `shallow depth of field, sharp cinematic 4k`.
+- Film stocks (`35mm film`, `IMAX 70mm`) — triggers policy flags and sprocket-hole borders. Use optical descriptors like `shallow depth of field, sharp cinematic 4k`.
 
 ---
 
