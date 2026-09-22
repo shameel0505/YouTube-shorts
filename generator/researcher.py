@@ -7,13 +7,8 @@ import json
 import xml.etree.ElementTree as ET
 import time
 import re
-import google.generativeai as genai
-import quota_tracker
-from config import GEMINI_API_KEY, GEMINI_API_KEYS, GEMINI_MODEL, NICHE
-
-genai.configure(api_key=GEMINI_API_KEY)
-_model = genai.GenerativeModel(GEMINI_MODEL)
-_current_key_idx = 0
+from config import NICHE
+from generator.gemini_service import gemini_service
 
 
 # ── Niche → subreddit mapping (Format 1) ─────────────────────────────────────
@@ -160,33 +155,8 @@ def get_hackernews_top(limit: int = 10) -> list[dict]:
 
 
 def _call_gemini(prompt: str) -> dict:
-    """Call Gemini, parse JSON response, track quota, and rotate keys if necessary. Returns parsed dict or {}."""
-    global _current_key_idx, _model
-    
-    for _ in range(3):
-        try:
-            quota_tracker.increment()
-            response = _model.generate_content(prompt)
-            text = response.text
-            text = re.sub(r"^```json\s*", "", text.strip(), flags=re.IGNORECASE)
-            text = re.sub(r"^```\s*", "", text)
-            text = re.sub(r"\s*```$", "", text)
-            return json.loads(text)
-        except Exception as e:
-            if "429" in str(e) or "quota" in str(e).lower() or "ResourceExhausted" in str(type(e)):
-                if len(GEMINI_API_KEYS) > 1:
-                    _current_key_idx = (_current_key_idx + 1) % len(GEMINI_API_KEYS)
-                    print(f"   ⏳ Key exhausted. Switching to backup key #{_current_key_idx + 1}...")
-                    genai.configure(api_key=GEMINI_API_KEYS[_current_key_idx])
-                    _model = genai.GenerativeModel(GEMINI_MODEL)
-                    time.sleep(2)
-                    continue
-                else:
-                    print("   ⏳ Rate limit hit! Sleeping for 60 seconds...")
-                    time.sleep(60)
-            else:
-                time.sleep(1)
-    return {}
+    """Call Gemini 3 GA model via gemini_service with key rotation, quota tracking, and fallback."""
+    return gemini_service.generate_json(prompt)
 
 
 

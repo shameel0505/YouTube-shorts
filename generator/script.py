@@ -7,14 +7,8 @@ Script generation for all three video formats using Gemini 2.5 Pro.
 import json
 import re
 import os
-import google.generativeai as genai
-import quota_tracker
-import time
-from config import GEMINI_API_KEY, GEMINI_API_KEYS, GEMINI_MODEL, NICHE, VIDEO_DURATION_SEC
-
-genai.configure(api_key=GEMINI_API_KEY)
-_model = genai.GenerativeModel(GEMINI_MODEL)
-_current_key_idx = 0
+from config import NICHE, VIDEO_DURATION_SEC
+from generator.gemini_service import gemini_service
 
 
 _USED_TOPICS_FILE = "./temp/used_topics.json"
@@ -93,38 +87,9 @@ def _load_used_topics() -> list:
 
 
 def _call_gemini_for_script(prompt: str, required_keys: list, retries: int = 3) -> dict:
-    """Call Gemini, parse and validate JSON, track quota, and rotate keys if necessary."""
-    global _current_key_idx, _model
-    
-    for attempt in range(retries):
-        try:
-            quota_tracker.increment()
-            response = _model.generate_content(prompt)
-            text = response.text
-            text = re.sub(r"^```json\s*", "", text.strip(), flags=re.IGNORECASE)
-            text = re.sub(r"^```\s*", "", text)
-            text = re.sub(r"\s*```$", "", text)
-            data = json.loads(text)
-            for k in required_keys:
-                if k not in data:
-                    raise ValueError(f"Missing key: {k}")
-            return data
-        except Exception as e:
-            if "429" in str(e) or "quota" in str(e).lower() or "ResourceExhausted" in str(type(e)):
-                if len(GEMINI_API_KEYS) > 1:
-                    _current_key_idx = (_current_key_idx + 1) % len(GEMINI_API_KEYS)
-                    print(f"   ⏳ Key exhausted. Switching to backup key #{_current_key_idx + 1}...")
-                    genai.configure(api_key=GEMINI_API_KEYS[_current_key_idx])
-                    _model = genai.GenerativeModel(GEMINI_MODEL)
-                    time.sleep(2)
-                    continue
-                else:
-                    print("   ⏳ Rate limit hit! Sleeping for 60 seconds...")
-                    time.sleep(60)
-            else:
-                print(f"   ⚠️ Gemini Error: {e}")
-                time.sleep(5)
-    return None
+    """Call Gemini 3 GA model via gemini_service with key rotation, quota tracking, fallback, and validation."""
+    data = gemini_service.generate_json(prompt, required_keys=required_keys, retries=retries)
+    return data if data else None
 
 
 # ── FORMAT 1: Mind-Blowing Facts ─────────────────────────────────────────────

@@ -109,8 +109,9 @@ YT_CATEGORY_ID        = "28"   # Science & Technology
 YT_DEFAULT_TAGS       = ["shorts", "facts", "didyouknow", "technology", "AI"]
 YT_PRIVACY            = os.getenv("YT_PRIVACY", "public")
 
-# Gemini
-GEMINI_MODEL          = "gemini-2.5-flash"
+# Gemini GA Models
+GEMINI_MODEL          = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
+GEMINI_FALLBACK_MODELS = ["gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-3.8-flash"]
 
 # ── Scheduler — posting times in UTC ─────────────────────────────────────────
 DAILY_REELS           = int(os.getenv("DAILY_REELS", "1"))

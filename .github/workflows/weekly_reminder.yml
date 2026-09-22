@@ -1,0 +1,35 @@
+name: Weekly Studio Reminder
+
+on:
+  schedule:
+    # Trigger every Monday at 10:00 UTC (14:00 Gulf Standard Time / laptop working hours)
+    - cron: '0 10 * * 1'
+  workflow_dispatch:
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          pip install requests python-dotenv
+
+      - name: Unpack Environment Secrets
+        env:
+          ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }}
+        run: |
+          if [ -n "$ENV_FILE_CONTENT" ]; then
+            echo "$ENV_FILE_CONTENT" > .env
+          fi
+
+      - name: Send Weekly Telegram Reminder
+        run: |
+          python -m telegram.weekly_reminder

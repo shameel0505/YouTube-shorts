@@ -27,8 +27,8 @@ from config import (
     NICHE, TEMP_DIR,
     FORMAT1_SCHEDULE_HOUR, FORMAT2_SCHEDULE_HOUR, FORMAT3_SCHEDULE_HOUR,
 )
-from generator.researcher import research_topic, research_thriller, research_dilemma
-from generator.script import generate_script, generate_thriller, generate_dilemma
+from generator.researcher import research_topic, research_thriller, research_dilemma, research_psychology
+from generator.script import generate_script, generate_thriller, generate_dilemma, generate_psychology, generate_long_video
 from generator.voiceover import generate_voiceover
 from generator.story_state import load_state, save_state, reset_state
 from video.notebooklm_footage import fetch_notebooklm_footage
@@ -704,7 +704,7 @@ def run_format4(upload: bool = True, attempt: int = 1, manual: bool = False, res
                 with open(script_path, "w") as f:
                     json.dump(script_data, f)
                 from memory.content_log import add_used_topic
-                add_used_topic(script_data.get("used_topic_seed", script_data.get("title", "")), int(base_fmt))
+                add_used_topic(script_data.get("used_topic_seed", script_data.get("title", "")), 4)
 
         # Step 4 — Footage (Direct video delivery)
         log("🎬 Step 4/7: Generating NotebookLM video (voiceover & subtitles built-in)...", fmt)
@@ -839,7 +839,7 @@ def run_format5(upload: bool = True, attempt: int = 1, resume: bool = False, moc
                 with open(script_path, "w") as f:
                     json.dump(script_data, f)
                 from memory.content_log import add_used_topic
-                add_used_topic(script_data.get("used_topic_seed", script_data.get("title", "")), int(base_fmt))
+                add_used_topic(script_data.get("used_topic_seed", script_data.get("title", "")), 5)
 
         log("🎬 Step 4: Generating NotebookLM 16:9 video...", fmt)
         footage_paths = fetch_notebooklm_footage(
@@ -1335,35 +1335,57 @@ if __name__ == "__main__":
                 pending = json.load(pf)
                 
             now = datetime.now(timezone.utc)
+            to_upload = []
             remaining = []
-            uploaded_any = False
             
             for post in pending:
                 target_time = datetime.fromisoformat(post["schedule_time"])
                 if now >= target_time:
-                    log(f"   🚀 Publishing scheduled IG post for Format {post.get('fmt')} (Scheduled: {target_time.isoformat()})")
-                    try:
-                        post_id = publish_from_url(post["url"], post["caption"], IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
-                        log(f"   ✅ Successfully posted! ID: {post_id}")
-                        uploaded_any = True
-                    except Exception as e:
-                        log(f"   ❌ Failed to publish IG post: {e}")
-                        from telegram.approver import notify_pipeline_failed
-                        notify_pipeline_failed("Instagram Upload Failed", f"Format {post.get('fmt')} failed to post to Instagram. Error: {str(e)[:200]}")
-                        remaining.append(post) # Keep in queue if failed
+                    to_upload.append(post)
                 else:
                     remaining.append(post)
-                    
+
+            if not to_upload:
+                log("   ⏭️ No posts currently due for publishing.")
+                exit(0)
+
+            # 🔒 Atomic Claim: Immediately write remaining queue and push to GitHub so concurrent runners see no due posts
             with open(pending_file, "w") as pf:
                 json.dump(remaining, pf)
-                
-            if uploaded_any:
+            try:
+                from memory.saver import push_memory_to_github
+                push_memory_to_github()
+            except Exception as e:
+                log(f"⚠️ Failed to push claimed IG queue to GitHub: {e}")
+
+            failed_posts = []
+            for post in to_upload:
+                target_time = datetime.fromisoformat(post["schedule_time"])
+                log(f"   🚀 Publishing scheduled IG post for Format {post.get('fmt')} (Scheduled: {target_time.isoformat()})")
+                try:
+                    post_id = publish_from_url(post["url"], post["caption"], IG_ACCESS_TOKEN, IG_ACCOUNT_ID)
+                    log(f"   ✅ Successfully posted! ID: {post_id}")
+                except Exception as e:
+                    log(f"   ❌ Failed to publish IG post: {e}")
+                    from telegram.approver import notify_pipeline_failed
+                    notify_pipeline_failed("Instagram Upload Failed", f"Format {post.get('fmt')} failed to post to Instagram. Error: {str(e)[:200]}")
+                    failed_posts.append(post)  # Re-queue on failure
+
+            if failed_posts:
+                try:
+                    with open(pending_file, "r") as pf:
+                        curr_pending = json.load(pf)
+                except Exception:
+                    curr_pending = []
+                curr_pending.extend(failed_posts)
+                with open(pending_file, "w") as pf:
+                    json.dump(curr_pending, pf)
                 try:
                     from memory.saver import push_memory_to_github
                     push_memory_to_github()
-                except Exception as e:
-                    log(f"⚠️ Failed to push updated IG queue to GitHub: {e}")
-                    
+                except Exception:
+                    pass
+
             exit(0)
             
         elif args.fresh:
