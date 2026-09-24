@@ -1978,5 +1978,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "uOSfJH7ATm8",
+        "format": 1,
+        "topic": "During pregnancy, fetal cells migrate into the mother's body and integrate into her heart, brain, and organs, effectively living within her as a distinct, permanent part of her physical self for decades.",
+        "hook": "Original",
+        "upload_time": "2026-09-24T06:21:55.617312+00:00",
+        "check_time": "2026-09-25T06:21:55.617312+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
