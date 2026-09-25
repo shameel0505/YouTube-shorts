@@ -1990,5 +1990,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "0uUsV7y6vNs",
+        "format": 1,
+        "topic": "People with a rare condition called blindsight are completely blind, yet they can effortlessly navigate obstacles and detect facial emotions without consciously seeing a thing. This happens because their eyes still send visual data to a primitive, subconscious region of the brain, bypassing conscious awareness entirely.",
+        "hook": "Original",
+        "upload_time": "2026-09-25T06:22:05.690111+00:00",
+        "check_time": "2026-09-26T06:22:05.690111+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
