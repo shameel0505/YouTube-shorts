@@ -2038,5 +2038,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "0vBLDrQKpg0",
+        "format": 1,
+        "topic": "When a person dies, they can experience 'cadaveric spasm,' a rare phenomenon where muscles instantly lock in their final, conscious position at the moment of death, effectively freezing the person in their last physical act, like clutching a weapon, permanently.",
+        "hook": "Original",
+        "upload_time": "2026-09-29T07:50:39.921798+00:00",
+        "check_time": "2026-09-30T07:50:39.921798+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
