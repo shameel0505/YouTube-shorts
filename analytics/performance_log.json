@@ -2062,5 +2062,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "aI9JQWWuxtQ",
+        "format": 1,
+        "topic": "The Bronze Age Collapse remains one of history's greatest enigmas; in the span of just a few decades, nearly every advanced civilization in the Mediterranean\u2014from the Hittites to the Mycenaeans\u2014suddenly and violently disintegrated, leaving cities burned and a global dark age that lasted centuries.",
+        "hook": "Hacker News",
+        "upload_time": "2026-10-01T06:42:02.502551+00:00",
+        "check_time": "2026-10-02T06:42:02.502551+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
