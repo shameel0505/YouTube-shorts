@@ -2134,5 +2134,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "4afkVes0_v8",
+        "format": 1,
+        "topic": "For decades, the loneliest tree on Earth stood completely alone in the Sahara Desert, with no other tree for 250 miles in any direction. Its legendary survival came to a bizarre end in 1973 when a drunk truck driver managed to crash directly into it.",
+        "hook": "Wikipedia",
+        "upload_time": "2026-10-08T06:23:03.597479+00:00",
+        "check_time": "2026-10-09T06:23:03.597479+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
