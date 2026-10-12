@@ -697,6 +697,8 @@ class VideoRenderer:
             ]
             if self.project_id:
                 cmd.extend(["--project", self.project_id])
+            if scene.get("previous_video"):
+                cmd.extend(["--previous-video", scene["previous_video"]])
             print(f"   👤 A-Roll character lock: routing via verified @liya Playwright tagger")
         else:
             # B-Roll documentary cutscene: uses reliable Flow browser runner without character tag
@@ -713,6 +715,8 @@ class VideoRenderer:
             ]
             if self.project_id:
                 cmd.extend(["--project", self.project_id])
+            if scene.get("previous_video"):
+                cmd.extend(["--previous-video", scene["previous_video"]])
             print(f"   🎬 B-Roll documentary evidence: routing via verified Flow browser runner")
 
         if dry_run:

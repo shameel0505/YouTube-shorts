@@ -51,6 +51,7 @@ async def generate_aroll(
     timeout_s: float = 300.0,
     dry_run: bool = False,
     tag_character: bool = True,
+    previous_video: str = None,
 ) -> dict:
     out_path = Path(out_dir) if out_dir else (ROOT_DIR / "temp" / "studio" / "clips")
     out_path.mkdir(parents=True, exist_ok=True)
@@ -119,6 +120,32 @@ async def generate_aroll(
         await comp.click()
         await page.wait_for_timeout(500)
 
+        # 3. If previous video is specified for continuation chaining, tag it first via @
+        if previous_video:
+            print(f"🔗 Tagging previous video for continuation: '@{previous_video}'...")
+            await page.keyboard.type("@", delay=120)
+            await page.wait_for_timeout(2000)
+            await page.keyboard.type(previous_video, delay=60)
+            await page.wait_for_timeout(2500)
+
+            # Check autocomplete options and target Video option if present
+            options_loc = page.locator(PICKER_OPTION)
+            offered_texts = [t.strip() for t in await options_loc.all_text_contents()]
+            target_idx = 0
+            for idx, txt in enumerate(offered_texts):
+                if txt.endswith("Video"):
+                    target_idx = idx
+                    break
+
+            for _ in range(target_idx):
+                await page.keyboard.press("ArrowDown")
+                await page.wait_for_timeout(200)
+
+            await page.keyboard.press("Enter")
+            await page.wait_for_timeout(2000)
+            await page.keyboard.type(" ", delay=80)
+            print(f"   ✅ Previous video chip committed.")
+
         if tag_character:
             # 4. Mandatory @ + l + i + y + a + Enter sequence
             await page.keyboard.type("@", delay=120)
@@ -135,7 +162,9 @@ async def generate_aroll(
             await page.wait_for_timeout(2500)
 
             chips = await composer.read_chips(page)
-            if not chips or chips[0].get("reference_type") != "entity":
+            # Find the entity chip
+            entity_chips = [c for c in chips if c.get("reference_type") == "entity"]
+            if not entity_chips:
                 raise RuntimeError(f"Failed to attach Liya entity chip: got chips={chips}")
 
             # 5. Append prompt text after chip
@@ -224,6 +253,7 @@ def main():
     parser.add_argument("--timeout", type=float, default=300.0, help="Timeout in seconds.")
     parser.add_argument("--dry-run", action="store_true", help="Simulate without spending credits.")
     parser.add_argument("--no-character", action="store_true", help="Skip character tagging (for B-Roll scenes).")
+    parser.add_argument("--previous-video", default=None, help="Name or query of previous video to chain/continue from.")
     args = parser.parse_args()
 
     try:
@@ -237,6 +267,7 @@ def main():
             timeout_s=args.timeout,
             dry_run=args.dry_run,
             tag_character=not args.no_character,
+            previous_video=args.previous_video,
         ))
         print(json.dumps(res))
         sys.exit(0)
