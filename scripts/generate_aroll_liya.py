@@ -49,6 +49,7 @@ async def generate_aroll(
     profile: str = "youtube",
     timeout_s: float = 300.0,
     dry_run: bool = False,
+    tag_character: bool = True,
 ) -> dict:
     out_path = Path(out_dir) if out_dir else (ROOT_DIR / "temp" / "studio" / "clips")
     out_path.mkdir(parents=True, exist_ok=True)
@@ -65,14 +66,34 @@ async def generate_aroll(
         page = client._pages[0]
         composer = MigratedComposer()
 
-        # 1. Land on project editor explicitly using /u/0/ since this is a fresh profile with 1 account
-        url = f"https://flow.google.com/u/0/project/{project_id}"
-        print(f"   [DEBUG] Forcing navigation to {url}")
-        await page.goto(url)
-        await page.wait_for_timeout(3000)
-        # Verify we didn't get redirected
-        if "/about" in page.url:
-            raise RuntimeError(f"Still redirected to /about even after forcing {url}. Please check session.")
+        # 1. Land on project editor with resilient multi-account index discovery
+        account_idx = os.environ.get("GFLOW_ACCOUNT_INDEX")
+        candidate_urls = []
+        if account_idx:
+            candidate_urls.append(f"https://flow.google.com/u/{account_idx}/project/{project_id}")
+        candidate_urls.extend([
+            f"https://flow.google.com/u/0/project/{project_id}",
+            f"https://flow.google.com/u/1/project/{project_id}",
+            f"https://flow.google.com/project/{project_id}",
+        ])
+
+        landed = False
+        for url in candidate_urls:
+            print(f"   [DEBUG] Attempting navigation to {url}")
+            await page.goto(url)
+            await page.wait_for_timeout(3000)
+            if "/about" not in page.url:
+                landed = True
+                print(f"   ✅ Successfully landed on editor: {page.url}")
+                break
+            print(f"   [WARN] Redirected to /about on {url}, testing next candidate...")
+
+        if not landed:
+            print("   [WARN] Candidate URLs redirected to /about; attempting composer.ensure_editor fallback...")
+            try:
+                await composer.ensure_editor(page, project_id)
+            except Exception as e:
+                raise RuntimeError(f"Could not open project {project_id} (redirected to /about across all account indices): {e}")
 
         # 2. Clear composer
         await composer.clear_composer(page)
@@ -82,28 +103,33 @@ async def generate_aroll(
         await comp.click()
         await page.wait_for_timeout(500)
 
-        # 4. Mandatory @ + l + i + y + a + Enter sequence
-        await page.keyboard.type("@", delay=120)
-        await page.wait_for_timeout(2000)
-        await page.keyboard.type("liya", delay=100)
-        await page.wait_for_timeout(2500)
+        if tag_character:
+            # 4. Mandatory @ + l + i + y + a + Enter sequence
+            await page.keyboard.type("@", delay=120)
+            await page.wait_for_timeout(2000)
+            await page.keyboard.type("liya", delay=100)
+            await page.wait_for_timeout(2500)
 
-        # Confirm dropdown has options
-        offered = [t.strip() for t in await page.locator(PICKER_OPTION).all_text_contents()]
-        if not offered:
-            raise RuntimeError(f"Flow mention dropdown did not show any options for 'liya'")
+            # Confirm dropdown has options
+            offered = [t.strip() for t in await page.locator(PICKER_OPTION).all_text_contents()]
+            if not offered:
+                raise RuntimeError(f"Flow mention dropdown did not show any options for 'liya'")
 
-        await page.keyboard.press("Enter")
-        await page.wait_for_timeout(2500)
+            await page.keyboard.press("Enter")
+            await page.wait_for_timeout(2500)
 
-        chips = await composer.read_chips(page)
-        if not chips or chips[0].get("reference_type") != "entity":
-            raise RuntimeError(f"Failed to attach Liya entity chip: got chips={chips}")
+            chips = await composer.read_chips(page)
+            if not chips or chips[0].get("reference_type") != "entity":
+                raise RuntimeError(f"Failed to attach Liya entity chip: got chips={chips}")
 
-        # 5. Append prompt text after chip
-        await page.keyboard.type(" ", delay=80)
-        await page.keyboard.insert_text(prompt)
-        await page.wait_for_timeout(1000)
+            # 5. Append prompt text after chip
+            await page.keyboard.type(" ", delay=80)
+            await page.keyboard.insert_text(prompt)
+            await page.wait_for_timeout(1000)
+        else:
+            # B-Roll: Insert direct prompt without character chip
+            await page.keyboard.insert_text(prompt)
+            await page.wait_for_timeout(1000)
 
         # 6. Prepare completion future
         loop = asyncio.get_running_loop()
@@ -180,6 +206,7 @@ def main():
     parser.add_argument("--profile", default="youtube", help="gflow auth profile.")
     parser.add_argument("--timeout", type=float, default=300.0, help="Timeout in seconds.")
     parser.add_argument("--dry-run", action="store_true", help="Simulate without spending credits.")
+    parser.add_argument("--no-character", action="store_true", help="Skip character tagging (for B-Roll scenes).")
     args = parser.parse_args()
 
     try:
@@ -191,6 +218,7 @@ def main():
             profile=args.profile,
             timeout_s=args.timeout,
             dry_run=args.dry_run,
+            tag_character=not args.no_character,
         ))
         print(json.dumps(res))
         sys.exit(0)

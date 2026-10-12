@@ -13,6 +13,9 @@ client_secret.json
 gameplay/
 assets/
 
-experiments/
+experiments/*
+!experiments/*.py
+!experiments/*.json
+!experiments/*.sh
 memory/studio/
 service-account.json

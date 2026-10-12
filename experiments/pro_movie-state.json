@@ -1,0 +1,98 @@
+{
+  "version": 2,
+  "title": "Monsters of the Deep: Mariana Trench's GIANT Horrors",
+  "project": "pro-experiment-001",
+  "characters": {},
+  "scenes": {
+    "scene_1": {
+      "media_id": "",
+      "flow_operation_id": null,
+      "local_path": null,
+      "status": "failed",
+      "prompt": "Slow push-in on a seemingly normal-sized, eerie deep-sea Anglerfish, its bioluminescent lure flickering. Then, a sudden, brief cut to a subtle ripple of something much larger, indistinct, passing just out of frame in the crushing darkness. Cinematic 8k, photorealistic. A professional, mysterious entity. Cinematic, documentary style. Wide shot. Narrator (Algenib) says: \"Imagine a creature you know, but ten, maybe a hundred times larger, lurking in unimaginable darkness.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm, 8k, photorealistic.",
+      "consistency_method": "text",
+      "style_hash": "4b10feb35133ffccc6bd487c3737abc013dade8b7c570b8cda7e8c605bcb359c"
+    },
+    "scene_2": {
+      "media_id": "",
+      "flow_operation_id": null,
+      "local_path": null,
+      "status": "failed",
+      "prompt": "Slow, downward crane shot over a computer-generated, photorealistic cross-section of the Mariana Trench, highlighting its immense depth. Cinematic 8k, photorealistic. A professional, mysterious entity. Cinematic, documentary style. Wide shot. Narrator (Algenib) says: \"Over 36,000 feet down, in the Mariana Trench, pressure would instantly vaporize you.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm, 8k, photorealistic.",
+      "consistency_method": "text",
+      "style_hash": "ab01765b00d682cb41b2e3e39a47c1e8cc9af945076338c1be962428d24c0fab"
+    },
+    "scene_3": {
+      "media_id": "",
+      "flow_operation_id": null,
+      "local_path": null,
+      "status": "failed",
+      "prompt": "Eerie, slow reveal of an impossibly large, shadowy silhouette of an unknown creature moving sluggishly in the abyssal darkness, illuminated by faint bioluminescence. Cinematic 8k, photorealistic. A professional, mysterious entity. Cinematic, documentary style. Wide shot. Narrator (Algenib) says: \"But here, creatures don't shrink from the void; they become monstrous, thanks to Deep-Sea Gigantism.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm, 8k, photorealistic.",
+      "consistency_method": "text",
+      "style_hash": "0f165444264dc428427bacf803955a54fce29920c8db1cc6ff547d436a497c12"
+    },
+    "scene_4": {
+      "media_id": "",
+      "flow_operation_id": null,
+      "local_path": null,
+      "status": "failed",
+      "prompt": "Close-up slow-motion shot of shimmering pressure waves distorting a tiny light source, surrounded by icy, turbulent water. Cinematic 8k, photorealistic. A professional, mysterious entity. Cinematic, documentary style. Wide shot. Narrator (Algenib) says: \"Extreme pressure and frigid temperatures drastically slow metabolism, stretching lifespans.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm, 8k, photorealistic.",
+      "consistency_method": "text",
+      "style_hash": "5ad81476d612ba955f89fb77887e4d2bfbdbc36fe0782db5470398fda5c623cb"
+    },
+    "scene_5": {
+      "media_id": "",
+      "flow_operation_id": null,
+      "local_path": null,
+      "status": "failed",
+      "prompt": "Wide, desolate shot of the abyssal plain, with 'marine snow' gently falling, illuminating sparse, alien-like organisms, hinting at resource scarcity. Cinematic 8k, photorealistic. A professional, mysterious entity. Cinematic, documentary style. Wide shot. Narrator (Algenib) says: \"With less energy needed, creatures can divert resources into relentless growth, becoming titans.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm, 8k, photorealistic.",
+      "consistency_method": "text",
+      "style_hash": "86efd677f38942171dae568ab5794df946b3707ef33ac18975a9be6fdbc36b0f"
+    },
+    "scene_6": {
+      "media_id": "",
+      "flow_operation_id": null,
+      "local_path": null,
+      "status": "failed",
+      "prompt": "Macro, slow-motion orbit around a colossal, translucent amphipod, its many legs scuttling over a craggy rock surface. Cinematic 8k, photorealistic. A professional, mysterious entity. Cinematic, documentary style. Wide shot. Narrator (Algenib) says: \"Meet the Granddaddy Long Legs of the deep: amphipods, the size of a human arm.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm, 8k, photorealistic.",
+      "consistency_method": "text",
+      "style_hash": "19d48bf7afb572ee3c319b5481058a3a384361356b2b31144d3c038212c63404"
+    },
+    "scene_7": {
+      "media_id": "",
+      "flow_operation_id": null,
+      "local_path": null,
+      "status": "failed",
+      "prompt": "Dynamic close-up of a giant isopod, its segmented body slowly unfurling, revealing menacing compound eyes. Cinematic 8k, photorealistic. A professional, mysterious entity. Cinematic, documentary style. Wide shot. Narrator (Algenib) says: \"Or the colossal isopod, a terrifying deep-sea woodlouse the size of a football.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm, 8k, photorealistic.",
+      "consistency_method": "text",
+      "style_hash": "a010ba6dcd36adbf49c41e45b0f6049387110cb5b8d1d04f78b161e3e49eb60b"
+    },
+    "scene_8": {
+      "media_id": "",
+      "flow_operation_id": null,
+      "local_path": null,
+      "status": "failed",
+      "prompt": "POV shot from inside a submersible, looking out as a blurred, massive shape glides past the window, too large to fully comprehend. Cinematic 8k, photorealistic. A professional, mysterious entity. Cinematic, documentary style. Wide shot. Narrator (Algenib) says: \"For every creature we've found, scientists believe dozens more unseen leviathans lurk in the abyss.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm, 8k, photorealistic.",
+      "consistency_method": "text",
+      "style_hash": "4c1cf0e4622b5cb427d5e151adab6db0c94a395196e9b9eb83d0a5dd83580da6"
+    },
+    "scene_9": {
+      "media_id": "",
+      "flow_operation_id": null,
+      "local_path": null,
+      "status": "failed",
+      "prompt": "A lone submersible light pierces the absolute blackness, revealing only tiny, scattered bioluminescent specks, emphasizing the vast emptiness. Cinematic 8k, photorealistic. A professional, mysterious entity. Cinematic, documentary style. Wide shot. Narrator (Algenib) says: \"It's a world where the smallest things are huge, and the biggest... are beyond our nightmares.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm, 8k, photorealistic.",
+      "consistency_method": "text",
+      "style_hash": "dd4f564f11e28df46e63e83f8fdbbb21a95db0a0cb3cc5bb2e295506ec4eba79"
+    },
+    "scene_10": {
+      "media_id": "",
+      "flow_operation_id": null,
+      "local_path": null,
+      "status": "failed",
+      "prompt": "Rapid pull-back from a single, enormous, unidentifiable eye peering from the crushing darkness, dissolving into absolute black. Cinematic 8k, photorealistic. A professional, mysterious entity. Cinematic, documentary style. Wide shot. Narrator (Algenib) says: \"What terrifying, unseen titans are still growing, miles beneath our feet?\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm, 8k, photorealistic.",
+      "consistency_method": "text",
+      "style_hash": "94ada3df8f3285158cff0c40fb1feb3c29e9e3521778031cf5e47035fcbfac54"
+    }
+  }
+}

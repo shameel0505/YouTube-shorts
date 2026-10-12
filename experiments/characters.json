@@ -1,0 +1,76 @@
+{
+  "characters": [
+    {
+      "name": "liya",
+      "role": "Aesthetic Tech & Science Creator / Documentarian",
+      "face_prompt": "A charismatic young adult creator looking directly into camera with engaging, authentic expression, clean features, illuminated by warm 3200K key light with subtle rim accents.",
+      "body_prompt": "Wearing the tailored matte charcoal overshirt over crisp crewneck, sitting naturally with confident posture at a sleek minimalist timber creator studio desk with generous headroom and acoustic slat depth, sharp cinematic 4k.",
+      "voice": "Sadachbia",
+      "personality": "Charismatic, authentic, high-retention storytelling, punchy hooks, conversational delivery with great comedic timing.",
+      "style_tags": "aesthetic minimalist creator studio, warm ambient 3200K lighting, acoustic slat depth, 35mm f/2.0 shallow depth of field, modern cinematic 4k"
+    },
+    {
+      "name": "me",
+      "role": "Aesthetic Tech & Science Creator / Documentarian",
+      "face_prompt": "A charismatic young adult creator looking directly into camera with engaging, authentic expression, clean features, illuminated by warm 3200K key light with subtle rim accents.",
+      "body_prompt": "Wearing the tailored matte charcoal overshirt over crisp crewneck, sitting naturally with confident posture at a sleek minimalist timber creator studio desk with generous headroom and acoustic slat depth, sharp cinematic 4k.",
+      "voice": "Sadachbia",
+      "personality": "Charismatic, authentic, high-retention storytelling, punchy hooks, conversational delivery with great comedic timing.",
+      "style_tags": "aesthetic minimalist creator studio, warm ambient 3200K lighting, acoustic slat depth, 35mm f/2.0 shallow depth of field, modern cinematic 4k"
+    },
+    {
+      "name": "Alex",
+      "role": "Top-tier Tech & Science YouTuber (MKBHD / Veritasium style)",
+      "face_prompt": "A charismatic young adult male YouTuber looking directly into camera with an engaging confident expression, clean haircut, short trimmed beard, illuminated by soft cinematic studio key light and subtle warm edge rim light, shot on Sony A7SIII 35mm f/1.4, sharp 4k.",
+      "body_prompt": "Wearing a premium matte-black minimalist crewneck sweatshirt, sitting in a sleek modern creator studio with a professional boom microphone just out of frame, acoustic wood slat wall and warm bokeh lights in background, full body turnaround.",
+      "voice": "Sadachbia",
+      "personality": "High-energy, charismatic, punchy hooks, relatable, sharp comedic timing, engaging storytelling.",
+      "style_tags": "professional YouTube studio, Sony FX3 4k, 35mm shallow depth of field, warm rim lighting, acoustic wood panel backdrop, modern creator aesthetic"
+    },
+    {
+      "name": "Maya",
+      "role": "Viral Video Essayist & Mystery Documentarian (Vox / Johnny Harris style)",
+      "face_prompt": "An articulate young adult female documentary YouTuber with expressive hazel eyes, natural smile, looking right into lens, high-end editorial studio lighting, soft diffused glow, sharp 4k.",
+      "body_prompt": "Wearing a chic oversized earthy olive overshirt over a clean white tee, standing in an aesthetic Brooklyn loft studio with industrial brick wall, warm desk lamps and camera monitors in background, full body turnaround.",
+      "voice": "Zephyr",
+      "personality": "Curious, investigative, fast-paced, breathless hooks, dramatic reveals, intellectual yet conversational.",
+      "style_tags": "high-end video essay aesthetic, ARRI Alexa mini look, 50mm f/1.2, warm tungsten practical lights, exposed brick loft, cinematic YouTube production"
+    },
+    {
+      "name": "Marcus",
+      "role": "High-Impact Business & Curiosity Host (MagnatesMedia / Hormozi style)",
+      "face_prompt": "An intense, sharply focused young adult male content creator, speaking with conviction directly into camera, athletic build, short fade haircut, dramatic high-contrast side lighting, sharp 4k.",
+      "body_prompt": "Wearing a dark charcoal fitted athletic tee, sitting in a moody dark-mode podcast studio with dark acoustic panels, subtle warm ambient accent tube in background, professional podcast broadcast mic, full body turnaround.",
+      "voice": "Algenib",
+      "personality": "Authoritative, intense, no-fluff delivery, shocking statistics, psychological hooks.",
+      "style_tags": "dark mode podcast studio, cinematic high-contrast lighting, Shure SM7B aesthetic, high retention pacing, sharp 4k documentary style"
+    },
+    {
+      "name": "Kaelen",
+      "role": "Cyberpunk investigator and quantum reality chronicler",
+      "face_prompt": "A sharp-eyed young adult male investigator with sleek silver cybernetic temple implants, weathered features, piercing gaze, neutral studio lighting, sharp 4k.",
+      "body_prompt": "Wearing a dark matte-leather duster coat with high collar, dark tech-fabric cargo trousers, combat boots, neutral lighting, full body turnaround.",
+      "voice": "Algenib",
+      "personality": "Observant, cynical, calm under pressure, gravelly and authoritative delivery.",
+      "style_tags": "cinematic documentary, dystopian investigative atmosphere, 50mm f/1.4 shallow depth of field, sharp 4k"
+    },
+    {
+      "name": "Elena",
+      "role": "Deep-ocean explorer and abyssal marine researcher",
+      "face_prompt": "A young adult female deep-sea researcher with focused hazel eyes, braided dark hair, subtle blue bioluminescent light reflection, sharp 4k.",
+      "body_prompt": "Wearing a fitted pressurized high-tech submersible diving suit with subtle copper seals and chest instrumentation, full body turnaround.",
+      "voice": "Aoede",
+      "personality": "Curious, determined, articulate, passionate about the unknown.",
+      "style_tags": "cinematic documentary, 50mm f/1.4 shallow depth of field, sharp 4k"
+    },
+    {
+      "name": "Soren",
+      "role": "Cosmic astrophysicist and narrator of universal anomalies",
+      "face_prompt": "A thoughtful senior astrophysicist with short silver-streaked hair, rimless glasses, contemplative expression, soft warm key light, sharp 4k.",
+      "body_prompt": "Wearing a charcoal tailored wool trench coat over a dark minimalist sweater and trousers, clean background, full body turnaround.",
+      "voice": "Charon",
+      "personality": "Profound, awe-inspiring, measured, deep resonant cadence.",
+      "style_tags": "epic sci-fi, cinematic documentary, 50mm f/1.4 shallow depth of field, sharp 4k"
+    }
+  ]
+}

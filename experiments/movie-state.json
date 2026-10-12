@@ -1,0 +1,98 @@
+{
+  "version": 2,
+  "title": "Abyssal Leviathans: Earth's True Alien Giants",
+  "project": "f73aac02-d5f5-4b72-a52a-00e0c7d01991",
+  "characters": {},
+  "scenes": {
+    "scene_1": {
+      "media_id": "2653a8dd-15ce-49d4-a461-0ee59bea6296",
+      "flow_operation_id": null,
+      "local_path": "output/experiments/my_movie/2653a8dd-15ce-49d4-a461-0ee59bea6296.mp4",
+      "status": "completed",
+      "prompt": "An extreme wide, anamorphic shot, slowly panning downwards into an impenetrable abyss. The water's surface, dimly lit by a distant, fading sun, quickly gives way to absolute, inky blackness. Subtle particulate matter drifts lazily in the currents, catching residual light for a fleeting moment before disappearing into the void. The camera movement is glacially slow, emphasizing the immense scale and crushing silence. A cosmic entity. Cinematic, documentary style. Wide shot. Narrator (Charon) says: \"Beneath the sunlit waves, Earth hides a terrifying secret: the Mariana Trench.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm.",
+      "consistency_method": "text",
+      "style_hash": "a05e1b24bc37dbb0d4ebb170481e4a4c174f051868bb0754ca816cdae4f27a49"
+    },
+    "scene_2": {
+      "media_id": "fbf56a16-dc40-44ac-9840-566b0c3f5678",
+      "flow_operation_id": null,
+      "local_path": "output/experiments/my_movie/fbf56a16-dc40-44ac-9840-566b0c3f5678.mp4",
+      "status": "completed",
+      "prompt": "A POV shot from a hypothetical submersible's viewport, looking out into absolute black. Tiny, almost imperceptible compression lines or distortions ripple across the thick, reinforced glass. The only light source is the faint, internal glow from instrumentation panels, casting barely visible reflections on the glass. The camera slowly zooms slightly, emphasizing the feeling of being pressed deeper and deeper into an unyielding, lightless void. A cosmic entity. Cinematic, documentary style. Wide shot. Narrator (Charon) says: \"Nine miles down, where sunlight dies and pressure could crush a submarine like paper...\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm.",
+      "consistency_method": "text",
+      "style_hash": "cf9a1b8d547bd8856ab222c81b070cdae9e63f2fa1efdfe04e1eabd14867be87"
+    },
+    "scene_3": {
+      "media_id": "83062438-2c32-4409-92d6-25b360c6bf68",
+      "flow_operation_id": null,
+      "local_path": "output/experiments/my_movie/83062438-2c32-4409-92d6-25b360c6bf68.mp4",
+      "status": "completed",
+      "prompt": "A delicate, almost ethereal shot. A single, small, bioluminescent deep-sea comb jelly (ctenophore) pulsates gently in the darkness. Its iridescent cilia shimmer with otherworldly blues and greens, creating fleeting, organic light trails. The background is pure, deep black, making the creature appear suspended in infinite space. Filmed with a macro lens, shallow depth of field, rendering the creature in exquisite, fragile detail. A cosmic entity. Cinematic, documentary style. Wide shot. Narrator (Charon) says: \"...life persists, but not as we know it.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm.",
+      "consistency_method": "text",
+      "style_hash": "dbd985ef20e1836856acec14e472adfa90d884a343b31211dfb44228b58952f6"
+    },
+    "scene_4": {
+      "media_id": "2b47f31b-9708-4273-8d6f-b86275248351",
+      "flow_operation_id": null,
+      "local_path": "output/experiments/my_movie/2b47f31b-9708-4273-8d6f-b86275248351.mp4",
+      "status": "completed",
+      "prompt": "A long shot, framed through the narrow beam of a submersible's spotlight. The beam cuts through the inky blackness, revealing only particulate matter. Suddenly, a vast, indistinct, dark mass briefly eclipses part of the beam's edge, creating an unsettling, fleeting shadow against the microscopic glow. It's gone as quickly as it appeared, leaving only questions and a sense of immense scale just beyond perception. The camera holds, creating suspense. A cosmic entity. Cinematic, documentary style. Wide shot. Narrator (Charon) says: \"Here, in the cold, black abyss, a bizarre phenomenon takes hold: Deep-Sea Gigantism.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm.",
+      "consistency_method": "text",
+      "style_hash": "e0acc86269291c6c17bf81cc1e4e6b6e63babe0abec5f94fb332f3d3b61a596d"
+    },
+    "scene_5": {
+      "media_id": "d5e5f3a7-66bf-4588-a9b6-28fd9bc03e54",
+      "flow_operation_id": null,
+      "local_path": "output/experiments/my_movie/d5e5f3a7-66bf-4588-a9b6-28fd9bc03e54.mp4",
+      "status": "completed",
+      "prompt": "A medium close-up, slightly tilted. A giant isopods (Bathynomus giganteus), roughly the size of a football, slowly scuttles across a rocky, sediment-covered seafloor. Its segmented exoskeleton reflects the submersible's harsh, directional light with an unsettling, metallic sheen. Its many legs move with slow, deliberate effort, an ancient, alien crawl. The creature's compound eyes reflect a faint, ghostly glow. A cosmic entity. Cinematic, documentary style. Wide shot. Narrator (Charon) says: \"Think of an ordinary shrimp, then imagine it the size of a human arm.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm.",
+      "consistency_method": "text",
+      "style_hash": "68677539aa70553ed0a2035371e5b162c85d85f0221cbc2e1bb3b9094652cc7e"
+    },
+    "scene_6": {
+      "media_id": "d08c65c8-faaa-417e-9ca6-c1d6c85a9671",
+      "flow_operation_id": null,
+      "local_path": "output/experiments/my_movie/d08c65c8-faaa-417e-9ca6-c1d6c85a9671.mp4",
+      "status": "completed",
+      "prompt": "An extreme close-up, almost abstract, focusing on the intricate, strangely beautiful yet terrifying details of a deep-sea creature's feature. Perhaps the gaping, tooth-filled maw of an anglerfish (scaled up, showing only part of it) or the iridescent, complex eye of a colossal squid. The lighting is dramatic, high contrast chiaroscuro, highlighting textures and unsettling angles, emphasizing its alien morphology. A cosmic entity. Cinematic, documentary style. Wide shot. Narrator (Charon) says: \"Extreme pressure, icy temperatures, and scarce food slow metabolism, allowing some creatures to grow to colossal, alien proportions.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm.",
+      "consistency_method": "text",
+      "style_hash": "5f6081262369598238f77812947d2a4b70e57f59ab1d73e0929fa7335392b2a2"
+    },
+    "scene_7": {
+      "media_id": "978c083b-5ee1-43d4-8f60-bb8e18a3e796",
+      "flow_operation_id": null,
+      "local_path": "output/experiments/my_movie/978c083b-5ee1-43d4-8f60-bb8e18a3e796.mp4",
+      "status": "completed",
+      "prompt": "A wide shot, almost panoramic, from a submersible's perspective. From the swirling darkness, a colossal tentacle of a Colossal Squid slowly unfurls and drifts into the beam of light. Its arm is studded with powerful suckers and hooked claws, catching the light as it moves with eerie grace. The creature's full body is obscured by the darkness, amplifying its unknown size. The water around it is disturbed, emphasizing its immense presence. A cosmic entity. Cinematic, documentary style. Wide shot. Narrator (Charon) says: \"From monstrous amphipods the size of dogs, to squids with eyes bigger than dinner plates...\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm.",
+      "consistency_method": "text",
+      "style_hash": "495c924c9b1429e1b0b2f7f1d2bc5124df8e590e76e30793bdd24d62323f34b6"
+    },
+    "scene_8": {
+      "media_id": "2f405c49-30df-4836-bb70-84d922c96d81",
+      "flow_operation_id": null,
+      "local_path": "output/experiments/my_movie/2f405c49-30df-4836-bb70-84d922c96d81.mp4",
+      "status": "completed",
+      "prompt": "A slow, tracking shot, as if the submersible is following. A massive, ghostly pale Mariana Snailfish (or a similar large, gelatinous abyssal fish) glides silently through the water, its translucent skin revealing faint internal structures. Its large, dark eyes seem to stare blankly. The background is an endless black, making the creature appear like a spectral apparition. The sheer size, compared to known fish, is the terror. A cosmic entity. Cinematic, documentary style. Wide shot. Narrator (Charon) says: \"...these are not just large, they are the stuff of primordial nightmares.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm.",
+      "consistency_method": "text",
+      "style_hash": "d73a0c1c9020cd55dc9ca434de9081f64849b67bd90844a813f16d0a8b90711d"
+    },
+    "scene_9": {
+      "media_id": "99020391-7988-46bf-8997-be88258cc90f",
+      "flow_operation_id": null,
+      "local_path": "output/experiments/my_movie/99020391-7988-46bf-8997-be88258cc90f.mp4",
+      "status": "completed",
+      "prompt": "An extreme wide shot looking out from a submersible, its powerful floodlights barely scratching the surface of the vast, featureless, inky blackness beyond. The light only illuminates a tiny, confined sphere of water, emphasizing the monumental scale of the unexplored abyss. A subtle, almost imperceptible tremor through the water hints at something massive moving far off in the unseen depths. A cosmic entity. Cinematic, documentary style. Wide shot. Narrator (Charon) says: \"Vast stretches of this abyss remain unexplored, holding secrets we can barely comprehend.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm.",
+      "consistency_method": "text",
+      "style_hash": "7bbc926cdee76340e97d221fd2ba122e9a4a79d8eb39c7486b21355b5bb50d54"
+    },
+    "scene_10": {
+      "media_id": "58c00caf-1d3d-4850-9787-6b917e279854",
+      "flow_operation_id": null,
+      "local_path": "output/experiments/my_movie/58c00caf-1d3d-4850-9787-6b917e279854.mp4",
+      "status": "completed",
+      "prompt": "A breathtaking, slow pull-back shot. A truly immense, almost mythological creature (e.g., a colossal, shimmering siphonophore colony stretching hundreds of feet, or a spectral, translucent deep-sea whale fall being consumed by dozens of these giant creatures, all dimly lit by distant, diffuse bioluminescence) slowly drifts into and out of view, its scale almost incomprehensible. The camera continues to pull back, until the creature is merely a fleeting, magnificent silhouette swallowed by the profound darkness, leaving an enduring sense of awe, mystery, and primal fear. A cosmic entity. Cinematic, documentary style. Wide shot. Narrator (Charon) says: \"The Mariana Trench isn't just deep; it's Earth's true alien ocean, home to giants beyond our wildest dreams.\" Avoid: text, watermark, low quality, cartoon. hyper-realistic, highly detailed, professional cinematography, IMAX 70mm.",
+      "consistency_method": "text",
+      "style_hash": "6002c2f8264a9f4a18086c18227fe6fd741f7be1e114ed9379779b0f9c4d9817"
+    }
+  }
+}
