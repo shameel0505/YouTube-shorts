@@ -723,7 +723,7 @@ class VideoRenderer:
             mock_path = out_dir / f"scene_{scene_num:02d}_mock.mp4"
             print(f"[DRY-RUN] Command: {' '.join(cmd)}")
             if not mock_path.exists():
-                w, h = (1080, 1920) if target_aspect == "9:16" else (1920, 1080)
+                w, h = (720, 1280) if target_aspect == "9:16" else (1280, 720)
                 subprocess.run([
                     "ffmpeg", "-y",
                     "-f", "lavfi", "-i", f"color=c=0x18181b:s={w}x{h}:d=2",
@@ -957,15 +957,30 @@ class PostProduction:
             faded = PostProduction._apply_boundary_audio_fades(with_audio, temp_dir)
             prepared_clips.append(faded)
 
-        # Fix 9: Frame-accurate stitching via ffmpeg concat filter (avoids MoviePy drift)
+        # Fix 9: Frame-accurate stitching via ffmpeg concat filter with resolution normalization
         stitched_video_path = temp_dir / f"stitched_{int(time.time())}.mp4"
         inputs = []
         filter_complex = ""
+
+        # Determine target resolution from first clip
+        target_w, target_h = (720, 1280)
+        try:
+            probe_cmd = ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height", "-of", "csv=s=x:p=0", str(prepared_clips[0])]
+            wh = subprocess.run(probe_cmd, capture_output=True, text=True).stdout.strip().split("x")
+            if len(wh) == 2:
+                target_w, target_h = int(wh[0]), int(wh[1])
+        except Exception:
+            pass
+
         for i, clip in enumerate(prepared_clips):
             inputs.extend(["-i", str(clip)])
-            filter_complex += f"[{i}:v:0][{i}:a:0]"
+            filter_complex += f"[{i}:v:0]scale={target_w}:{target_h}:force_original_aspect_ratio=decrease,pad={target_w}:{target_h}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=30[v{i}];"
+            filter_complex += f"[{i}:a:0]aformat=sample_rates=48000:channel_layouts=stereo[a{i}];"
+
+        for i in range(len(prepared_clips)):
+            filter_complex += f"[v{i}][a{i}]"
         filter_complex += f"concat=n={len(prepared_clips)}:v=1:a=1[outv][outa]"
-        
+
         concat_cmd = [
             "ffmpeg", "-y",
             *inputs,
@@ -1063,6 +1078,7 @@ def main():
     parser.add_argument("--profile", type=str, default="youtube", help="Auth profile name")
     parser.add_argument("--dry-run", action="store_true", help="Validate end-to-end without spending Flow credits")
     parser.add_argument("--storyboard", type=str, default=None, help="Path to existing storyboard JSON file to execute")
+    parser.add_argument("--session", type=str, default=None, help="Specific session ID to resume (e.g. liya_1791806220)")
     args = parser.parse_args()
 
     cm = CharacterManager()
@@ -1122,7 +1138,21 @@ def main():
         with open(sb_path) as f:
             storyboard = json.load(f)
         storyboard_path = sb_path
-        session_id = f"{char_info['name'].lower()}_{int(time.time())}"
+        session_id = args.session
+        if not session_id:
+            for s_file in sorted(SESSION_DIR.glob(f"{char_info['name'].lower()}_*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
+                try:
+                    with open(s_file) as f:
+                        s_data = json.load(f)
+                    sp = s_data.get("storyboard_path", "")
+                    if sp in (str(sb_path), str(sb_path.resolve()), str(sb_path.relative_to(PROJECT_ROOT) if sb_path.is_relative_to(PROJECT_ROOT) else sb_path)):
+                        session_id = s_data["session_id"]
+                        print(f"🔄 Auto-detected active session for storyboard: {session_id}")
+                        break
+                except Exception:
+                    pass
+        if not session_id:
+            session_id = f"{char_info['name'].lower()}_{int(time.time())}"
         print(f"📖 Loaded Existing Storyboard: '{storyboard.get('title')}' ({len(storyboard.get('scenes', []))} scenes)")
     else:
         topic = args.topic
