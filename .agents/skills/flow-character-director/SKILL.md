@@ -11,8 +11,10 @@ This skill guides the autonomous creation of character-consistent video shorts u
 
 1. **Character Is the Only Persistent Identity in Flow**:
    Flow supports first-class `CHARACTER` entities (`gflow character create`). Locations, backgrounds, and props are image-level only (`--ref`).
-2. **Deterministic `@Name` Reference Binding**:
-   When generating scenes via `video t2v` or `video r2v`, tagging `@CharacterName` in the prompt automatically binds the character's facial and bodily reference images to the generation wire (`referenceEntities`).
+2. **Deterministic `@Name` Reference Binding (MANDATORY AUTOMATION RULE)**:
+   - On `flow.google.com`, character chips MUST be committed via keystrokes: `@` -> type character name letter-by-letter (`l-i-y-a`) -> wait for autocomplete popup -> press `Enter` -> append prompt text.
+   - 🛑 **NEVER paste `@liya` as raw text** (`insert_text` or clipboard). Pasted text does NOT trigger the autocomplete popup and will fail to attach the character chip.
+   - 🛑 **AGENTS MUST ASK THE USER BEFORE MODIFYING OR TOUCHING THIS CHARACTER FLOW.** See [AGENTS.md](file:///Users/shameel/Desktop/youtube/AGENTS.md) and [test_tag_liya.py](file:///Users/shameel/Desktop/youtube/scripts/test_tag_liya.py).
 3. **Pacing for Vertical Shorts (9:16)**:
    - Target duration: ~50–60 seconds total.
    - Pacing: 10 to 12 scenes, each 4 to 5 seconds long.

@@ -406,9 +406,12 @@ def _build_caption_clips(captions: list[dict], video_clip, fmt: int, closing_que
         
     vw, vh = video_clip.size if hasattr(video_clip, 'size') else (VIDEO_WIDTH, VIDEO_HEIGHT)
 
-    # Position in the lower portion (around 80%)
-    center_y = int(vh * 0.80)
-    font = _load_font(CAPTION_FONT_SIZE)
+    # Position in the lower portion (around 70% for bottom-third)
+    center_y = int(vh * 0.70)
+    
+    # Scale font size proportionally: calibrated 64px on 720p (96px on 1080p)
+    font_size = int(round(64 * (vw / 720.0)))
+    font = _load_font(font_size)
 
     closing_start = (video_clip.duration - CLOSING_Q_DURATION) if closing_question and fmt == 3 else video_clip.duration
     
@@ -441,11 +444,14 @@ def _render_word_frame(words, active_idx, font, center_y, vw, fmt):
     probe = Image.new("RGBA", (1, 1))
     probe_draw = ImageDraw.Draw(probe)
 
-    texts = [w["text"].upper() for w in words]
+    texts = [w["text"] for w in words]
     widths = [probe_draw.textbbox((0, 0), t, font=font)[2] - probe_draw.textbbox((0, 0), t, font=font)[0] for t in texts]
 
-    # Elegant cinematic letter/word tracking
-    gap = 20
+    sample_bbox = probe_draw.textbbox((0, 0), "Ay", font=font)
+    text_h = sample_bbox[3] - sample_bbox[1]
+
+    # Elegant cinematic letter/word tracking proportional to font size
+    gap = int(text_h * 0.35)
     max_allowed = vw - 80
 
     # Line wrapping algorithm (Font size is strictly locked!)
@@ -465,15 +471,13 @@ def _render_word_frame(words, active_idx, font, center_y, vw, fmt):
     if current_line_words:
         lines.append({"words": current_line_words, "width": current_line_w - gap})
 
-    sample_bbox = probe_draw.textbbox((0, 0), "Ay", font=font)
-    text_h = sample_bbox[3] - sample_bbox[1]
     line_spacing = int(text_h * 1.2)
 
     total_h = line_spacing * len(lines)
     canvas_w = vw
     
-    shadow_offset = 6
-    blur_radius = 8
+    shadow_offset = 4
+    blur_radius = 4
     canvas_h = total_h + shadow_offset + blur_radius * 2 + 40
 
     img = Image.new("RGBA", (canvas_w, canvas_h), (0, 0, 0, 0))
@@ -499,12 +503,13 @@ def _render_word_frame(words, active_idx, font, center_y, vw, fmt):
 
     # Draw Text
     y = start_y
-    modern_cyan = (0, 229, 255, 255) # Modern 2026 High-Retention Cyan
+    active_color = (255, 255, 255, 255) # Stark white
+    dim_color = (200, 200, 200, 180)    # Minimalist grey/translucent
 
     for line in lines:
         x = (canvas_w - line["width"]) // 2
         for orig_idx, w_text, w_px in line["words"]:
-            color = modern_cyan if orig_idx == active_idx else (255, 255, 255, 255)
+            color = active_color if orig_idx == active_idx else dim_color
             draw.text((x, y), w_text, font=font, fill=color)
             x += w_px + gap
         y += line_spacing

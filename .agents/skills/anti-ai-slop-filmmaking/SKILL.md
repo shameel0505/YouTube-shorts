@@ -58,20 +58,25 @@ The goal is simple: **Eliminate every trace of "AI slop"** (plastic glowing face
   > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Medium waist-up shot at sleek minimalist timber creator desk, host wearing the tailored matte charcoal overshirt over crisp crewneck with generous headroom, opens leaning forward over desk and snaps eyeline up to the lens with an energetic hand gesture holding up two fingers, speaking with sharp conviction saying: \"[Complete spoken sentence, 12-16 words max]\", warm 3200K key light, subtle practical lamp glow, acoustic wood panel depth, 35mm f/2.0 lens, sharp 4k."`
   *(Note: NEVER use tight close-ups or aggressive push-ins. Always open on an active physical movement before speaking to eliminate dead puppet poses. Repeat the verbatim wardrobe token in every prompt).*
 
-* **Macro Science & High-Speed Physics B-Roll**:
-  > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. High-speed Phantom 4K macro capture at 20,000 frames per second: heavy industrial hydraulic steel press crushes a teardrop of clear solid glass with zero deflection, heavy steel textures, microscopic dust particles, directional tungsten spotlight, sharp cinematic 4k."`
-
-* **Historical / Archival Visual Essay B-Roll**:
-  > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Slow cinematic crane reveal over an antique mahogany table covered in handwritten blue ink architectural schematics on yellowed parchment, brass compass, warm desk lamp glow, high-end documentary aesthetic."`
-
-* **Epic Landscape / Cosmic B-Roll**:
-  > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Wide cinematic drone orbit around an isolated deep-space telescope perched on a snowy mountain ridge under a vibrant milky way galaxy, atmospheric fog, sharp 4k."`
+* **The 6 Ultra-Realistic B-Roll Archetypes (Zero CGI / Pure Documentary Cinematography)**:
+  1. **Archetype 1: High-Speed Lab Physics & Impact Dynamics**:
+     > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Captured on Phantom Flex 4K at 20,000 fps with Laowa 24mm f/14 macro probe lens on locked-off heavy tripod: [exact physical action], 180-degree physical shutter motion blur, directional 3200K tungsten side spotlight casting deep shadow roll-off, microscopic dust particles in the beam, authentic high-speed laboratory capture."`
+  2. **Archetype 2: Archival Investigation & Evidence Desk (Johnny Harris / Vox Style)**:
+     > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. ARRI Alexa Mini LF with Zeiss Supreme 50mm T1.5 prime lens on motorized linear slider gliding 2mm above: hands in white cotton archival gloves examining yellowed cotton-rag blueprints with authentic blue fountain pen ink bleed, brass drafting compass, warm 2800K desk lamp glow, shallow depth of field with organic bokeh."`
+  3. **Archetype 3: Precision Industrial Engineering & Micro-Mechanisms**:
+     > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Sony FX9 with Sony 90mm f/2.8 Macro G OSS lens on fluid head: precision CNC milling cutter carving matte 6061 billet aluminum with fine liquid coolant mist, authentic metal machining micro-scratches, industrial tungsten lighting."`
+  4. **Archetype 4: Microscopic Optical Probes & Birefringence (Veritasium Style)**:
+     > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Olympus BX53 optical microscope capture under polarized cross-filters: vivid violet, cyan, and amber optical birefringence stress patterns swirling through solid transparent quartz glass, high optical clarity, authentic scientific microscopy."`
+  5. **Archetype 5: Tangible Physical Apparatus & Analog Evidence**:
+     > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Macro rack-focus with 50mm f/1.4 lens across an authentic analog CRT oscilloscope screen displaying an active green P31 phosphor sine waveform trace, matte dark-gray metal chassis, warm vintage laboratory background."`
+  6. **Archetype 6: Cinematic Environmental Establishing & Telephoto Compression**:
+     > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Wide cinematic establish on Cooke 35mm Anamorphic prime lens: brutalist research observatory perched on foggy mountain ridge at sunrise, natural optical depth compression, warm morning atmospheric haze."`
 
 ### B. Prompt Blacklist (NEVER Use These Words)
 
 ❌ **Forbidden Terms**:
 - `photorealistic`, `hyperrealistic`, `8k resolution`, `masterpiece`, `trending on artstation`, `unreal engine 5`
-- Abstract CGI terms (`cinematic visualization`, `3d render`, `vector fields`) — forces cartoon CGI shaders. Use real physical materials instead.
+- Abstract CGI terms (`glowing hologram`, `neon grid`, `cinematic visualization`, `3d render`, `vector fields`, `futuristic particles`) — forces cartoon CGI shaders. Always translate concepts into physical, tangible objects.
 - Numeric ages (`27-year-old`) — triggers safety filters. Use stage nouns like `young adult creator`.
 - Film stocks (`35mm film`, `IMAX 70mm`) — triggers policy flags and sprocket-hole borders. Use optical descriptors like `shallow depth of field, sharp cinematic 4k`.
 
