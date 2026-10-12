@@ -1110,8 +1110,20 @@ def main():
 
     cm.ensure_character_in_project(char_info, project_id, profile=args.profile, dry_run=args.dry_run)
 
+    topic = args.topic
+    if not topic:
+        try:
+            from generator.studio_researcher import DynamicStudioResearcher
+            researcher = DynamicStudioResearcher()
+            research_data = researcher.research_viral_topic()
+            topic = f"{research_data['title']}: {research_data['topic']}"
+            print(f"🔬 Autonomously Researched Fresh Topic: '{topic}'")
+        except Exception as e:
+            print(f"⚠️ Dynamic research notice ({e}), using default generator...")
+            topic = None
+
     director = StoryDirector(api_key=GEMINI_API_KEY)
-    storyboard = director.generate_script(char_info, topic=args.topic, aspect=args.aspect)
+    storyboard = director.generate_script(char_info, topic=topic, aspect=args.aspect)
 
     session_id = f"{char_info['name'].lower()}_{int(time.time())}"
     storyboard_path = OUTPUT_BASE / f"storyboard_{int(time.time())}.json"

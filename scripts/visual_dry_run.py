@@ -49,7 +49,9 @@ DEFAULT_PROMPT = (
     'stillness or awkward sideways glances, sharp cinematic 4k.'
 )
 
-async def run_visual_dry_run(aspect: str = "9:16", count: int = 1, prompt_text: str = DEFAULT_PROMPT, wait_s: int = 45):
+async def run_visual_dry_run(aspect: str = "9:16", count: int = 1, prompt_text: str = None, wait_s: int = 45):
+    if not prompt_text:
+        prompt_text = DEFAULT_PROMPT.replace("9:16", aspect)
     profile_name = _resolve_profile("youtube")
     pdir = _make_provider_dir(profile_name)
 
@@ -142,7 +144,8 @@ async def run_visual_dry_run(aspect: str = "9:16", count: int = 1, prompt_text: 
         await page.wait_for_timeout(1000)
 
         # 8. Save screenshot for verification
-        out_screenshot = ROOT_DIR / "output" / "visual_dry_run_inspection.png"
+        aspect_clean = aspect.replace(":", "_")
+        out_screenshot = ROOT_DIR / "output" / f"visual_dry_run_inspection_{aspect_clean}.png"
         out_screenshot.parent.mkdir(parents=True, exist_ok=True)
         await page.screenshot(path=str(out_screenshot))
         print(f"\n📸 Screenshot captured: {out_screenshot}")
@@ -166,6 +169,24 @@ if __name__ == "__main__":
     parser.add_argument("--aspect", default="9:16", help="Aspect ratio (default 9:16)")
     parser.add_argument("--count", type=int, default=1, help="Video count (default 1)")
     parser.add_argument("--wait", type=int, default=45, help="Seconds to leave browser open (default 45)")
+    parser.add_argument("--scene", type=int, default=None, help="Scene number to load from storyboard")
+    parser.add_argument("--storyboard", type=str, default=None, help="Path to storyboard JSON file")
     args = parser.parse_args()
 
-    asyncio.run(run_visual_dry_run(aspect=args.aspect, count=args.count, wait_s=args.wait))
+    prompt = None
+    if args.scene is not None:
+        sb_path = Path(args.storyboard) if args.storyboard else ROOT_DIR / "output/experiments/autonomous_characters/storyboard_1791804017.json"
+        if sb_path.exists():
+            import json
+            with open(sb_path) as f:
+                sb_data = json.load(f)
+            scenes = {s["scene_num"]: s for s in sb_data.get("scenes", [])}
+            if args.scene in scenes:
+                prompt = scenes[args.scene].get("prompt")
+                print(f"📖 Loaded Scene {args.scene} prompt from {sb_path.name}")
+            else:
+                print(f"⚠️ Scene {args.scene} not found in {sb_path.name}")
+        else:
+            print(f"⚠️ Storyboard not found: {sb_path}")
+
+    asyncio.run(run_visual_dry_run(aspect=args.aspect, count=args.count, prompt_text=prompt, wait_s=args.wait))
