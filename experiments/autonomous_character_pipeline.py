@@ -223,13 +223,13 @@ class CharacterManager:
 
 
 class StoryDirector:
-    """Uses Gemini 3 GA models to generate, budget, loop-check, and refine high-retention 60-second vertical scripts bound to a Flow character."""
+    """Uses Gemini 3 GA models to generate, budget, loop-check, and refine high-retention 60-second scripts bound to a Flow character."""
     def __init__(self, api_key: str = None):
         from generator.gemini_service import gemini_service
         self.service = gemini_service
         self.conversation = None
 
-    def generate_script(self, char_info: dict, topic: str = None) -> dict:
+    def generate_script(self, char_info: dict, topic: str = None, aspect: str = "9:16") -> dict:
         char_name = char_info["name"]
         role = char_info.get("role", "Protagonist / Narrator")
         style = char_info.get("style_tags", "aesthetic minimalist creator studio, warm ambient 3200K lighting, acoustic slat depth, 35mm f/2.0 shallow depth of field, modern cinematic 4k")
@@ -237,7 +237,7 @@ class StoryDirector:
         face = char_info.get("face_prompt", "")
         body = char_info.get("body_prompt", "")
 
-        print(f"📝 Scriptwriting with Gemini for Creator: {char_name} ({role})...")
+        print(f"📝 Scriptwriting with Gemini for Creator: {char_name} ({role}) [{aspect}]...")
         prompt = f"""
 You are the executive creative director and cinematographer behind the world's most viral, prestige-tier educational YouTube visual essays (Vox, Johnny Harris, Veritasium, and MagnatesMedia).
 Write a high-retention 60-second YouTube Short script (exactly 10 scenes, alternating A-ROLL host and B-ROLL photoreal visual evidence).
@@ -267,19 +267,19 @@ MASTER SCRIPTING & ANTI-AI-SLOP RULES:
      * **DELIVERY**: Speaks with relaxed, confident authority using natural conversational hand gestures.
      * **CRITICAL POST-SPEECH RULE**: As the spoken sentence completes, the host naturally pauses with a subtle knowing nod and rests hands easily on the timber desk, keeping relaxed direct eye contact with the viewer—completely eliminating awkward stillness, wandering glances, or looking sideways.
    - Required A-Roll Prompt Format:
-     "Full-frame 9:16 image edge to edge, no bars. ARRI Alexa Mini LF with Zeiss Supreme 50mm T1.5 prime lens, medium waist-up shot at minimalist timber creator studio desk, host wearing the tailored matte charcoal overshirt over crisp crewneck with generous headroom, authentic natural skin texture with visible micro-pores, illuminated by warm 3200K softbox key light at 45 degrees with subtle warm rim accent, organic optical bokeh. The shot opens with the host looking directly into the camera lens with engaging warmth and closed mouth in a brief 0.5-second natural resting pause, takes a subtle breath, and then begins speaking with relaxed conviction saying: \\"[Exact Complete Sentence]\\", using subtle natural hand gestures, and as the words finish, pauses naturally with a subtle knowing nod and rests hands easily on the timber desk, keeping warm direct eye contact with the viewer with zero frozen stillness or awkward sideways glances, sharp cinematic 4k."
+     "Full-frame {aspect} image edge to edge, no bars. ARRI Alexa Mini LF with Zeiss Supreme 50mm T1.5 prime lens, medium waist-up shot at minimalist timber creator studio desk, host wearing the tailored matte charcoal overshirt over crisp crewneck with generous headroom, authentic natural skin texture with visible micro-pores, illuminated by warm 3200K softbox key light at 45 degrees with subtle warm rim accent, organic optical bokeh. The shot opens with the host looking directly into the camera lens with engaging warmth and closed mouth in a brief 0.5-second natural resting pause, takes a subtle breath, and then begins speaking with relaxed conviction saying: \\"[Exact Complete Sentence]\\", using subtle natural hand gestures, and as the words finish, pauses naturally with a subtle knowing nod and rests hands easily on the timber desk, keeping warm direct eye contact with the viewer with zero frozen stillness or awkward sideways glances, sharp cinematic 4k."
    - Verbatim wardrobe token MUST be preserved: `wearing the tailored matte charcoal overshirt over crisp crewneck`.
 
 4. **PHOTOREAL DOCUMENTARY B-ROLL (TANGIBLE PHYSICAL EVIDENCE - NO AI SLOP)**:
    - Ground EVERY B-Roll prompt in real cinema optics, tangible physical materials, and authentic physics.
    - STRICT FORBIDDEN LIST (NEVER USE): glowing holograms, neon grids, abstract 3D CGI spheres, futuristic particles, vector fields, cartoon shaders. Always translate concepts into physical objects.
    - Choose ONE or a cohesive combination of these photoreal archetypes:
-     * *Archetype 1 (Macro Physical Textures & Real Material Stress)*: "Full-frame 9:16 image edge to edge, no bars. Macro close-up on RED V-Raptor 8K with Canon 100mm f/2.8L Macro lens: authentic physical [material/reaction/fluid], showing natural surface tension, physical micro-fractures, fluid dynamics or thermal stress under warm 3200K studio lighting, authentic physics, shallow depth of field, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
-     * *Archetype 2 (Archival Investigation & Evidence Desk - Johnny Harris / Vox Style)*: "Full-frame 9:16 image edge to edge, no bars. ARRI Alexa Mini LF with Zeiss Supreme 50mm T1.5 prime lens on motorized slider gliding 2mm above: hands in white cotton archival gloves examining yellowed blueprints or authentic documents with fountain pen ink bleed, brass drafting tools, warm 2800K desk lamp glow, shallow depth of field, organic bokeh, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
-     * *Archetype 3 (Precision Industrial Engineering & Micro-Mechanisms)*: "Full-frame 9:16 image edge to edge, no bars. Sony FX9 with 90mm f/2.8 Macro lens: precision mechanical apparatus or components operating in real physical space, metal machining micro-scratches, industrial tungsten lighting, authentic depth of field, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
-     * *Archetype 4 (Microscopic Optical Probes & Birefringence - Veritasium Style)*: "Full-frame 9:16 image edge to edge, no bars. Olympus BX53 optical microscope capture under polarized cross-filters: vivid optical birefringence stress patterns swirling through solid transparent quartz glass, authentic scientific microscopy, high optical clarity, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
-     * *Archetype 5 (Tangible Physical Apparatus & Analog Evidence)*: "Full-frame 9:16 image edge to edge, no bars. Macro rack-focus with 50mm f/1.4 lens across an authentic analog CRT oscilloscope screen displaying an active green P31 phosphor sine waveform trace, dark-gray metal chassis, warm vintage laboratory background, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
-     * *Archetype 6 (Cinematic Environmental Establishing)*: "Full-frame 9:16 image edge to edge, no bars. Wide cinematic establish on Cooke 35mm Anamorphic prime lens: real-world research location perched on foggy mountain ridge at sunrise, natural optical depth compression, realistic atmospheric haze, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
+     * *Archetype 1 (Macro Physical Textures & Real Material Stress)*: "Full-frame {aspect} image edge to edge, no bars. Macro close-up on RED V-Raptor 8K with Canon 100mm f/2.8L Macro lens: authentic physical [material/reaction/fluid], showing natural surface tension, physical micro-fractures, fluid dynamics or thermal stress under warm 3200K studio lighting, authentic physics, shallow depth of field, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
+     * *Archetype 2 (Archival Investigation & Evidence Desk - Johnny Harris / Vox Style)*: "Full-frame {aspect} image edge to edge, no bars. ARRI Alexa Mini LF with Zeiss Supreme 50mm T1.5 prime lens on motorized slider gliding 2mm above: hands in white cotton archival gloves examining yellowed blueprints or authentic documents with fountain pen ink bleed, brass drafting tools, warm 2800K desk lamp glow, shallow depth of field, organic bokeh, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
+     * *Archetype 3 (Precision Industrial Engineering & Micro-Mechanisms)*: "Full-frame {aspect} image edge to edge, no bars. Sony FX9 with 90mm f/2.8 Macro lens: precision mechanical apparatus or components operating in real physical space, metal machining micro-scratches, industrial tungsten lighting, authentic depth of field, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
+     * *Archetype 4 (Microscopic Optical Probes & Birefringence - Veritasium Style)*: "Full-frame {aspect} image edge to edge, no bars. Olympus BX53 optical microscope capture under polarized cross-filters: vivid optical birefringence stress patterns swirling through solid transparent quartz glass, authentic scientific microscopy, high optical clarity, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
+     * *Archetype 5 (Tangible Physical Apparatus & Analog Evidence)*: "Full-frame {aspect} image edge to edge, no bars. Macro rack-focus with 50mm f/1.4 lens across an authentic analog CRT oscilloscope screen displaying an active green P31 phosphor sine waveform trace, dark-gray metal chassis, warm vintage laboratory background, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
+     * *Archetype 6 (Cinematic Environmental Establishing)*: "Full-frame {aspect} image edge to edge, no bars. Wide cinematic establish on Cooke 35mm Anamorphic prime lens: real-world research location perched on foggy mountain ridge at sunrise, natural optical depth compression, realistic atmospheric haze, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
 
 5. **Prompt Length Constraint**:
    - Keep all prompt strings under 1000 characters (Flow has a hard 1300-char limit).
@@ -294,7 +294,7 @@ Return ONLY valid JSON with this exact schema:
     {{
       "scene_num": 1,
       "type": "A-ROLL",
-      "prompt": "Full-frame 9:16 image edge to edge, no bars. ARRI Alexa Mini LF with Zeiss Supreme 50mm T1.5 prime lens, medium waist-up shot at minimalist timber creator studio desk, host wearing the tailored matte charcoal overshirt over crisp crewneck with generous headroom, authentic natural skin texture with visible micro-pores, illuminated by warm 3200K softbox key light at 45 degrees with subtle warm rim accent, organic optical bokeh. The shot opens with the host looking directly into the camera lens with engaging warmth and closed mouth in a brief 0.5-second natural resting pause, takes a subtle breath, and then begins speaking with relaxed conviction saying: \\"[Opening Hook Sentence]\\", using subtle natural hand gestures, and as the words finish, pauses naturally with a subtle knowing nod and rests hands easily on the timber desk, keeping warm direct eye contact with the viewer with zero frozen stillness or awkward sideways glances, sharp cinematic 4k.",
+      "prompt": "Full-frame {aspect} image edge to edge, no bars. ARRI Alexa Mini LF with Zeiss Supreme 50mm T1.5 prime lens, medium waist-up shot at minimalist timber creator studio desk, host wearing the tailored matte charcoal overshirt over crisp crewneck with generous headroom, authentic natural skin texture with visible micro-pores, illuminated by warm 3200K softbox key light at 45 degrees with subtle warm rim accent, organic optical bokeh. The shot opens with the host looking directly into the camera lens with engaging warmth and closed mouth in a brief 0.5-second natural resting pause, takes a subtle breath, and then begins speaking with relaxed conviction saying: \\"[Opening Hook Sentence]\\", using subtle natural hand gestures, and as the words finish, pauses naturally with a subtle knowing nod and rests hands easily on the timber desk, keeping warm direct eye contact with the viewer with zero frozen stillness or awkward sideways glances, sharp cinematic 4k.",
       "narration": "[Opening Hook Sentence]",
       "duration": 6
     }}
@@ -305,6 +305,10 @@ Return ONLY valid JSON with this exact schema:
         self.conversation = self.service.create_conversation()
         data = self.conversation.send_json_message(prompt, required_keys=["title", "scenes"])
         print(f"✅ Generated Initial Script: '{data.get('title')}' ({len(data.get('scenes', []))} scenes)")
+
+        # Ensure aspect is attached to each scene
+        for s in data.get("scenes", []):
+            s["aspect"] = aspect
 
         # Fix 6: Programmatic speech budget enforcement
         data = self.enforce_speech_budget(data)
@@ -437,7 +441,7 @@ Return ONLY valid JSON with this exact schema:
 class QualityAssurance:
     """Automated QA runner using clip_qa.py and programmatic quality gates."""
     @staticmethod
-    def validate_single_clip(clip_path: Path, scene: dict = None) -> tuple[bool, str]:
+    def validate_single_clip(clip_path: Path, scene: dict = None, aspect: str = None) -> tuple[bool, str]:
         """Per-clip QA gate before assembly: verifies stream integrity, dimensions, and duration (Fix 7)."""
         if not clip_path.exists():
             return False, "File does not exist"
@@ -461,7 +465,7 @@ class QualityAssurance:
 
             w = int(v_stream.get("width", 0))
             h = int(v_stream.get("height", 0))
-            target_aspect = scene.get("aspect", "9:16") if scene else "9:16"
+            target_aspect = aspect or (scene.get("aspect") if scene else "9:16")
             if target_aspect == "9:16" and w > h:
                 return False, f"Aspect ratio mismatch: expected portrait 9:16, got {w}x{h}"
             if target_aspect == "16:9" and h > w:
@@ -686,6 +690,7 @@ class VideoRenderer:
                 sys.executable, aroll_script,
                 "--prompt", prompt,
                 "--aspect", target_aspect,
+                "--count", "1",
                 "--profile", self.profile,
                 "--out-dir", str(out_dir),
                 "--timeout", "1200",
@@ -700,6 +705,7 @@ class VideoRenderer:
                 sys.executable, flow_runner,
                 "--prompt", prompt,
                 "--aspect", target_aspect,
+                "--count", "1",
                 "--profile", self.profile,
                 "--out-dir", str(out_dir),
                 "--timeout", "1200",
@@ -778,7 +784,7 @@ class VideoRenderer:
 
                 if clip_path and clip_path.exists():
                     # Fix 7: Per-clip QA gate before accepting
-                    passed, reason = QualityAssurance.validate_single_clip(clip_path, scene)
+                    passed, reason = QualityAssurance.validate_single_clip(clip_path, scene, aspect=target_aspect)
                     if passed:
                         print(f"   ✅ Clip ready and QA passed: {clip_path.name}")
                         if checkpoint:
@@ -1105,7 +1111,7 @@ def main():
     cm.ensure_character_in_project(char_info, project_id, profile=args.profile, dry_run=args.dry_run)
 
     director = StoryDirector(api_key=GEMINI_API_KEY)
-    storyboard = director.generate_script(char_info, topic=args.topic)
+    storyboard = director.generate_script(char_info, topic=args.topic, aspect=args.aspect)
 
     session_id = f"{char_info['name'].lower()}_{int(time.time())}"
     storyboard_path = OUTPUT_BASE / f"storyboard_{int(time.time())}.json"

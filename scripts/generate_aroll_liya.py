@@ -44,6 +44,7 @@ from gflow_cli.api.transports.batchexecute import (
 async def generate_aroll(
     prompt: str,
     aspect: str = "9:16",
+    count: int = 1,
     out_dir: Path = None,
     project_id: str = "f8d0e960-846a-42d6-a643-333562c0d44f",
     profile: str = "youtube",
@@ -95,10 +96,25 @@ async def generate_aroll(
             except Exception as e:
                 raise RuntimeError(f"Could not open project {project_id} (redirected to /about across all account indices): {e}")
 
-        # 2. Clear composer
+        # 2. Configure Mode (Video), Aspect Ratio (crop_9_16 vs crop_16_9), and Count (x1 - only one video)
+        target_aspect_lig = "crop_9_16" if aspect == "9:16" else "crop_16_9"
+        print(f"   [SETTINGS] Selecting mode: video, aspect ratio: {aspect} ({target_aspect_lig}), count: x{count}")
+        try:
+            pane = await composer._open_pane(page)
+            try:
+                await composer._select(page, pane, axis="mode", lig="videocam")
+                await composer._select(page, pane, axis="aspect", lig=target_aspect_lig)
+                await composer._select(page, pane, axis="count", text=f"x{count}")
+            finally:
+                await composer._close_pane(page)
+            print(f"   ✅ Successfully applied settings: mode=videocam, aspect={aspect}, count=x{count}")
+        except Exception as e:
+            print(f"   [WARN] Could not apply settings pane ({e}), proceeding with page state...")
+
+        # 3. Clear composer
         await composer.clear_composer(page)
 
-        # 3. Focus composer
+        # 4. Focus composer
         comp = page.locator(COMPOSER).first
         await comp.click()
         await page.wait_for_timeout(500)
@@ -201,6 +217,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate A-Roll scene with tagged @liya character.")
     parser.add_argument("--prompt", required=True, help="Scene prompt to append after @liya chip.")
     parser.add_argument("--aspect", default="9:16", help="Aspect ratio (default 9:16).")
+    parser.add_argument("--count", type=int, default=1, help="Number of video candidates to generate (default: 1).")
     parser.add_argument("--out-dir", default=None, help="Directory to save downloaded clip.")
     parser.add_argument("--project", default="f8d0e960-846a-42d6-a643-333562c0d44f", help="Flow project ID.")
     parser.add_argument("--profile", default="youtube", help="gflow auth profile.")
@@ -213,6 +230,7 @@ def main():
         res = asyncio.run(generate_aroll(
             prompt=args.prompt,
             aspect=args.aspect,
+            count=args.count,
             out_dir=Path(args.out_dir) if args.out_dir else None,
             project_id=args.project,
             profile=args.profile,
