@@ -1062,6 +1062,7 @@ def main():
     parser.add_argument("--project", type=str, default=None, help="Google Flow project ID")
     parser.add_argument("--profile", type=str, default="youtube", help="Auth profile name")
     parser.add_argument("--dry-run", action="store_true", help="Validate end-to-end without spending Flow credits")
+    parser.add_argument("--storyboard", type=str, default=None, help="Path to existing storyboard JSON file to execute")
     args = parser.parse_args()
 
     cm = CharacterManager()
@@ -1114,26 +1115,36 @@ def main():
 
     cm.ensure_character_in_project(char_info, project_id, profile=args.profile, dry_run=args.dry_run)
 
-    topic = args.topic
-    if not topic:
-        try:
-            from generator.studio_researcher import DynamicStudioResearcher
-            researcher = DynamicStudioResearcher()
-            research_data = researcher.research_viral_topic()
-            topic = f"{research_data['title']}: {research_data['topic']}"
-            print(f"🔬 Autonomously Researched Fresh Topic: '{topic}'")
-        except Exception as e:
-            print(f"⚠️ Dynamic research notice ({e}), using default generator...")
-            topic = None
+    if args.storyboard:
+        sb_path = Path(args.storyboard)
+        if not sb_path.exists():
+            raise FileNotFoundError(f"Storyboard file not found: {sb_path}")
+        with open(sb_path) as f:
+            storyboard = json.load(f)
+        storyboard_path = sb_path
+        session_id = f"{char_info['name'].lower()}_{int(time.time())}"
+        print(f"📖 Loaded Existing Storyboard: '{storyboard.get('title')}' ({len(storyboard.get('scenes', []))} scenes)")
+    else:
+        topic = args.topic
+        if not topic:
+            try:
+                from generator.studio_researcher import DynamicStudioResearcher
+                researcher = DynamicStudioResearcher()
+                research_data = researcher.research_viral_topic()
+                topic = f"{research_data['title']}: {research_data['topic']}"
+                print(f"🔬 Autonomously Researched Fresh Topic: '{topic}'")
+            except Exception as e:
+                print(f"⚠️ Dynamic research notice ({e}), using default generator...")
+                topic = None
 
-    director = StoryDirector(api_key=GEMINI_API_KEY)
-    storyboard = director.generate_script(char_info, topic=topic, aspect=args.aspect)
+        director = StoryDirector(api_key=GEMINI_API_KEY)
+        storyboard = director.generate_script(char_info, topic=topic, aspect=args.aspect)
 
-    session_id = f"{char_info['name'].lower()}_{int(time.time())}"
-    storyboard_path = OUTPUT_BASE / f"storyboard_{int(time.time())}.json"
-    with open(storyboard_path, "w") as f:
-        json.dump(storyboard, f, indent=2)
-    print(f"💾 Storyboard saved to: {storyboard_path}")
+        session_id = f"{char_info['name'].lower()}_{int(time.time())}"
+        storyboard_path = OUTPUT_BASE / f"storyboard_{int(time.time())}.json"
+        with open(storyboard_path, "w") as f:
+            json.dump(storyboard, f, indent=2)
+        print(f"💾 Storyboard saved to: {storyboard_path}")
 
     # ── SESSION CHECKPOINT: resume from last crash point ────────────────────
     checkpoint = SessionCheckpoint(session_id, storyboard_path)
