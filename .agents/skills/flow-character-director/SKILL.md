@@ -71,33 +71,45 @@ Generate exactly 10 to 12 scenes with the following strict JSON schema:
 ```json
 {
   "title": "Short Title",
-  "character": "Kaelen",
+  "theme": "Kurzgesagt 2D Vector Graphic",
+  "character": "Liya",
   "scenes": [
     {
       "scene_num": 1,
-      "prompt": "@Kaelen stands at the edge of a rain-swept neon rooftop looking down at a cyberpunk metropolis, slow cinematic drone orbit, 8k photorealistic, IMAX 70mm.",
-      "narration": "They told us the machine was infallible... until it predicted its own destruction.",
-      "duration": 5
+      "title": "Opening Hook",
+      "type": "A-ROLL",
+      "prompt": "[Scene 01 - Opening Hook]: Full-frame 9:16 image edge to edge, no bars. ARRI Alexa Mini LF with Zeiss Supreme 50mm T1.5 prime lens, medium waist-up shot at minimalist timber creator studio desk, host wearing the tailored matte charcoal overshirt over crisp crewneck with generous headroom, authentic natural skin texture with visible micro-pores, illuminated by warm 3200K softbox key light at 45 degrees with subtle warm rim accent, organic optical bokeh. The shot opens with the host looking directly into the camera lens with engaging warmth and closed mouth in a brief 0.5-second natural resting pause, takes a subtle breath, and then begins speaking with relaxed conviction saying: \"[Opening statement]\", using subtle natural hand gestures, and as the words finish, pauses naturally with a subtle knowing nod and rests hands easily on the timber desk, keeping warm direct eye contact with the viewer with zero frozen stillness or awkward sideways glances, sharp cinematic 4k.",
+      "narration": "[Opening statement]",
+      "duration": 6
+    },
+    {
+      "scene_num": 2,
+      "title": "Scientific Evidence Diagram",
+      "type": "B-ROLL",
+      "prompt": "[Scene 02 - Scientific Evidence Diagram]: Full-frame 9:16 image edge to edge, no bars. Prestigious educational scientific 2D vector animation in clean flat infographic style: deep matte navy-blue background (#0A1128). Crisp minimalist geometric icons: [mechanism]. Bold graphic silhouettes, smooth 2D mechanical motion, razor-sharp vector lines, high visual hierarchy, flat solid colors with luminous high-contrast accents, zero photorealism, zero 3D CGI reflections, off-screen narrator voiceover saying: \"[Voiceover line]\"",
+      "narration": "[Voiceover line]",
+      "previous_video": "Scene 01 - Opening Hook",
+      "duration": 6
     }
   ]
 }
 ```
 
-Rules for high retention:
-- **Hook (0-3s)**: High curiosity or visual impact. No "Did you know".
-- **Camera Grammar**: Explicit motion verb in every prompt (`slow push-in`, `drone orbit`, `macro tracking`, `low-angle pan`).
+Rules for high retention & structural integrity:
+- **Unified B-Roll Theme**: ONE VIDEO = ONE UNIFIED B-ROLL THEME. All B-roll cutaways share the exact same visual identity (e.g. Kurzgesagt 2D Vector Graphic standard for science explainers).
+- **Unique Slugging**: Every scene prompt starts with `[Scene {scene_num:02d} - {title}]: ` to guarantee unique, searchable Flow asset titles.
+- **Continuation Chaining**: Every scene from Scene 2 onwards chains to its predecessor via `--previous-video`.
+- **Speech Budget**: Spoken lines strictly between 10–14 words (<= 1.8 words/sec), 100% complete sentences with zero trailing fragments.
 - **Aspect Ratio**: Always vertical `9:16`.
 
-### Step 3: Batch Video Generation (Veo)
-Run `gflow video t2v` for each scene:
+### Step 3: Scene Generation with Flow & Veo
+Run the verified pipeline runner:
 ```bash
-gflow video t2v \
-  "@Kaelen stands at the edge of a rain-swept neon rooftop..." \
-  --project <FLOW_PROJECT_ID> \
+python experiments/autonomous_character_pipeline.py \
+  --character liya \
+  --scenes 10 \
   --aspect 9:16 \
-  --profile youtube \
-  --out-dir ./output/experiments/autonomous_characters/clips/ \
-  --json
+  --profile youtube
 ```
 
 **Guardrails**:

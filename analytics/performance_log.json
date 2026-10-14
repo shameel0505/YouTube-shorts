@@ -1954,5 +1954,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "Z43o_GuIFKw",
+        "format": 1,
+        "topic": "Why Pure Water Won't Shock You",
+        "hook": "Did you know that perfectly pure water is actually an electrical insulator?",
+        "upload_time": "2026-10-14T07:28:27.713560+00:00",
+        "check_time": "2026-10-15T07:28:27.713560+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]

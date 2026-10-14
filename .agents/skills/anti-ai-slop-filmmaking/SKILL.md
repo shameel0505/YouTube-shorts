@@ -58,18 +58,23 @@ The goal is simple: **Eliminate every trace of "AI slop"** (plastic glowing face
   > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Medium waist-up shot at sleek minimalist timber creator desk, host wearing the tailored matte charcoal overshirt over crisp crewneck with generous headroom, opens leaning forward over desk and snaps eyeline up to the lens with an energetic hand gesture holding up two fingers, speaking with sharp conviction saying: \"[Complete spoken sentence, 12-16 words max]\", warm 3200K key light, subtle practical lamp glow, acoustic wood panel depth, 35mm f/2.0 lens, sharp 4k."`
   *(Note: NEVER use tight close-ups or aggressive push-ins. Always open on an active physical movement before speaking to eliminate dead puppet poses. Repeat the verbatim wardrobe token in every prompt).*
 
-* **The 6 Ultra-Realistic B-Roll Archetypes (Zero CGI / Pure Documentary Cinematography)**:
-  1. **Archetype 1: High-Speed Lab Physics & Impact Dynamics**:
+* **The Unified B-Roll Theme Rule (Crucial Aesthetic Standard)**:
+  > **ONE VIDEO = ONE UNIFIED B-ROLL THEME.** Never mix different visual mediums within the same piece (e.g. do not jump between chalkboards, 2D vectors, and paper craft). Every cutaway in a single video must share the exact same aesthetic language, background canvas, and rendering grammar.
+
+* **The Master B-Roll Archetypes**:
+  1. **Archetype 1: Kurzgesagt Minimalist 2D Vector Graphic (Gold Standard for Explainer Diagrams & Science)**:
+     > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Prestigious educational scientific 2D vector animation in clean flat infographic style: deep matte navy-blue background (#0A1128). Crisp minimalist geometric icons showing [exact mechanical interaction, particle movement, or diagram]. Bold graphic silhouettes, smooth 2D mechanical motion, razor-sharp vector lines, high visual hierarchy, flat solid colors with luminous high-contrast accents (vibrant cyan, warm amber, electric magenta, crisp white), zero photorealism, zero 3D CGI reflections, zero AI cartoon slop."`
+  2. **Archetype 2: High-Speed Lab Physics & Impact Dynamics**:
      > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Captured on Phantom Flex 4K at 20,000 fps with Laowa 24mm f/14 macro probe lens on locked-off heavy tripod: [exact physical action], 180-degree physical shutter motion blur, directional 3200K tungsten side spotlight casting deep shadow roll-off, microscopic dust particles in the beam, authentic high-speed laboratory capture."`
-  2. **Archetype 2: Archival Investigation & Evidence Desk (Johnny Harris / Vox Style)**:
+  3. **Archetype 3: Archival Investigation & Evidence Desk (Johnny Harris / Vox Style)**:
      > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. ARRI Alexa Mini LF with Zeiss Supreme 50mm T1.5 prime lens on motorized linear slider gliding 2mm above: hands in white cotton archival gloves examining yellowed cotton-rag blueprints with authentic blue fountain pen ink bleed, brass drafting compass, warm 2800K desk lamp glow, shallow depth of field with organic bokeh."`
-  3. **Archetype 3: Precision Industrial Engineering & Micro-Mechanisms**:
+  4. **Archetype 4: Precision Industrial Engineering & Micro-Mechanisms**:
      > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Sony FX9 with Sony 90mm f/2.8 Macro G OSS lens on fluid head: precision CNC milling cutter carving matte 6061 billet aluminum with fine liquid coolant mist, authentic metal machining micro-scratches, industrial tungsten lighting."`
-  4. **Archetype 4: Microscopic Optical Probes & Birefringence (Veritasium Style)**:
+  5. **Archetype 5: Microscopic Optical Probes & Birefringence (Veritasium Style)**:
      > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Olympus BX53 optical microscope capture under polarized cross-filters: vivid violet, cyan, and amber optical birefringence stress patterns swirling through solid transparent quartz glass, high optical clarity, authentic scientific microscopy."`
-  5. **Archetype 5: Tangible Physical Apparatus & Analog Evidence**:
+  6. **Archetype 6: Tangible Physical Apparatus & Analog Evidence**:
      > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Macro rack-focus with 50mm f/1.4 lens across an authentic analog CRT oscilloscope screen displaying an active green P31 phosphor sine waveform trace, matte dark-gray metal chassis, warm vintage laboratory background."`
-  6. **Archetype 6: Cinematic Environmental Establishing & Telephoto Compression**:
+  7. **Archetype 7: Cinematic Environmental Establishing & Telephoto Compression**:
      > `"Full-frame 9:16 (or 16:9) image edge to edge, no bars. Wide cinematic establish on Cooke 35mm Anamorphic prime lens: brutalist research observatory perched on foggy mountain ridge at sunrise, natural optical depth compression, warm morning atmospheric haze."`
 
 ### B. Prompt Blacklist (NEVER Use These Words)

@@ -265,23 +265,26 @@ MASTER SCRIPTING & ANTI-AI-SLOP RULES:
    - EVERY A-Roll prompt MUST choreograph the opening lead-in, speech, and post-speech beats:
      * **OPENING PRE-ROLL BEAT (Fixes "Cut-Off at Start")**: The shot MUST open with the host looking directly into the camera lens with a calm, engaging presence, natural eye contact, and closed mouth in a brief 0.5-second resting pause, taking a subtle natural breath, and THEN beginning to speak.
      * **DELIVERY**: Speaks with relaxed, confident authority using natural conversational hand gestures.
-     * **CRITICAL POST-SPEECH RULE**: As the spoken sentence completes, the host naturally pauses with a subtle knowing nod and rests hands easily on the timber desk, keeping relaxed direct eye contact with the viewer—completely eliminating awkward stillness, wandering glances, or looking sideways.
-   - Required A-Roll Prompt Format:
-     "Full-frame {aspect} image edge to edge, no bars. ARRI Alexa Mini LF with Zeiss Supreme 50mm T1.5 prime lens, medium waist-up shot at minimalist timber creator studio desk, host wearing the tailored matte charcoal overshirt over crisp crewneck with generous headroom, authentic natural skin texture with visible micro-pores, illuminated by warm 3200K softbox key light at 45 degrees with subtle warm rim accent, organic optical bokeh. The shot opens with the host looking directly into the camera lens with engaging warmth and closed mouth in a brief 0.5-second natural resting pause, takes a subtle breath, and then begins speaking with relaxed conviction saying: \\"[Exact Complete Sentence]\\", using subtle natural hand gestures, and as the words finish, pauses naturally with a subtle knowing nod and rests hands easily on the timber desk, keeping warm direct eye contact with the viewer with zero frozen stillness or awkward sideways glances, sharp cinematic 4k."
-   - Verbatim wardrobe token MUST be preserved: `wearing the tailored matte charcoal overshirt over crisp crewneck`.
+     * **CRITICAL POST-SPEECH RULE**: As the spoken sentence    - Required A-Roll Prompt Format:
+      "Full-frame {aspect} image edge to edge, no bars. ARRI Alexa Mini LF with Zeiss Supreme 50mm T1.5 prime lens, medium waist-up shot at minimalist timber creator studio desk, host wearing a relaxed sand-toned textured linen overshirt over a crisp off-white crewneck with generous headroom, authentic natural skin texture with visible micro-pores, illuminated by warm 3200K softbox key light at 45 degrees with subtle warm rim accent, organic optical bokeh. The shot opens with the host looking directly into the camera lens with engaging warmth and closed mouth in a brief 0.5-second natural resting pause, takes a subtle breath, and then begins speaking with relaxed conviction saying: \\"[Exact Complete Sentence]\\", using subtle natural hand gestures, and as the words finish, pauses naturally with a subtle knowing nod and rests hands easily on the timber desk, keeping warm direct eye contact with the viewer with zero frozen stillness or awkward sideways glances, sharp cinematic 4k."
+    - Verbatim wardrobe token MUST be preserved: `wearing a relaxed sand-toned textured linen overshirt over a crisp off-white crewneck`.
 
-4. **PHOTOREAL DOCUMENTARY B-ROLL (TANGIBLE PHYSICAL EVIDENCE - NO AI SLOP)**:
-   - Ground EVERY B-Roll prompt in real cinema optics, tangible physical materials, and authentic physics.
-   - STRICT FORBIDDEN LIST (NEVER USE): glowing holograms, neon grids, abstract 3D CGI spheres, futuristic particles, vector fields, cartoon shaders. Always translate concepts into physical objects.
-   - Choose ONE or a cohesive combination of these photoreal archetypes:
-     * *Archetype 1 (Macro Physical Textures & Real Material Stress)*: "Full-frame {aspect} image edge to edge, no bars. Macro close-up on RED V-Raptor 8K with Canon 100mm f/2.8L Macro lens: authentic physical [material/reaction/fluid], showing natural surface tension, physical micro-fractures, fluid dynamics or thermal stress under warm 3200K studio lighting, authentic physics, shallow depth of field, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
-     * *Archetype 2 (Archival Investigation & Evidence Desk - Johnny Harris / Vox Style)*: "Full-frame {aspect} image edge to edge, no bars. ARRI Alexa Mini LF with Zeiss Supreme 50mm T1.5 prime lens on motorized slider gliding 2mm above: hands in white cotton archival gloves examining yellowed blueprints or authentic documents with fountain pen ink bleed, brass drafting tools, warm 2800K desk lamp glow, shallow depth of field, organic bokeh, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
-     * *Archetype 3 (Precision Industrial Engineering & Micro-Mechanisms)*: "Full-frame {aspect} image edge to edge, no bars. Sony FX9 with 90mm f/2.8 Macro lens: precision mechanical apparatus or components operating in real physical space, metal machining micro-scratches, industrial tungsten lighting, authentic depth of field, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
-     * *Archetype 4 (Microscopic Optical Probes & Birefringence - Veritasium Style)*: "Full-frame {aspect} image edge to edge, no bars. Olympus BX53 optical microscope capture under polarized cross-filters: vivid optical birefringence stress patterns swirling through solid transparent quartz glass, authentic scientific microscopy, high optical clarity, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
-     * *Archetype 5 (Tangible Physical Apparatus & Analog Evidence)*: "Full-frame {aspect} image edge to edge, no bars. Macro rack-focus with 50mm f/1.4 lens across an authentic analog CRT oscilloscope screen displaying an active green P31 phosphor sine waveform trace, dark-gray metal chassis, warm vintage laboratory background, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
-     * *Archetype 6 (Cinematic Environmental Establishing)*: "Full-frame {aspect} image edge to edge, no bars. Wide cinematic establish on Cooke 35mm Anamorphic prime lens: real-world research location perched on foggy mountain ridge at sunrise, natural optical depth compression, realistic atmospheric haze, off-screen narrator voiceover saying: \\"[Exact Complete Sentence]\\""
+4. **UNIFIED VISUAL THEME FOR B-ROLL EXPLAINERS (ONE VIDEO = ONE COHESIVE THEME)**:
+   - MANDATORY ARCHITECTURAL RULE: ONE VIDEO = ONE UNIFIED B-ROLL THEME! NEVER mix different visual mediums within the same video (do NOT jump between chalkboards, 2D vectors, blueprints, or raw physical footage). The entire video's B-roll track must share the exact same unified aesthetic language and visual palette from start to finish.
+   - MASTER STANDARD FOR EXPLAINER DIAGRAMS & SCIENCE PHENOMENA: **The Kurzgesagt 2D Vector Graphic (Modern, flat, vibrant scientific infographic)**:
+     * Background Canvas: Deep matte navy-blue backdrop (#0A1128).
+     * Geometry & Style: Crisp minimalist geometric icons, bold graphic silhouettes, razor-sharp vector lines, smooth mechanical 2D motion, high visual hierarchy, flat solid colors with luminous high-contrast accents (vibrant cyan, warm amber, electric magenta, crisp white).
+     * STRICT FORBIDDEN LIST (NEVER USE): generic floating 3D CGI spheres, plastic reflections, melting cartoon slop, glowing futuristic neon grids, blurry gradients, 3D meshes, illegible AI hieroglyphics. Always enforce flat 2D graphic design.
+     * Required B-Roll Prompt Format:
+       "Full-frame {aspect} image edge to edge, no bars. Prestigious educational scientific 2D vector animation in clean flat infographic style: deep matte navy-blue background (#0A1128). Crisp minimalist geometric icons: [exact visual mechanism and particle interactions]. Bold graphic silhouettes, smooth 2D mechanical motion, razor-sharp vector lines, high visual hierarchy, flat colors, zero photorealism, zero 3D CGI reflections, off-screen narrator voiceover saying: \"[Exact Complete Sentence]\""
 
-5. **Prompt Length Constraint**:
+5. **UNIQUE SCENE TITLING & CONTINUATION CHAINING**:
+   - Every scene MUST have a unique, descriptive title in the storyboard (`"title": "..."`).
+   - Every scene prompt MUST prepend its unique title slug: `[Scene {scene_num:02d} - {title}]: Full-frame {aspect}...`
+   - This ensures Google Flow's automatic titler gives each asset a unique name in the project library, completely preventing mention picker collisions.
+   - For every scene from Scene 2 onwards, include `"previous_video"` set to the previous scene's unique title.
+
+6. **Prompt Length Constraint**:
    - Keep all prompt strings under 1000 characters (Flow has a hard 1300-char limit).
 
 Topic: {topic if topic else "An engaging, accessible educational concept or scientific phenomenon"}
@@ -290,11 +293,13 @@ Return ONLY valid JSON with this exact schema:
 {{
   "title": "High-CTR Hook Title",
   "topic": "Concise summary",
+  "theme": "Kurzgesagt 2D Vector Graphic",
   "scenes": [
     {{
       "scene_num": 1,
+      "title": "Short Unique Scene Title",
       "type": "A-ROLL",
-      "prompt": "Full-frame {aspect} image edge to edge, no bars. ARRI Alexa Mini LF with Zeiss Supreme 50mm T1.5 prime lens, medium waist-up shot at minimalist timber creator studio desk, host wearing the tailored matte charcoal overshirt over crisp crewneck with generous headroom, authentic natural skin texture with visible micro-pores, illuminated by warm 3200K softbox key light at 45 degrees with subtle warm rim accent, organic optical bokeh. The shot opens with the host looking directly into the camera lens with engaging warmth and closed mouth in a brief 0.5-second natural resting pause, takes a subtle breath, and then begins speaking with relaxed conviction saying: \\"[Opening Hook Sentence]\\", using subtle natural hand gestures, and as the words finish, pauses naturally with a subtle knowing nod and rests hands easily on the timber desk, keeping warm direct eye contact with the viewer with zero frozen stillness or awkward sideways glances, sharp cinematic 4k.",
+      "prompt": "Full-frame {aspect} image edge to edge, no bars. ARRI Alexa Mini LF with Zeiss Supreme 50mm T1.5 prime lens, medium waist-up shot at minimalist timber creator studio desk, host wearing a relaxed sand-toned textured linen overshirt over a crisp off-white crewneck with generous headroom, authentic natural skin texture with visible micro-pores, illuminated by warm 3200K softbox key light at 45 degrees with subtle warm rim accent, organic optical bokeh. The shot opens with the host looking directly into the camera lens with engaging warmth and closed mouth in a brief 0.5-second natural resting pause, takes a subtle breath, and then begins speaking with relaxed conviction saying: \\"[Opening Hook Sentence]\\", using subtle natural hand gestures, and as the words finish, pauses naturally with a subtle knowing nod and rests hands easily on the timber desk, keeping warm direct eye contact with the viewer with zero frozen stillness or awkward sideways glances, sharp cinematic 4k.",
       "narration": "[Opening Hook Sentence]",
       "duration": 6
     }}
@@ -310,6 +315,9 @@ Return ONLY valid JSON with this exact schema:
         for s in data.get("scenes", []):
             s["aspect"] = aspect
 
+        # Architectural Enforcement: Unified Theme, Unique Scene Slugs, and Sequential Continuation Chaining
+        data = self.enforce_unified_theme_and_slugs(data)
+
         # Fix 6: Programmatic speech budget enforcement
         data = self.enforce_speech_budget(data)
 
@@ -319,6 +327,43 @@ Return ONLY valid JSON with this exact schema:
         if self.conversation.last_thought_signature:
             print(f"   🧠 Thought Signature captured ({len(self.conversation.last_thought_signature)} bytes) for follow-up refinements.")
         return data
+
+    def enforce_unified_theme_and_slugs(self, storyboard: dict) -> dict:
+        """Enforces a single unified B-Roll visual theme, unique scene slugs, Option C wardrobe, and continuation chaining."""
+        theme = storyboard.get("theme", "Kurzgesagt 2D Vector Graphic")
+        storyboard["theme"] = theme
+        scenes = storyboard.get("scenes", [])
+        
+        print(f"\n🎨 Enforcing Unified Theme: '{theme}' across {len(scenes)} scenes...")
+        for i, s in enumerate(scenes, start=1):
+            s["scene_num"] = i
+            s["theme"] = theme
+            title = s.get("title", f"Scene {i:02d}").strip()
+            s["title"] = title
+            slug = f"[Scene {i:02d} - {title}]"
+            
+            # Enforce Option C wardrobe on all A-Roll scenes
+            prompt = s.get("prompt", "").strip()
+            if s.get("type", "").upper() == "A-ROLL":
+                prompt = re.sub(
+                    r"wearing the tailored matte charcoal overshirt over crisp crewneck",
+                    "wearing a relaxed sand-toned textured linen overshirt over a crisp off-white crewneck",
+                    prompt, flags=re.IGNORECASE
+                )
+
+            # Ensure unique slug at prompt beginning
+            if not prompt.startswith(f"[Scene {i:02d}"):
+                prompt = re.sub(r"^\[Scene\s*\d+[^\]]*\]:\s*", "", prompt)
+                prompt = f"{slug}: {prompt}"
+            s["prompt"] = prompt
+
+            # Sequential continuation chaining from scene 2 onwards
+            if i > 1 and not s.get("previous_video"):
+                prev_scene = scenes[i - 2]
+                prev_title = prev_scene.get("title", f"Scene {i-1:02d}")
+                s["previous_video"] = f"Scene {i-1:02d} - {prev_title}"
+
+        return storyboard
 
     def enforce_speech_budget(self, storyboard: dict) -> dict:
         """Enforces <= 2.0 words per second across all scenes with complete, punchy sentences (Fix 6)."""
@@ -648,24 +693,42 @@ class VideoRenderer:
             prompt = re.sub(r"\bslams?\s+(a\s+)?(heavy\s+)?(hammer|fist|weapon)\b", "gestures passionately with open palms", prompt, flags=re.IGNORECASE)
             prompt = re.sub(r"\bslams?\s+onto\s+the\s+desk\b", "leans forward over the desk with sharp conviction", prompt, flags=re.IGNORECASE)
 
-        # Fix 2 & Fix 4: Embed narration voiceover in B-ROLL & eliminate abstract CGI
+        # Fix 2, 4, 8: Theme-Aware Prompt Sanitization (Kurzgesagt 2D Vector vs Live-Action Documentary)
+        theme = scene.get("theme") or (char_info.get("theme") if char_info else None) or "Kurzgesagt 2D Vector Graphic"
+        is_2d_vector = any(k in str(theme).lower() for k in ["vector", "kurzgesagt", "infographic"]) or "2d vector" in prompt.lower()
+
         if scene_type == "B-ROLL":
             narration = scene.get("narration", "").strip()
             if narration:
                 if narration not in prompt and "saying" not in prompt.lower():
-                    prompt = f"{prompt}, crisp authoritative off-screen documentary narrator voiceover with natural room tone, saying: \"{narration}\""
+                    prompt = f"{prompt}, off-screen narrator voiceover saying: \"{narration}\""
             else:
-                if "room tone" not in prompt.lower():
+                if "room tone" not in prompt.lower() and not is_2d_vector:
                     prompt = f"{prompt}, rich atmospheric natural room tone and tactile physical ambient sound, no music"
 
-            prompt = re.sub(r"\b(hologram|holographic)\b", "physical optical quartz disc with green collimated laser refraction", prompt, flags=re.IGNORECASE)
-            prompt = re.sub(r"\b(glowing neon|neon glowing|glowing cyber)\b", "illuminated tungsten optical refraction with dust motes", prompt, flags=re.IGNORECASE)
-            prompt = re.sub(r"\b(3d render|cgi visualization|unreal engine|vector field)\b", "macro photographic laboratory capture", prompt, flags=re.IGNORECASE)
+            if is_2d_vector:
+                # 2D Vector Graphic (Kurzgesagt standard)
+                # Disallow 3D CGI plastic, glossy specular highlights, and AI cartoon slop
+                prompt = re.sub(r"\b(3d render|cgi visualization|unreal engine 5|unreal engine|plastic reflections?|3d mesh)\b", "clean flat 2D vector infographic", prompt, flags=re.IGNORECASE)
+                prompt = re.sub(r"\b(glowing neon|neon glowing|glowing cyber)\b", "vibrant high-contrast flat graphic accent", prompt, flags=re.IGNORECASE)
+                prompt = re.sub(r"\b(hologram|holographic)\b", "clean flat vector diagram", prompt, flags=re.IGNORECASE)
+                # Eliminate photographic camera optics from flat graphic animations
+                prompt = re.sub(r"\b(shallow depth of field|organic optical bokeh|bokeh|macro probe lens|macro photographic laboratory capture)\b", "flat 2D vector design", prompt, flags=re.IGNORECASE)
+                # Cleanly strip quality buzzwords without injecting live-action photography
+                prompt = re.sub(r"\b(8k|photorealistic|hyper-realistic|IMAX 70mm|masterpiece|trending on artstation)\b", "clean flat 2D vector graphic", prompt, flags=re.IGNORECASE)
+            else:
+                # Tangible Live-Action Documentary
+                prompt = re.sub(r"\b(hologram|holographic)\b", "physical optical quartz disc with green collimated laser refraction", prompt, flags=re.IGNORECASE)
+                prompt = re.sub(r"\b(glowing neon|neon glowing|glowing cyber)\b", "illuminated tungsten optical refraction with dust motes", prompt, flags=re.IGNORECASE)
+                prompt = re.sub(r"\b(3d render|cgi visualization|unreal engine|vector field)\b", "macro photographic laboratory capture", prompt, flags=re.IGNORECASE)
+                prompt = re.sub(r"\b(8k|photorealistic|hyper-realistic|IMAX 70mm|masterpiece|trending on artstation)\b", "sharp cinematic 4k, shallow depth of field", prompt, flags=re.IGNORECASE)
+
+            # Universal safety sanitizations
             prompt = re.sub(r"\b(explodes violently like a bomb|explodes like a bomb)\b", "rapid physical structural fracture propagation and particulate scattering", prompt, flags=re.IGNORECASE)
             prompt = re.sub(r"\b(bullet shooting|firing a bullet|lead bullet strikes)\b", "lead projectile strikes", prompt, flags=re.IGNORECASE)
-
-        # Fix 8: Strip blacklisted quality buzzwords from prompt
-        prompt = re.sub(r"\b(8k|photorealistic|hyper-realistic|IMAX 70mm|masterpiece|trending on artstation)\b", "sharp cinematic 4k, shallow depth of field", prompt, flags=re.IGNORECASE)
+        else:
+            # A-Roll: Host in studio - strip generic buzzwords and reinforce optical studio look
+            prompt = re.sub(r"\b(8k|photorealistic|hyper-realistic|IMAX 70mm|masterpiece|trending on artstation)\b", "sharp cinematic 4k, shallow depth of field", prompt, flags=re.IGNORECASE)
 
         # Fix 2: Cap prompt length to <= 1300 characters to prevent HTTP 400
         if len(prompt) > 1300:
@@ -673,6 +736,15 @@ class VideoRenderer:
 
         print(f"\n🎬 Scene {scene_num} [{scene_type}] ({target_aspect})")
         print(f"   📜 Full Prompt: {prompt}")
+
+        python_bin = str(PROJECT_ROOT / "venv" / "bin" / "python")
+        if not Path(python_bin).exists():
+            python_bin = sys.executable
+
+        # Automatic continuation chaining from scene 2 onwards
+        prev_video = scene.get("previous_video")
+        if not prev_video and scene_num > 1:
+            prev_video = "latest"
 
         if scene_type == "A-ROLL":
             # ====================================================================================
@@ -687,7 +759,7 @@ class VideoRenderer:
             # ====================================================================================
             aroll_script = str(PROJECT_ROOT / "scripts" / "generate_aroll_liya.py")
             cmd = [
-                sys.executable, aroll_script,
+                python_bin, aroll_script,
                 "--prompt", prompt,
                 "--aspect", target_aspect,
                 "--count", "1",
@@ -697,14 +769,14 @@ class VideoRenderer:
             ]
             if self.project_id:
                 cmd.extend(["--project", self.project_id])
-            if scene.get("previous_video"):
-                cmd.extend(["--previous-video", scene["previous_video"]])
-            print(f"   👤 A-Roll character lock: routing via verified @liya Playwright tagger")
+            if prev_video:
+                cmd.extend(["--previous-video", prev_video])
+            print(f"   👤 A-Roll character lock: routing via verified @liya Playwright tagger" + (f" (chained to '{prev_video}')" if prev_video else ""))
         else:
             # B-Roll documentary cutscene: uses reliable Flow browser runner without character tag
             flow_runner = str(PROJECT_ROOT / "scripts" / "generate_aroll_liya.py")
             cmd = [
-                sys.executable, flow_runner,
+                python_bin, flow_runner,
                 "--prompt", prompt,
                 "--aspect", target_aspect,
                 "--count", "1",
@@ -715,9 +787,9 @@ class VideoRenderer:
             ]
             if self.project_id:
                 cmd.extend(["--project", self.project_id])
-            if scene.get("previous_video"):
-                cmd.extend(["--previous-video", scene["previous_video"]])
-            print(f"   🎬 B-Roll documentary evidence: routing via verified Flow browser runner")
+            if prev_video:
+                cmd.extend(["--previous-video", prev_video])
+            print(f"   🎬 B-Roll documentary evidence: routing via verified Flow browser runner" + (f" (chained to '{prev_video}')" if prev_video else ""))
 
         if dry_run:
             mock_path = out_dir / f"scene_{scene_num:02d}_mock.mp4"
@@ -731,7 +803,7 @@ class VideoRenderer:
                     "-t", "2", "-c:v", "libx264", "-c:a", "aac",
                     "-preset", "ultrafast", str(mock_path)
                 ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            if checkpoint:
+            if checkpoint and not dry_run:
                 checkpoint.mark_success(scene_num, mock_path, 1)
             return mock_path
 
@@ -891,6 +963,104 @@ class PostProduction:
         return padded_path
 
     @staticmethod
+    def _cut_to_speech_boundaries(clip_path: Path, temp_dir: Path, is_seeded: bool = False) -> Path:
+        """
+        Intelligently trims raw clip to speech onset and conclusion using Whisper word timestamps.
+        Applies a natural -0.12s breath intake lead-in and +0.30s post-speech buffer.
+        If is_seeded is True, drops the first frame (0.033s) to eliminate duplicate seed freeze-frames.
+        """
+        from video.captions import _get_model
+
+        probe_cmd = ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(clip_path)]
+        try:
+            total_dur = float(subprocess.run(probe_cmd, capture_output=True, text=True, check=True).stdout.strip())
+        except Exception:
+            return clip_path
+
+        start_time = 0.0
+        end_time = total_dur
+
+        try:
+            model = _get_model()
+            segments, _ = model.transcribe(str(clip_path), word_timestamps=True)
+            words = []
+            for s in segments:
+                for w in s.words:
+                    words.append((w.word.strip(), float(w.start), float(w.end)))
+
+            if words:
+                first_start = words[0][1]
+                last_end = words[-1][2]
+                start_time = max(0.0, first_start - 0.12)
+                end_time = min(total_dur, last_end + 0.30)
+                print(f"   ✂️ Speech-boundary cut for {clip_path.name}: {start_time:.2f}s -> {end_time:.2f}s (words: '{words[0][0]}' ... '{words[-1][0]}')")
+            else:
+                start_time = 0.15 if total_dur > 1.5 else 0.0
+                end_time = max(start_time + 1.0, total_dur - 0.20)
+                print(f"   ✂️ Motion settling trim for {clip_path.name}: {start_time:.2f}s -> {end_time:.2f}s")
+        except Exception as e:
+            print(f"   ⚠️ Speech boundary detection notice ({e}), preserving full duration.")
+            return clip_path
+
+        # veotools trick: drop duplicate seed frame if chained
+        if is_seeded and start_time < 0.033:
+            start_time += 0.033
+
+        dur = end_time - start_time
+        if dur < 1.0:
+            return clip_path
+
+        out_path = temp_dir / f"trimmed_{clip_path.name}"
+        trim_cmd = [
+            "ffmpeg", "-y",
+            "-ss", f"{start_time:.3f}",
+            "-to", f"{end_time:.3f}",
+            "-i", str(clip_path),
+            "-c:v", "libx264", "-crf", "16", "-preset", "ultrafast",
+            "-c:a", "aac",
+            str(out_path)
+        ]
+        res = subprocess.run(trim_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return out_path if out_path.exists() and out_path.stat().st_size > 5000 else clip_path
+
+    @staticmethod
+    def _normalize_stream_segment(clip_path: Path, temp_dir: Path, target_w: int = 720, target_h: int = 1280, target_fps: int = 30) -> Path:
+        """
+        Pre-join stream normalization pass (veotools standard):
+        Enforces identical yuv420p, constant fps, 48kHz audio, and per-clip volume leveling.
+        Falls back to standard audio resampler if audio is mathematically silent (preventing NaN crash in loudnorm).
+        """
+        norm_path = temp_dir / f"norm_{clip_path.name}"
+        vf_filter = f"scale={target_w}:{target_h}:force_original_aspect_ratio=decrease,pad={target_w}:{target_h}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps={target_fps},format=yuv420p"
+
+        # Attempt with loudnorm first
+        norm_cmd = [
+            "ffmpeg", "-y",
+            "-i", str(clip_path),
+            "-vf", vf_filter,
+            "-af", "aresample=48000,loudnorm=I=-16:TP=-1.5:LRA=11",
+            "-c:v", "libx264", "-crf", "16", "-preset", "veryfast",
+            "-c:a", "aac", "-ar", "48000", "-ac", "2",
+            str(norm_path)
+        ]
+        res = subprocess.run(norm_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if norm_path.exists() and norm_path.stat().st_size > 5000:
+            return norm_path
+
+        # Fallback for silent/ambient audio
+        fallback_cmd = [
+            "ffmpeg", "-y",
+            "-i", str(clip_path),
+            "-vf", vf_filter,
+            "-af", "aresample=48000,aformat=sample_rates=48000:channel_layouts=stereo",
+            "-c:v", "libx264", "-crf", "16", "-preset", "veryfast",
+            "-c:a", "aac", "-ar", "48000", "-ac", "2",
+            str(norm_path)
+        ]
+        res = subprocess.run(fallback_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return norm_path if norm_path.exists() and norm_path.stat().st_size > 5000 else clip_path
+
+    @staticmethod
     def _apply_boundary_audio_fades(clip_path: Path, temp_dir: Path, fade_s: float = 0.005) -> Path:
         """Applies a 5ms audio de-click fade-in and fade-out at clip boundaries to eliminate cut pops without cutting off speech consonants."""
         cmd = [
@@ -950,35 +1120,25 @@ class PostProduction:
         temp_dir = final_path.parent / "temp_assembly"
         temp_dir.mkdir(parents=True, exist_ok=True)
 
-        print(f"🔗 Processing {len(valid_clips)} clips (boundary fade + audio stream normalization)...")
+        print(f"🔗 Processing {len(valid_clips)} clips (speech-boundary cut + veotools stream normalization)...")
         prepared_clips = []
-        for p in valid_clips:
+        for idx, p in enumerate(valid_clips):
+            is_seeded = (idx > 0)
             with_audio = PostProduction._ensure_audio_stream(p, temp_dir)
-            faded = PostProduction._apply_boundary_audio_fades(with_audio, temp_dir)
-            prepared_clips.append(faded)
+            trimmed = PostProduction._cut_to_speech_boundaries(with_audio, temp_dir, is_seeded=is_seeded)
+            faded = PostProduction._apply_boundary_audio_fades(trimmed, temp_dir)
+            normalized = PostProduction._normalize_stream_segment(faded, temp_dir)
+            prepared_clips.append(normalized)
 
-        # Fix 9: Frame-accurate stitching via ffmpeg concat filter with resolution normalization
+        # Frame-accurate stitching via ffmpeg concat filter
         stitched_video_path = temp_dir / f"stitched_{int(time.time())}.mp4"
         inputs = []
         filter_complex = ""
 
-        # Determine target resolution from first clip
-        target_w, target_h = (720, 1280)
-        try:
-            probe_cmd = ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height", "-of", "csv=s=x:p=0", str(prepared_clips[0])]
-            wh = subprocess.run(probe_cmd, capture_output=True, text=True).stdout.strip().split("x")
-            if len(wh) == 2:
-                target_w, target_h = int(wh[0]), int(wh[1])
-        except Exception:
-            pass
-
         for i, clip in enumerate(prepared_clips):
             inputs.extend(["-i", str(clip)])
-            filter_complex += f"[{i}:v:0]scale={target_w}:{target_h}:force_original_aspect_ratio=decrease,pad={target_w}:{target_h}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=30[v{i}];"
-            filter_complex += f"[{i}:a:0]aformat=sample_rates=48000:channel_layouts=stereo[a{i}];"
+            filter_complex += f"[{i}:v:0][{i}:a:0]"
 
-        for i in range(len(prepared_clips)):
-            filter_complex += f"[v{i}][a{i}]"
         filter_complex += f"concat=n={len(prepared_clips)}:v=1:a=1[outv][outa]"
 
         concat_cmd = [
@@ -1067,6 +1227,36 @@ class PostProduction:
         return final_path
 
 
+def get_next_short_path(out_dir: Path, character_name: str, is_dry_run: bool = False) -> Path:
+    """
+    Generates a unique sequential number naming format:
+      short_[YYYYMMDD]_[###]_[character].mp4
+    e.g.:
+      short_20261014_001_liya.mp4
+      short_20261014_002_liya.mp4
+    For dry runs:
+      short_20261014_001_liya_dryrun.mp4
+    """
+    today_str = datetime.now().strftime("%Y%m%d")
+    suffix = f"_{character_name.lower()}_dryrun.mp4" if is_dry_run else f"_{character_name.lower()}.mp4"
+
+    # Scan out_dir for existing files matching pattern to find next counter
+    pattern = rf"short_{today_str}_(\d+)_{character_name.lower()}"
+    max_idx = 0
+    if out_dir.exists():
+        for p in out_dir.glob(f"short_{today_str}_*_{character_name.lower()}*.mp4"):
+            m = re.search(pattern, p.name)
+            if m:
+                try:
+                    max_idx = max(max_idx, int(m.group(1)))
+                except ValueError:
+                    pass
+
+    next_idx = max_idx + 1
+    filename = f"short_{today_str}_{next_idx:03d}{suffix}"
+    return out_dir / filename
+
+
 def main():
     parser = argparse.ArgumentParser(description="Autonomous Character Video Pipeline for Google Flow")
     parser.add_argument("--character", type=str, default=None, help="Name of the character from characters.json (e.g. liya, Alex, Maya, Marcus)")
@@ -1079,7 +1269,13 @@ def main():
     parser.add_argument("--dry-run", action="store_true", help="Validate end-to-end without spending Flow credits")
     parser.add_argument("--storyboard", type=str, default=None, help="Path to existing storyboard JSON file to execute")
     parser.add_argument("--session", type=str, default=None, help="Specific session ID to resume (e.g. liya_1791806220)")
+    parser.add_argument("--telegram", dest="telegram", action="store_true", default=None, help="Enable Telegram approval flow for topic and video")
+    parser.add_argument("--no-telegram", dest="telegram", action="store_false", help="Disable Telegram approval flow")
     args = parser.parse_args()
+
+    use_telegram = (args.telegram is not False) and bool(os.environ.get("TELEGRAM_BOT_TOKEN") and os.environ.get("TELEGRAM_CHAT_ID"))
+    if args.telegram is True:
+        use_telegram = True
 
     cm = CharacterManager()
 
@@ -1160,9 +1356,26 @@ def main():
             try:
                 from generator.studio_researcher import DynamicStudioResearcher
                 researcher = DynamicStudioResearcher()
-                research_data = researcher.research_viral_topic()
-                topic = f"{research_data['title']}: {research_data['topic']}"
-                print(f"🔬 Autonomously Researched Fresh Topic: '{topic}'")
+                if use_telegram and not args.dry_run:
+                    from telegram.approver import wait_for_topic_approval, send_telegram_notification
+                    send_telegram_notification(
+                        f"🎬 <b>Production Run Initialized</b>\n"
+                        f"Creator: <code>@{char_info['name']}</code> ({char_info.get('role', 'Documentarian')})\n"
+                        f"🔍 Researching 3 viral anomalies for your approval..."
+                    )
+                    candidates = researcher.research_candidate_topics(count=3)
+                    chosen = wait_for_topic_approval(candidates, timeout=1800)
+                    chosen_title = chosen.get("title") or chosen.get("chosen_topic") or chosen.get("text")
+                    chosen_desc = chosen.get("topic") or ""
+                    topic = f"{chosen_title}: {chosen_desc}".strip(": ")
+                    send_telegram_notification(
+                        f"✅ <b>Topic Approved:</b> <i>{chosen_title}</i>\n"
+                        f"🚀 Generating 10-scene script & starting Flow video generation..."
+                    )
+                else:
+                    research_data = researcher.research_viral_topic()
+                    topic = f"{research_data['title']}: {research_data['topic']}"
+                    print(f"🔬 Autonomously Researched Fresh Topic: '{topic}'")
             except Exception as e:
                 print(f"⚠️ Dynamic research notice ({e}), using default generator...")
                 topic = None
@@ -1222,16 +1435,61 @@ def main():
         print(f"   Storyboard: {len(rendered_clips)} scene(s) staged for character '@{char_info['name']}'.")
         print("   Zero Flow credits spent.")
         # Test assembly in dry-run to ensure end-to-end post-production integrity
-        test_final = FINAL_DIR / f"{char_info['name'].lower()}_dryrun_{int(time.time())}.mp4"
+        test_final = get_next_short_path(FINAL_DIR, char_info['name'], is_dry_run=True)
         final_video = PostProduction.assemble(rendered_clips, storyboard, test_final)
         QualityAssurance.inspect(final_video)
         print(f"🚀 DRY-RUN ASSEMBLY VALIDATED: {final_video}")
     else:
         print(f"🎉 RENDER COMPLETED! {len(rendered_clips)} scene(s) generated.")
-        final_output_path = FINAL_DIR / f"{char_info['name'].lower()}_short_{int(time.time())}.mp4"
+        final_output_path = get_next_short_path(FINAL_DIR, char_info['name'], is_dry_run=False)
         final_video = PostProduction.assemble(rendered_clips, storyboard, final_output_path)
         QualityAssurance.inspect(final_video)
         print(f"🚀 FINAL DELIVERABLE READY: {final_video}")
+
+        if use_telegram:
+            from telegram.approver import wait_for_video_approval, notify_pipeline_success, send_telegram_notification
+            video_caption = (
+                f"🎬 <b>New YouTube Short Ready for Review!</b>\n\n"
+                f"<b>Title:</b> {storyboard.get('title', 'YouTube Short')}\n"
+                f"<b>Character:</b> @{char_info['name']}\n"
+                f"<b>Format:</b> 9:16 Vertical Short (~60s)\n\n"
+                f"Tap <b>Approve</b> to publish live to YouTube Shorts & Instagram Reels, or <b>Reject</b> to hold."
+            )
+            print("\n📱 Sending final video to Telegram for approval...")
+            decision = wait_for_video_approval(str(final_video), video_caption, timeout=3600)
+            if decision == "Approve":
+                print("\n✅ Video APPROVED via Telegram! Initiating multi-platform publish...")
+                send_telegram_notification("🚀 <b>Publishing approved!</b> Uploading to YouTube Shorts & Instagram Reels...")
+                from uploader.youtube import upload_video
+                from uploader.instagram import upload_reel
+                from analytics.tracker import log_upload
+
+                title = f"{storyboard.get('title')} ⚡ #shorts"
+                description = f"{storyboard.get('topic', '')}\n\nHost @{char_info['name']} breaks down this fascinating anomaly."
+                hashtags = ["#shorts", "#science", "#facts", "#didyouknow", "#education"]
+                ig_caption = f"{title}\n\n{description}\n\n" + " ".join(hashtags)
+
+                # 1. YouTube Shorts Upload
+                yt_res = upload_video(str(final_video), title, description, hashtags, is_short=True)
+                yt_url = yt_res.get("url") if yt_res else None
+                if yt_res:
+                    log_upload(yt_res["video_id"], 1, storyboard.get('title'), storyboard.get('topic', ''))
+
+                # 2. Instagram Reels Upload
+                ig_id = None
+                ig_token = os.environ.get("IG_ACCESS_TOKEN")
+                ig_account = os.environ.get("IG_ACCOUNT_ID")
+                if ig_token and ig_account:
+                    try:
+                        ig_id = upload_reel(str(final_video), ig_caption, ig_token, ig_account)
+                    except Exception as e:
+                        print(f"⚠️ Instagram upload notice: {e}")
+
+                notify_pipeline_success(f"Studio @{char_info['name']}", storyboard.get('title'), yt_url, ig_id)
+                print(f"🎉 Fully Published! YouTube: {yt_url} | Instagram: {ig_id}")
+            else:
+                send_telegram_notification("⚠️ Video publication <b>held/aborted</b> by user.")
+                print(f"⚠️ Video publication decision: {decision}. Held from public posting.")
     print("=" * 60)
 
 

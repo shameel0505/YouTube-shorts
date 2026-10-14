@@ -19,7 +19,7 @@ from gflow_cli.api.transports.migrated_composer import (
 )
 
 PROJECT_ID = os.environ.get("FLOW_PROJECT_ID", "f8d0e960-846a-42d6-a643-333562c0d44f")
-TARGET_QUERY = "Host speaking at wooden desk"
+TARGET_QUERY = sys.argv[1] if len(sys.argv) > 1 else "Scene 02"
 
 async def test_tag_media():
     profile_name = _resolve_profile("youtube")
@@ -54,10 +54,14 @@ async def test_tag_media():
         await page.keyboard.type("@", delay=120)
         await page.wait_for_timeout(2000)
 
-        # 5. Type query
-        print(f"3️⃣ Typing '{TARGET_QUERY}' character by character...")
-        await page.keyboard.type(TARGET_QUERY, delay=60)
-        await page.wait_for_timeout(2500)
+        # 5. Type query if specified
+        if TARGET_QUERY and TARGET_QUERY.lower() not in ("all", "none", ""):
+            print(f"3️⃣ Typing '{TARGET_QUERY}' character by character...")
+            await page.keyboard.type(TARGET_QUERY, delay=60)
+            await page.wait_for_timeout(2500)
+        else:
+            print("3️⃣ No filter typed; waiting for default options list...")
+            await page.wait_for_timeout(2500)
 
         # 6. Read filtered options
         options = await page.locator(PICKER_OPTION).all()

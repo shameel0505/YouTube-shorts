@@ -144,6 +144,61 @@ Respond ONLY in valid JSON with this schema:
         record_used_topic(data["title"], data["topic"])
         return data
 
+    def research_candidate_topics(self, count: int = 3, user_hint: str = None) -> list[dict]:
+        """Discovers multiple distinct topic candidates for Telegram user selection."""
+        print(f"\n🔍 [RESEARCHER] Dynamically researching {count} viral topic candidates...")
+        used = load_used_topics()
+        recent_used = used[-50:] if len(used) > 50 else used
+        used_bullet_list = "\n".join(f"- {u[:120]}" for u in recent_used) if recent_used else "None"
+
+        trend_signals = []
+        try:
+            gt = get_trending_searches("US")
+            if gt:
+                trend_signals.append("Current Google Trends: " + ", ".join(gt[:6]))
+        except Exception:
+            pass
+        try:
+            hn = get_hackernews_top(5)
+            if hn:
+                trend_signals.append("Top HackerNews curiosities: " + ", ".join(h.get("title", "") for h in hn[:4]))
+        except Exception:
+            pass
+
+        signals_str = "\n".join(trend_signals) if trend_signals else "General curiosity & cutting-edge science"
+
+        prompt = f"""You are the head of research for Veritasium, Vox, and Johnny Harris.
+Propose exactly {count} distinct, extraordinary, viral curiosity anomalies, paradoxes, or hidden realities for an educational YouTube Short.
+
+LIVE SIGNALS:
+{signals_str}
+
+USER HINT:
+{user_hint if user_hint else "Mind-bending scientific revelations, everyday physics anomalies, sensory illusions, or perception paradoxes"}
+
+🛑 ZERO DUPLICATION:
+Do NOT select or repeat any of these previously covered topics:
+{used_bullet_list}
+
+Respond ONLY in valid JSON matching this schema:
+{{
+  "topics": [
+    {{
+      "title": "Short Punchy Title (e.g. Why Pure Water Won't Shock You)",
+      "topic": "1-sentence summary of the core paradox and mechanism",
+      "hook_preview": "The exact opening line (12-14 words max)",
+      "climax_punchline": "The exact closing revelation (12-14 words max)"
+    }}
+  ]
+}}
+"""
+        data = self.service.generate_json(prompt, required_keys=["topics"])
+        candidates = data.get("topics", [])
+        print(f"✨ Researched {len(candidates)} Candidate Topics:")
+        for idx, c in enumerate(candidates, start=1):
+            print(f"   [{idx}] {c.get('title')}: {c.get('topic')}")
+        return candidates
+
 if __name__ == "__main__":
     researcher = DynamicStudioResearcher()
     res = researcher.research_viral_topic()

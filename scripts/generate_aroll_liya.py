@@ -122,29 +122,71 @@ async def generate_aroll(
 
         # 3. If previous video is specified for continuation chaining, tag it first via @
         if previous_video:
-            print(f"🔗 Tagging previous video for continuation: '@{previous_video}'...")
+            print(f"🔗 Tagging previous video for continuation: '{previous_video}'...")
             await page.keyboard.type("@", delay=120)
             await page.wait_for_timeout(2000)
-            await page.keyboard.type(previous_video, delay=60)
-            await page.wait_for_timeout(2500)
 
-            # Check autocomplete options and target Video option if present
+            # If a specific search title is provided (and not 'latest'/'auto'), filter by it
+            if previous_video.lower() not in ("latest", "auto", "previous", "true"):
+                await page.keyboard.type(previous_video, delay=60)
+            # Dynamically wait up to 5s for autocomplete options to appear
             options_loc = page.locator(PICKER_OPTION)
+            for _ in range(10):
+                if await options_loc.count() > 0:
+                    break
+                await page.wait_for_timeout(300)
+            await page.wait_for_timeout(1000)
+
+            # Check autocomplete options and target Video option
             offered_texts = [t.strip() for t in await options_loc.all_text_contents()]
-            target_idx = 0
+            target_idx = None
             for idx, txt in enumerate(offered_texts):
-                if txt.endswith("Video"):
+                clean_txt = txt.strip()
+                if clean_txt.endswith("Video") or "\nVideo" in clean_txt or " Video" in clean_txt or "video" in clean_txt.lower():
                     target_idx = idx
+                    print(f"   📹 Selected video asset from picker: '{clean_txt}' (index {idx})")
                     break
 
-            for _ in range(target_idx):
-                await page.keyboard.press("ArrowDown")
-                await page.wait_for_timeout(200)
+            # Robust fallback: if search query yielded no video options, clear filter and select newest video in project
+            if target_idx is None and previous_video.lower() not in ("latest", "auto", "previous", "true"):
+                print(f"   ⚠️ Search query '{previous_video}' yielded no Video options in picker (got {len(offered_texts)} options).")
+                print("   🔄 Clearing filter to select the latest chronological video in the project...")
+                await page.keyboard.press("Meta+a")
+                await page.keyboard.press("Backspace")
+                await page.wait_for_timeout(500)
+                await page.keyboard.type("@", delay=120)
+                await page.wait_for_timeout(2000)
+                for _ in range(10):
+                    if await options_loc.count() > 0:
+                        break
+                    await page.wait_for_timeout(300)
+                await page.wait_for_timeout(1000)
+                offered_texts = [t.strip() for t in await options_loc.all_text_contents()]
+                for idx, txt in enumerate(offered_texts):
+                    clean_txt = txt.strip()
+                    if clean_txt.endswith("Video") or "\nVideo" in clean_txt or " Video" in clean_txt or "video" in clean_txt.lower():
+                        target_idx = idx
+                        print(f"   📹 Selected latest video asset from project: '{clean_txt}' (index {idx})")
+                        break
 
-            await page.keyboard.press("Enter")
-            await page.wait_for_timeout(2000)
-            await page.keyboard.type(" ", delay=80)
-            print(f"   ✅ Previous video chip committed.")
+            if target_idx is not None:
+                for _ in range(target_idx):
+                    await page.keyboard.press("ArrowDown")
+                    await page.wait_for_timeout(200)
+
+                await page.keyboard.press("Enter")
+                await page.wait_for_timeout(2000)
+                await page.keyboard.type(" ", delay=80)
+
+                # Confirm chip in DOM (Flow attaches media as an ingredient button or mention-chip)
+                attached_count = await page.evaluate('''() => {
+                    return document.querySelectorAll('.mention-chip, button.chip-container, button[aria-label="Ingredient"], flow-prompt-box button:has(img)').length;
+                }''')
+                if attached_count == 0:
+                    raise RuntimeError("Failed to commit previous video chip: no chip attached in DOM")
+                print(f"   ✅ Previous video chip confirmed in DOM ({attached_count} chip(s) attached).")
+            else:
+                raise RuntimeError(f"No 'Video' asset found in mention picker! Options: {offered_texts}")
 
         if tag_character:
             # 4. Mandatory @ + l + i + y + a + Enter sequence
@@ -172,7 +214,20 @@ async def generate_aroll(
             await page.keyboard.insert_text(prompt)
             await page.wait_for_timeout(1000)
         else:
-            # B-Roll: Insert direct prompt without character chip
+            # B-Roll: Move caret to the exact end of composer and insert prompt
+            await page.evaluate('''() => {
+                const el = document.querySelector('[contenteditable="true"]');
+                if (el) {
+                    el.focus();
+                    const range = document.createRange();
+                    range.selectNodeContents(el);
+                    range.collapse(false);
+                    const sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            }''')
+            await page.wait_for_timeout(300)
             await page.keyboard.insert_text(prompt)
             await page.wait_for_timeout(1000)
 
@@ -206,7 +261,18 @@ async def generate_aroll(
 
         page.on("response", on_response)
 
-        # 7. Locate Submit button (arrow_forward)
+        # 7. Explicit Settings Pre-Flight Verification Guardrail
+        # Verifies the active toolbar pills to confirm Mode=Video, Aspect=target_aspect, Count=x1
+        try:
+            settings_summary = await page.evaluate('''() => {
+                const buttons = Array.from(document.querySelectorAll('flow-prompt-box button, .prompt-box button, [role="toolbar"] button'));
+                return buttons.map(b => b.textContent.trim().replace(/\\s+/g, ' ')).filter(t => t.length > 0 && t.length < 40).join(' | ');
+            }''')
+            print(f"   🛡️ Pre-submit toolbar verification: [{settings_summary}]")
+        except Exception as e:
+            print(f"   ⚠️ Toolbar verification notice: {e}")
+
+        # Locate Submit button (arrow_forward)
         submit = page.locator("button").filter(has=_ligature(page, "arrow_forward")).first
         if not await submit.count():
             raise RuntimeError("Submit button (arrow_forward) not found in Flow composer")
