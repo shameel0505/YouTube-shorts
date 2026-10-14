@@ -2194,5 +2194,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "v2GCJzoM5hI",
+        "format": 1,
+        "topic": "At age 12, Martin Pistorius slipped into a coma, but years later his mind woke up while his body remained paralyzed. For a decade, he was fully conscious and trapped inside his own body, silently listening to his own mother tell doctors she hoped he would die.",
+        "hook": "Original",
+        "upload_time": "2026-10-14T06:22:37.191627+00:00",
+        "check_time": "2026-10-15T06:22:37.191627+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
