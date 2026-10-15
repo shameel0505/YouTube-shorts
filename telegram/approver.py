@@ -22,16 +22,85 @@ def _send_photo(photo_url: str) -> int:
         return resp["result"]["message_id"]
     return None
 
+def _get_video_meta(video_path: str):
+    import subprocess
+    try:
+        cmd = [
+            "ffprobe", "-v", "error",
+            "-select_streams", "v:0",
+            "-show_entries", "stream=width,height,duration",
+            "-of", "json", video_path
+        ]
+        res = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        data = json.loads(res.stdout)["streams"][0]
+        w = int(data.get("width", 720))
+        h = int(data.get("height", 1280))
+        dur = int(float(data.get("duration", 0)))
+        return w, h, dur
+    except Exception:
+        return 720, 1280, 0
+
 def _send_video(video_path: str, caption: str, reply_markup: dict = None) -> int:
+    import subprocess
+    from pathlib import Path
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendVideo"
-    data = {"chat_id": TELEGRAM_CHAT_ID, "caption": caption}
+    w, h, dur = _get_video_meta(video_path)
+    
+    # Ensure dimensions match vertical shorts standard (9:16)
+    if w > h and w == 1280 and h == 720:
+        # Flipped orientation safety
+        w, h = 720, 1280
+        
+    data = {
+        "chat_id": TELEGRAM_CHAT_ID,
+        "caption": caption,
+        "parse_mode": "HTML",
+        "width": w,
+        "height": h,
+        "duration": dur,
+        "supports_streaming": True,
+    }
     if reply_markup:
         data["reply_markup"] = json.dumps(reply_markup)
-    with open(video_path, "rb") as f:
-        files = {"video": f}
+
+    # Telegram Bot API requirement: thumbnail max width & height is 320px.
+    # For 9:16 vertical shorts, 180x320 is exact 9:16 aspect ratio (<320px limit).
+    # Generating with exact setsar=1 prevents Telegram client from squishing the player.
+    thumb_path = Path("/tmp") / f"tg_thumb_{int(time.time())}.jpg"
+    subprocess.run([
+        "ffmpeg", "-y", "-ss", "00:00:01",
+        "-i", video_path,
+        "-vf", "scale=180:320:force_original_aspect_ratio=decrease,pad=180:320:(ow-iw)/2:(oh-ih)/2,setsar=1",
+        "-vframes", "1",
+        "-q:v", "2",
+        str(thumb_path)
+    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    f_vid = open(video_path, "rb")
+    # Pass explicit filename and video/mp4 MIME type so Telegram demuxer parses stream parameters properly
+    files = {
+        "video": (Path(video_path).name, f_vid, "video/mp4")
+    }
+    f_thumb = None
+    if thumb_path.exists() and thumb_path.stat().st_size > 0:
+        f_thumb = open(thumb_path, "rb")
+        # Support both 'thumbnail' (Bot API 6.6+) and legacy 'thumb' parameter
+        files["thumbnail"] = ("thumb.jpg", f_thumb, "image/jpeg")
+
+    try:
         resp = requests.post(url, data=data, files=files).json()
-    if resp.get("ok"):
-        return resp["result"]["message_id"]
+        if resp.get("ok"):
+            return resp["result"]["message_id"]
+        else:
+            print(f"⚠️ Telegram sendVideo error: {resp}")
+    finally:
+        f_vid.close()
+        if f_thumb:
+            f_thumb.close()
+            try:
+                thumb_path.unlink()
+            except Exception:
+                pass
     return None
 
 def _poll_for_callback(timeout: int, allowed_data: list = None) -> str:

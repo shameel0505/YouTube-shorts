@@ -164,6 +164,19 @@ class SessionCheckpoint:
                 return p
         return None
 
+    def get_all_completed_clips(self) -> dict[int, Path]:
+        """Returns a mapping of scene_num -> validated Path for all completed scenes."""
+        res = {}
+        for k, v in self.state.get("scenes", {}).items():
+            if isinstance(v, dict) and v.get("status") == "success" and v.get("clip_path"):
+                p = Path(v["clip_path"])
+                if p.exists() and p.stat().st_size > 0:
+                    try:
+                        res[int(k)] = p
+                    except ValueError:
+                        pass
+        return res
+
     def summary(self) -> str:
         scenes = self.state["scenes"]
         ok = [k for k, v in scenes.items() if v["status"] == "success"]
@@ -884,6 +897,17 @@ class VideoRenderer:
                             clip_path = new_files[0].resolve()
 
                 if clip_path and clip_path.exists():
+                    # Check if this clip was already used by another scene in this session
+                    if checkpoint:
+                        used_clips = {str(c.resolve()) for c in checkpoint.get_all_completed_clips().values() if c.exists()}
+                        if str(clip_path.resolve()) in used_clips:
+                            print(f"   ⚠️ Rejecting stale/duplicate clip {clip_path.name} already assigned to another scene!")
+                            last_error_class = "DuplicateClipError"
+                            last_reason = f"Clip {clip_path.name} already used in prior scene"
+                            if attempt < 3:
+                                time.sleep(3)
+                                continue
+
                     # Fix 7: Per-clip QA gate before accepting
                     passed, reason = QualityAssurance.validate_single_clip(clip_path, scene, aspect=target_aspect)
                     if passed:
@@ -1142,6 +1166,17 @@ class PostProduction:
         if not valid_clips:
             raise RuntimeError("No valid video clips found to assemble.")
 
+        # Duplicate clip safety guard: ensure no scene mistakenly reuses another scene's clip
+        seen_clips = {}
+        for idx, p in enumerate(valid_clips):
+            canonical = str(p.resolve())
+            if canonical in seen_clips:
+                raise RuntimeError(
+                    f"Pipeline Integrity Error: Duplicate clip detected across scenes! "
+                    f"Scene {idx + 1} reuses clip from Scene {seen_clips[canonical] + 1}: {p.name}"
+                )
+            seen_clips[canonical] = idx
+
         temp_dir = final_path.parent / "temp_assembly"
         temp_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1237,6 +1272,7 @@ class PostProduction:
             codec="libx264",
             audio_codec="aac",
             preset="ultrafast",
+            ffmpeg_params=["-vf", "setsar=1:1", "-pix_fmt", "yuv420p", "-movflags", "+faststart"],
             logger=None
         )
         print(f"✅ Final Video ready at: {final_path}")

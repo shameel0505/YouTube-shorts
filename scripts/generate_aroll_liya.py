@@ -33,6 +33,7 @@ from gflow_cli.api.transports.migrated_composer import (
     MENTION_CHIP,
     PICKER_OPTION,
     _ligature,
+    SUBMIT_RPCS,
 )
 from gflow_cli.api.transports.batchexecute import (
     parse_frames,
@@ -243,10 +244,13 @@ async def generate_aroll(
             await page.keyboard.insert_text(prompt)
             await page.wait_for_timeout(1000)
 
-        # 6. Prepare completion future
+        # 6. Prepare completion future with anti-stale-record guards
         loop = asyncio.get_running_loop()
         completed_record: asyncio.Future[GenerationRecord] = loop.create_future()
         active_workflow_id: list[str] = []
+        is_submitted: list[bool] = [False]
+        pre_existing_workflow_ids: set[str] = set()
+        pre_existing_media_ids: set[str] = set()
 
         def on_response(response):
             if "batchexecute" not in response.url or completed_record.done():
@@ -259,10 +263,29 @@ async def generate_aroll(
                             continue
                         try:
                             rec = generation_record(rid, payload)
-                            if rec.workflow_id and not active_workflow_id:
-                                active_workflow_id.append(rec.workflow_id)
+                            # Pre-submit: collect any existing finished or in-progress IDs to prevent false captures
+                            if not is_submitted[0]:
+                                if rec.workflow_id:
+                                    pre_existing_workflow_ids.add(rec.workflow_id)
+                                if rec.media_id:
+                                    pre_existing_media_ids.add(rec.media_id)
+                                continue
+
+                            # Post-submit: strictly ignore stale generation records from prior scenes
+                            if rec.workflow_id in pre_existing_workflow_ids:
+                                continue
+                            if rec.media_id and rec.media_id in pre_existing_media_ids:
+                                continue
+
+                            # Lock onto the new submission's workflow ID
+                            if not active_workflow_id:
+                                if rid in SUBMIT_RPCS or (rec.workflow_id and rec.workflow_id not in pre_existing_workflow_ids):
+                                    active_workflow_id.append(rec.workflow_id)
+                                    print(f"   🎯 Locked onto new generation workflow ID: {rec.workflow_id}")
+
                             if active_workflow_id and rec.workflow_id != active_workflow_id[0]:
                                 continue
+
                             if rec.is_done and rec.video_url and not completed_record.done():
                                 completed_record.set_result(rec)
                         except Exception:
@@ -298,6 +321,8 @@ async def generate_aroll(
 
         # 8. Click Submit
         await submit.click()
+        is_submitted[0] = True
+        print("   🚀 Submit clicked — waiting for new video generation to begin...")
 
         # 9. Wait for generation to complete
         try:
