@@ -280,7 +280,7 @@ MASTER SCRIPTING & ANTI-AI-SLOP RULES:
 
 5. **UNIQUE SCENE TITLING & CONTINUATION CHAINING**:
    - Every scene MUST have a unique, descriptive title in the storyboard (`"title": "..."`).
-   - Every scene prompt MUST prepend its unique title slug: `[Scene {scene_num:02d} - {title}]: Full-frame {aspect}...`
+   - Every scene prompt MUST prepend its unique title slug: `[Scene {{scene_num:02d}} - {{title}}]: Full-frame {aspect}...`
    - This ensures Google Flow's automatic titler gives each asset a unique name in the project library, completely preventing mention picker collisions.
    - For every scene from Scene 2 onwards, include `"previous_video"` set to the previous scene's unique title.
 
