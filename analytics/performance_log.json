@@ -2206,5 +2206,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "KUmXc07nf40",
+        "format": 1,
+        "topic": "The 1974 'Dyatlov Pass' incident remains a haunting mystery where nine experienced hikers died in the Ural Mountains; they cut their way out of their tents from the inside, fled into freezing temperatures without clothes, and some suffered severe internal trauma consistent with a car crash despite no external injuries.",
+        "hook": "Historical Analysis",
+        "upload_time": "2026-10-15T06:22:00.434829+00:00",
+        "check_time": "2026-10-16T06:22:00.434829+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
