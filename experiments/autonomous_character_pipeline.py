@@ -732,11 +732,18 @@ class VideoRenderer:
             # A-Roll: Host in studio - strip generic buzzwords and reinforce optical studio look
             prompt = re.sub(r"\b(8k|photorealistic|hyper-realistic|IMAX 70mm|masterpiece|trending on artstation)\b", "sharp cinematic 4k, shallow depth of field", prompt, flags=re.IGNORECASE)
 
-        # Lock unique scene title slug at prompt start so Flow names the asset correctly
-        scene_title = scene.get('title', f'Shot {scene_num:02d}').strip()
-        slug = f"[Scene {scene_num:02d} - {scene_title}]"
-        if not prompt.startswith(f"[Scene {scene_num:02d}"):
-            prompt = re.sub(r"^\[Scene\s*\d+[^\]]*\]:\s*", "", prompt)
+        # Lock unique scene title slug at prompt start with topic key for 100% global uniqueness across all shorts
+        story_title = ""
+        if checkpoint and checkpoint.storyboard_path and checkpoint.storyboard_path.exists():
+            try:
+                story_title = json.loads(checkpoint.storyboard_path.read_text(encoding="utf-8")).get("title", "")
+            except Exception:
+                pass
+        topic_key = re.sub(r"[^A-Za-z0-9]", "", story_title)[:10] if story_title else "Short"
+        clean_title = re.sub(r"[^A-Za-z0-9]", "", scene.get('title', f'Shot{scene_num:02d}'))[:14]
+        slug = f"[{topic_key}_S{scene_num:02d}_{clean_title}]"
+        if not (prompt.startswith(f"[{topic_key}_S{scene_num:02d}") or prompt.startswith(f"[Scene {scene_num:02d}")):
+            prompt = re.sub(r"^\[[^\]]+\]:\s*", "", prompt)
             prompt = f"{slug}: {prompt}"
 
         # Fix 2: Cap prompt length to <= 1300 characters to prevent HTTP 400
@@ -759,8 +766,8 @@ class VideoRenderer:
                 if scene_num > 1 and len(all_s) >= scene_num:
                     prev_s = all_s[scene_num - 2]
                     if prev_s.get("type", "").upper() == scene_type:
-                        # Search by scene number (e.g. "Scene 02")
-                        prev_video = f"Scene {scene_num - 1:02d}"
+                        # Globally unique search by topic key and scene number:
+                        prev_video = f"{topic_key}_S{scene_num - 1:02d}"
             except Exception:
                 pass
 
