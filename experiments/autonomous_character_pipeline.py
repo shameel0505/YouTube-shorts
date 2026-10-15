@@ -104,6 +104,8 @@ class SessionCheckpoint:
         self.session_id = session_id
         self.path = SESSION_DIR / f"{session_id}.json"
         self.state = self._load(storyboard_path)
+        sb_val = self.state.get("storyboard_path")
+        self.storyboard_path = Path(sb_val) if sb_val else (storyboard_path if isinstance(storyboard_path, Path) else None)
 
     def _load(self, storyboard_path: Path = None) -> dict:
         if self.path.exists():
@@ -741,10 +743,18 @@ class VideoRenderer:
         if not Path(python_bin).exists():
             python_bin = sys.executable
 
-        # Automatic continuation chaining from scene 2 onwards
+        # Automatic continuation chaining: only chain when consecutive scenes share the same modality
         prev_video = scene.get("previous_video")
-        if not prev_video and scene_num > 1:
-            prev_video = "latest"
+        if checkpoint and checkpoint.storyboard_path and checkpoint.storyboard_path.exists():
+            try:
+                sb_data = json.loads(checkpoint.storyboard_path.read_text(encoding="utf-8"))
+                all_s = sb_data.get("scenes", [])
+                if scene_num > 1 and len(all_s) >= scene_num:
+                    prev_s = all_s[scene_num - 2]
+                    if prev_s.get("type", "").upper() != scene_type:
+                        prev_video = None
+            except Exception:
+                pass
 
         if scene_type == "A-ROLL":
             # ====================================================================================
@@ -1326,6 +1336,18 @@ def main():
         print(f"📁 Using Flow Project: {project_id}")
 
     cm.ensure_character_in_project(char_info, project_id, profile=args.profile, dry_run=args.dry_run)
+
+    if args.session and not args.storyboard:
+        s_file = SESSION_DIR / f"{args.session}.json"
+        if s_file.exists():
+            try:
+                with open(s_file) as f:
+                    s_data = json.load(f)
+                if s_data.get("storyboard_path"):
+                    args.storyboard = s_data["storyboard_path"]
+                    print(f"🔄 Auto-loaded storyboard from session checkpoint: {args.storyboard}")
+            except Exception as e:
+                print(f"⚠️ Could not load storyboard from session file: {e}")
 
     if args.storyboard:
         sb_path = Path(args.storyboard)

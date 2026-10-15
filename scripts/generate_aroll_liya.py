@@ -186,7 +186,12 @@ async def generate_aroll(
                     raise RuntimeError("Failed to commit previous video chip: no chip attached in DOM")
                 print(f"   ✅ Previous video chip confirmed in DOM ({attached_count} chip(s) attached).")
             else:
-                raise RuntimeError(f"No 'Video' asset found in mention picker! Options: {offered_texts}")
+                print(f"   ⚠️ Could not locate previous video '{previous_video}' in picker (got: {offered_texts}).")
+                print("   🔄 Clearing mention query to proceed with fresh standalone generation...")
+                await composer.clear_composer(page)
+                comp = page.locator(COMPOSER).first
+                await comp.click()
+                await page.wait_for_timeout(500)
 
         if tag_character:
             # 4. Mandatory @ + l + i + y + a + Enter sequence
