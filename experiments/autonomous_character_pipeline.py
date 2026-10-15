@@ -732,6 +732,13 @@ class VideoRenderer:
             # A-Roll: Host in studio - strip generic buzzwords and reinforce optical studio look
             prompt = re.sub(r"\b(8k|photorealistic|hyper-realistic|IMAX 70mm|masterpiece|trending on artstation)\b", "sharp cinematic 4k, shallow depth of field", prompt, flags=re.IGNORECASE)
 
+        # Lock unique scene title slug at prompt start so Flow names the asset correctly
+        scene_title = scene.get('title', f'Shot {scene_num:02d}').strip()
+        slug = f"[Scene {scene_num:02d} - {scene_title}]"
+        if not prompt.startswith(f"[Scene {scene_num:02d}"):
+            prompt = re.sub(r"^\[Scene\s*\d+[^\]]*\]:\s*", "", prompt)
+            prompt = f"{slug}: {prompt}"
+
         # Fix 2: Cap prompt length to <= 1300 characters to prevent HTTP 400
         if len(prompt) > 1300:
             prompt = prompt[:1297] + "..."
@@ -744,15 +751,16 @@ class VideoRenderer:
             python_bin = sys.executable
 
         # Automatic continuation chaining: only chain when consecutive scenes share the same modality
-        prev_video = scene.get("previous_video")
+        prev_video = None
         if checkpoint and checkpoint.storyboard_path and checkpoint.storyboard_path.exists():
             try:
                 sb_data = json.loads(checkpoint.storyboard_path.read_text(encoding="utf-8"))
                 all_s = sb_data.get("scenes", [])
                 if scene_num > 1 and len(all_s) >= scene_num:
                     prev_s = all_s[scene_num - 2]
-                    if prev_s.get("type", "").upper() != scene_type:
-                        prev_video = None
+                    if prev_s.get("type", "").upper() == scene_type:
+                        # Search by scene number (e.g. "Scene 02")
+                        prev_video = f"Scene {scene_num - 1:02d}"
             except Exception:
                 pass
 

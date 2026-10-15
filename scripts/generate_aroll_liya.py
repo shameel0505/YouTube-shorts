@@ -151,8 +151,11 @@ async def generate_aroll(
             if target_idx is None and previous_video.lower() not in ("latest", "auto", "previous", "true"):
                 print(f"   ⚠️ Search query '{previous_video}' yielded no Video options in picker (got {len(offered_texts)} options).")
                 print("   🔄 Clearing filter to select the latest chronological video in the project...")
-                await page.keyboard.press("Meta+a")
-                await page.keyboard.press("Backspace")
+                await page.keyboard.press("Escape")
+                await page.wait_for_timeout(300)
+                await composer.clear_composer(page)
+                comp = page.locator(COMPOSER).first
+                await comp.click(force=True)
                 await page.wait_for_timeout(500)
                 await page.keyboard.type("@", delay=120)
                 await page.wait_for_timeout(2000)
@@ -188,9 +191,13 @@ async def generate_aroll(
             else:
                 print(f"   ⚠️ Could not locate previous video '{previous_video}' in picker (got: {offered_texts}).")
                 print("   🔄 Clearing mention query to proceed with fresh standalone generation...")
+                await page.keyboard.press("Escape")
+                await page.wait_for_timeout(300)
+                await page.keyboard.press("Escape")
+                await page.wait_for_timeout(300)
                 await composer.clear_composer(page)
                 comp = page.locator(COMPOSER).first
-                await comp.click()
+                await comp.click(force=True)
                 await page.wait_for_timeout(500)
 
         if tag_character:
