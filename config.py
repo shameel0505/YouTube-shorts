@@ -120,7 +120,7 @@ FORMAT2_SCHEDULE_HOUR = int(os.getenv("FORMAT2_SCHEDULE_HOUR", "13"))  # Thrille
 FORMAT3_SCHEDULE_HOUR = int(os.getenv("FORMAT3_SCHEDULE_HOUR", "17"))  # Dilemma
 
 # ── Quota management ─────────────────────────────────────────────────────────
-GEMINI_QUOTA_LIMIT    = 20 * max(1, len(GEMINI_API_KEYS))
+GEMINI_QUOTA_LIMIT    = 60 * max(1, len(GEMINI_API_KEYS))
 GEMINI_QUOTA_FILE     = os.path.join(os.path.dirname(TEMP_DIR), "memory", "gemini_quota.json")
 
 # ── Story state (Format 2 — Serialized Thriller) ─────────────────────────────

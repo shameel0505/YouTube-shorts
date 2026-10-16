@@ -955,7 +955,10 @@ def run_all_formats(upload: bool = True, niche: str = None, manual: bool = False
     pipeline_has_errors = False
 
     for fmt_name, runner in runners:
-        if not quota_tracker.can_proceed(2):
+        nblm_state = os.path.join(os.path.dirname(TEMP_DIR), "memory", f"nblm_state_f{fmt_name}.json")
+        is_already_created = resume_only or os.path.exists(nblm_state)
+
+        if not is_already_created and not quota_tracker.can_proceed(2):
             skipped = [f for f, _ in runners if f >= fmt_name]
             msg = f"Quota exhausted. Skipping Format(s): {', '.join(skipped)}"
             log(f"⚠️  {msg}")
