@@ -195,13 +195,13 @@ def run_format1(upload: bool = True, niche: str = None, attempt: int = 1, manual
     voice_path   = os.path.join(TEMP_DIR, "voiceover_f1.mp3")
 
     try:
-        # If resume_only and nblm state exists, load script from nblm state and jump straight to Step 4
-        if resume_only and os.path.exists(state_path):
+        # If (resume or resume_only) and nblm state exists, load script from nblm state and jump straight to Step 4
+        if (resume or resume_only or os.path.exists(state_path)) and os.path.exists(state_path):
             try:
                 with open(state_path) as f:
                     saved_state = json.load(f)
                 script_data = saved_state.get("script_data") or {}
-                log("⏩ Resume mode: Skipping research. Checking NotebookLM render status...", fmt)
+                log("⏩ Resume mode: Active NotebookLM render detected. Skipping research and checking render status...", fmt)
             except Exception:
                 script_data = {}
         else:

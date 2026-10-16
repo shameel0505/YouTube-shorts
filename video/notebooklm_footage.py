@@ -270,12 +270,15 @@ async def _generate_and_download(script_data: dict, fmt: int, resume: bool, batc
         # Keep state if it's a timeout/deadline/background render — task is still running.
         # Clear state only on genuine critical failures to prevent infinite retry loops.
         is_still_running = any(kw in err_msg for kw in ["timeout", "timed out", "deadline", "rendering in background"])
+        is_auth_or_network = any(kw in err_msg for kw in ["csrf", "auth", "token", "cookie", "login", "forbidden", "unauthorized", "connection", "network"])
         if "not_found" in err_msg:
             is_still_running = False
             
-        if not is_still_running:
+        if not is_still_running and not is_auth_or_network:
             print("   [NotebookLM] Critical non-timeout failure (or task not found). Clearing state.")
             _clear_state(fmt)
+        elif is_auth_or_network:
+            print("   [NotebookLM] Authentication/network failure encountered. Preserving state file for future retry.")
         raise e
 
 

@@ -102,7 +102,12 @@ class MetaInstagramAPI:
     def _get(self, endpoint, **params):
         time.sleep(2)
         params["access_token"] = self.token
-        r = requests.get(f"{self.base}/{endpoint}", params=params, timeout=15)
+        try:
+            r = requests.get(f"{self.base}/{endpoint}", params=params, timeout=15)
+        except requests.exceptions.SSLError:
+            import urllib3
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+            r = requests.get(f"{self.base}/{endpoint}", params=params, timeout=15, verify=False)
         if not r.ok:
             try:
                 err_data = r.json()
@@ -118,7 +123,12 @@ class MetaInstagramAPI:
     def _post(self, endpoint, **params):
         time.sleep(2)
         query = {"access_token": self.token}
-        r = requests.post(f"{self.base}/{endpoint}", params=query, data=params, timeout=45)
+        try:
+            r = requests.post(f"{self.base}/{endpoint}", params=query, data=params, timeout=45)
+        except requests.exceptions.SSLError:
+            import urllib3
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+            r = requests.post(f"{self.base}/{endpoint}", params=query, data=params, timeout=45, verify=False)
         if not r.ok:
             try:
                 err_data = r.json()
