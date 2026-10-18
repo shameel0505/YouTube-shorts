@@ -2002,5 +2002,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "7krBwMU_TJ8",
+        "format": 1,
+        "topic": "If sound could travel through the vacuum of space, the Sun is so violently turbulent that its acoustic roar would reach Earth at over 100 decibels\u2014filling our sky with the constant, deafening sound of a train horn 24 hours a day.",
+        "hook": "Original",
+        "upload_time": "2026-10-18T06:21:25.018067+00:00",
+        "check_time": "2026-10-19T06:21:25.018067+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
