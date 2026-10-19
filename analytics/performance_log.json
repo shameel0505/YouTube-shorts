@@ -2014,5 +2014,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "XL5xmVV19ag",
+        "format": 1,
+        "topic": "During the 1983 Byford Dolphin incident, a sudden decompression accident caused the nitrogen in the divers' blood to instantly boil, effectively disintegrating their bodies at a molecular level in less than a second.",
+        "hook": "Original",
+        "upload_time": "2026-10-19T06:22:01.844755+00:00",
+        "check_time": "2026-10-20T06:22:01.844755+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
