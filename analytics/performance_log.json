@@ -2050,5 +2050,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "zcxJrc8SvA8",
+        "format": 1,
+        "topic": "A single Gamma-Ray Burst from a collapsing star releases more energy in just two seconds than our Sun will produce in its entire 10-billion-year lifespan. If one occurred within 6,000 light-years of Earth, its beam would silently strip away our ozone layer and sterilize the planet instantly without warning.",
+        "hook": "Original / Astrophysics",
+        "upload_time": "2026-10-23T06:22:06.105578+00:00",
+        "check_time": "2026-10-24T06:22:06.105578+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
