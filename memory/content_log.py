@@ -42,33 +42,70 @@ def purge_old_entries():
         
     _save_log(data)
 
+STOPWORDS = {
+    "the", "a", "an", "and", "or", "but", "in", "on", "at", "to", "for", "of", "with",
+    "by", "from", "up", "about", "into", "over", "after", "is", "are", "was", "were",
+    "be", "been", "being", "have", "has", "had", "do", "does", "did", "this", "that",
+    "these", "those", "it", "its", "you", "your", "he", "she", "they", "we", "i", "what",
+    "why", "how", "when", "where", "who", "which"
+}
+
+def _extract_keywords(text: str) -> set[str]:
+    import re
+    cleaned = re.sub(r"[^a-zA-Z0-9\s]", " ", text.lower())
+    words = [w for w in cleaned.split() if len(w) > 3 and w not in STOPWORDS]
+    return set(words)
+
+def _is_similar(text_a: str, text_b: str, threshold: float = 0.45) -> bool:
+    """Checks if two topic titles or descriptions share significant content tokens."""
+    kw_a = _extract_keywords(text_a)
+    kw_b = _extract_keywords(text_b)
+    if not kw_a or not kw_b:
+        return text_a.strip().lower() == text_b.strip().lower()
+
+    intersection = kw_a.intersection(kw_b)
+    overlap = len(intersection) / min(len(kw_a), len(kw_b))
+    
+    # Critical entity check (e.g., specific names like 'byford', 'slotin', 'daghlian', 'chornobyl')
+    critical_entities = {"byford", "dolphin", "slotin", "plutonium", "decompression"}
+    if len(intersection.intersection(critical_entities)) >= 1 and len(intersection) >= 2:
+        return True
+
+    return overlap >= threshold
+
 def is_topic_used(topic: str, fmt: int) -> bool:
     data = _load_log()
     topic = topic.strip().lower()
-    
-    if fmt == 1:
-        for t in data["format1_topics"]:
-            if t["text"].strip().lower() == topic:
-                return True
-    elif fmt == 2:
-        for t in data["format2_titles"]:
-            if t["text"].strip().lower() == topic:
-                return True
-    elif fmt == 3:
-        now = datetime.now()
-        for t in data["format3_dilemmas"]:
-            if t["text"].strip().lower() == topic:
-                # 60 day lockout for F3
-                try:
-                    dt = datetime.fromisoformat(t["date"])
-                    if (now - dt).days < 60:
+
+    # 1. Check against performance_log.json (actual uploaded YouTube videos)
+    perf_log_file = os.path.join(TEMP_DIR, "../analytics/performance_log.json")
+    if os.path.exists(perf_log_file):
+        try:
+            with open(perf_log_file, "r") as f:
+                perf_data = json.load(f)
+                for entry in perf_data:
+                    past_title = entry.get("title", "")
+                    if _is_similar(topic, past_title):
+                        print(f"🚫 [Deduplication] Topic rejected! Shares keywords with published video: '{past_title}'")
                         return True
-                except:
-                    return True
-    elif fmt == 4:
-        for t in data["format4_cases"]:
-            if t["text"].strip().lower() == topic:
-                return True
+        except Exception:
+            pass
+
+    # 2. Check format specific logs
+    key_map = {
+        1: "format1_topics",
+        2: "format2_titles",
+        3: "format3_dilemmas",
+        4: "format4_cases"
+    }
+    target_key = key_map.get(fmt, "format1_topics")
+    
+    for t in data.get(target_key, []):
+        logged_text = t.get("text", "")
+        if _is_similar(topic, logged_text):
+            print(f"🚫 [Deduplication] Topic rejected! Overlaps with logged topic: '{logged_text[:60]}...'")
+            return True
+
     return False
 
 def add_used_topic(topic: str, fmt: int):

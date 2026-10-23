@@ -324,12 +324,43 @@ async def generate_aroll(
         is_submitted[0] = True
         print("   🚀 Submit clicked — waiting for new video generation to begin...")
 
-        # 9. Wait for generation to complete
+        # 9. Wait for generation to complete with proactive policy error detection
         try:
-            record = await asyncio.wait_for(completed_record, timeout=timeout_s)
-        except asyncio.TimeoutError:
-            page.remove_listener("response", on_response)
-            raise TimeoutError(f"Video generation timed out after {timeout_s}s")
+            start_wait = time.time()
+            record = None
+            while time.time() - start_wait < timeout_s:
+                if completed_record.done():
+                    record = completed_record.result()
+                    break
+
+                # Proactively inspect page for Flow prompt error / policy dialogs or snackbars
+                try:
+                    policy_err = await page.evaluate('''() => {
+                        const candidates = document.querySelectorAll(
+                            '[role="alert"], [role="alertdialog"], .mat-mdc-snack-bar-container, ' +
+                            'snack-bar-container, mat-error, .prompt-error, .field-error, ' +
+                            'div[aria-live="assertive"], div[aria-live="polite"], ' +
+                            'mat-dialog-container, .cdk-overlay-pane'
+                        );
+                        for (const el of candidates) {
+                            const txt = (el.innerText || el.textContent || '').trim();
+                            if (txt && (/violate/i.test(txt) || /policy/i.test(txt) || /terms of service/i.test(txt) || /unable to generate/i.test(txt))) {
+                                return txt;
+                            }
+                        }
+                        return null;
+                    }''')
+                    if policy_err:
+                        raise RuntimeError(f"Google Flow Prompt Policy Rejection: {policy_err}")
+                except RuntimeError:
+                    raise
+                except Exception:
+                    pass
+
+                await asyncio.sleep(2.0)
+
+            if record is None:
+                raise TimeoutError(f"Video generation timed out after {timeout_s}s")
         finally:
             page.remove_listener("response", on_response)
 

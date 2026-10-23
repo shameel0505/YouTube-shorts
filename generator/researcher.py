@@ -75,28 +75,54 @@ def get_reddit_posts(
     selected_subs = random.sample(subreddits, min(3, len(subreddits)))
     for sub in selected_subs:
         url = f"https://www.reddit.com/r/{sub}/{sort}.json?t={time_filter}&limit={limit * 2}"
+        sub_posts = []
         try:
-            resp = requests.get(url, headers=headers, timeout=10)
-            resp.raise_for_status()
-            posts = resp.json().get("data", {}).get("children", [])
-            for p in posts:
-                d = p.get("data", {})
-                score    = d.get("score", 0)
-                comments = d.get("num_comments", 0)
-                if d.get("is_video"):
-                    continue
-                if score < min_score or comments < min_comments:
-                    continue
-                results.append({
-                    "title":     d.get("title", ""),
-                    "selftext":  d.get("selftext", "")[:300],
-                    "url":       d.get("url", ""),
-                    "score":     score,
-                    "comments":  comments,
-                    "subreddit": sub,
-                })
+            resp = requests.get(url, headers=headers, timeout=8)
+            if resp.status_code == 200:
+                posts = resp.json().get("data", {}).get("children", [])
+                for p in posts:
+                    d = p.get("data", {})
+                    score    = d.get("score", 0)
+                    comments = d.get("num_comments", 0)
+                    if d.get("is_video"):
+                        continue
+                    if score < min_score or comments < min_comments:
+                        continue
+                    sub_posts.append({
+                        "title":     d.get("title", ""),
+                        "selftext":  d.get("selftext", "")[:300],
+                        "url":       d.get("url", ""),
+                        "score":     score,
+                        "comments":  comments,
+                        "subreddit": sub,
+                    })
         except Exception:
             pass
+
+        # Fallback to Reddit RSS Atom feed if JSON was blocked or empty
+        if not sub_posts:
+            try:
+                rss_url = f"https://www.reddit.com/r/{sub}/{sort}/.rss?t={time_filter}"
+                rss_resp = requests.get(rss_url, headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"}, timeout=8)
+                if rss_resp.status_code == 200:
+                    import xml.etree.ElementTree as ET
+                    root = ET.fromstring(rss_resp.content)
+                    for entry in root.findall("{http://www.w3.org/2005/Atom}entry"):
+                        title_el = entry.find("{http://www.w3.org/2005/Atom}title")
+                        link_el = entry.find("{http://www.w3.org/2005/Atom}link")
+                        if title_el is not None and title_el.text:
+                            sub_posts.append({
+                                "title": title_el.text,
+                                "selftext": "",
+                                "url": link_el.attrib.get("href", "") if link_el is not None else "",
+                                "score": 500,
+                                "comments": 50,
+                                "subreddit": sub,
+                            })
+            except Exception:
+                pass
+
+        results.extend(sub_posts)
         time.sleep(0.5)
 
     results.sort(key=lambda x: x["score"], reverse=True)

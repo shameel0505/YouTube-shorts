@@ -1218,9 +1218,28 @@ class PostProduction:
         temp_speech_audio = temp_dir / f"speech_audio_{int(time.time())}.wav"
         temp_master_audio = temp_dir / f"master_mixed_{int(time.time())}.wav"
 
-        if stitched_video.audio:
+        # Check if stitched video has an audio stream
+        has_audio = False
+        check_audio_cmd = [
+            "ffprobe", "-v", "error", "-select_streams", "a:0",
+            "-show_entries", "stream=codec_type", "-of", "csv=p=0", str(stitched_video_path)
+        ]
+        if subprocess.run(check_audio_cmd, capture_output=True, text=True).stdout.strip():
+            has_audio = True
+
+        if has_audio:
             print("🎙️ Extracting speech track for broadcast audio mastering...")
-            stitched_video.audio.write_audiofile(str(temp_speech_audio), fps=44100, logger=None)
+            # Native FFmpeg extraction: eliminates MoviePy buffer underflow/word duplication
+            extract_cmd = [
+                "ffmpeg", "-y",
+                "-i", str(stitched_video_path),
+                "-vn",
+                "-c:a", "pcm_s16le",
+                "-ar", "44100",
+                "-ac", "2",
+                str(temp_speech_audio)
+            ]
+            subprocess.run(extract_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
             ambient_track = PostProduction._find_ambient_track()
             if ambient_track and ambient_track.exists():
@@ -1230,12 +1249,12 @@ class PostProduction:
                     "-i", str(temp_speech_audio),
                     "-stream_loop", "-1", "-i", str(ambient_track),
                     "-filter_complex",
-                    f"[0:a]apad=whole_dur={total_duration + 2.0:.2f}[padded_speech];"
+                    f"[0:a]apad=whole_dur={total_duration:.2f}[padded_speech];"
                     f"[1:a]volume=0.10,afade=t=in:ss=0:d=0.5,afade=t=out:st={max(0, total_duration - 0.8):.2f}:d=0.8[amb];"
-                    f"[padded_speech][amb]amix=inputs=2:duration=longest:weights=1 0.15[mixed];"
+                    f"[padded_speech][amb]amix=inputs=2:duration=first:weights=1 0.15[mixed];"
                     f"[mixed]loudnorm=I=-14:TP=-1.5:LRA=11[norm]",
                     "-map", "[norm]",
-                    "-t", f"{total_duration + 2.0:.3f}",
+                    "-t", f"{total_duration:.3f}",
                     "-c:a", "pcm_s16le",
                     str(temp_master_audio)
                 ]
@@ -1248,10 +1267,8 @@ class PostProduction:
                 temp_master_audio = temp_speech_audio
 
             if temp_master_audio.exists():
-                from moviepy.audio.fx.all import audio_loop
                 raw_audio = AudioFileClip(str(temp_master_audio))
-                mixed_audio_clip = audio_loop(raw_audio, duration=total_duration + 3.0).set_duration(total_duration)
-                stitched_video = stitched_video.set_audio(mixed_audio_clip)
+                stitched_video = stitched_video.set_audio(raw_audio)
 
         final_comp = stitched_video
         caption_source_audio = temp_speech_audio if temp_speech_audio.exists() else temp_master_audio
