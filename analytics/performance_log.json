@@ -2146,5 +2146,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "EiikNsWYK44",
+        "format": 1,
+        "topic": "In 1980, an oil rig accidentally drilled a 14-inch hole into an underground salt mine beneath Lake Peigneur, creating a massive whirlpool that swallowed the entire 1,300-acre lake, 11 barges, and surrounding land in hours. Miraculously, all 55 workers escaped alive before the drainage temporarily reversed the flow of the Gulf of Mexico to fill the giant crater.",
+        "hook": "Wikipedia",
+        "upload_time": "2026-11-05T06:21:59.266642+00:00",
+        "check_time": "2026-11-06T06:21:59.266642+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
