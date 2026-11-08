@@ -1,15 +1,13 @@
 {
-    "current_day": "2026-11-07",
-    "status": "pending",
-    "posted_formats": [
-        "1"
-    ],
+    "current_day": "2026-11-08",
+    "status": "running",
+    "posted_formats": [],
     "exhausted_formats": [],
     "mode": "fresh",
-    "started_at": "2026-11-07T06:41:06.476360+00:00",
-    "posted_at": "2026-11-07T06:02:14.679798+00:00",
-    "last_updated": "2026-11-07T06:41:08.037302+00:00",
+    "started_at": "2026-11-08T06:01:13.572409+00:00",
+    "posted_at": null,
+    "last_updated": "2026-11-08T06:01:13.572411+00:00",
     "active_render": false,
-    "last_error": "Pipeline completed but no format was uploaded.",
+    "last_error": null,
     "retry_counts": {}
 }
