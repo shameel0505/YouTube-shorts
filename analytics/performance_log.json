@@ -2206,5 +2206,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "UmFkO-LL5c0",
+        "format": 1,
+        "topic": "In 1982, a college student named Gregory Watson wrote a paper arguing that a 1789 Constitutional amendment was still valid; his professor gave him a C, but Watson campaigned for a decade until it was finally ratified as the 27th Amendment in 1992, forcing the school to change his grade to an A.",
+        "hook": "Reddit",
+        "upload_time": "2026-11-12T06:21:28.070543+00:00",
+        "check_time": "2026-11-13T06:21:28.070543+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
