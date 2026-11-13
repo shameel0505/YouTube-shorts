@@ -2218,5 +2218,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "iVGJwFp-bFc",
+        "format": 1,
+        "topic": "After suffering a severe traumatic brain injury from a mugging in 2002, Jason Padgett woke up suddenly perceiving complex mathematical fractals in everything he looked at\u2014becoming one of the few known cases of Acquired Savant Syndrome, where brain damage paradoxically unlocks extraordinary genius.",
+        "hook": "Original",
+        "upload_time": "2026-11-13T06:22:12.301845+00:00",
+        "check_time": "2026-11-14T06:22:12.301845+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
