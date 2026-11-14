@@ -2230,5 +2230,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "1B5-tMvrauw",
+        "format": 1,
+        "topic": "A 1960 scientific formula famously predicted that human population would reach infinity on Friday, November 13, 2026\u2014which is tomorrow. This grim, viral prediction highlights how exponential growth models can lead to absurd and terrifying conclusions when applied to the real world.",
+        "hook": "Reddit",
+        "upload_time": "2026-11-14T06:41:42.653453+00:00",
+        "check_time": "2026-11-15T06:41:42.653453+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
