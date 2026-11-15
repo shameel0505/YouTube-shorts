@@ -2242,5 +2242,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "g1XGx69bc2Q",
+        "format": 1,
+        "topic": "When you see something so cute you feel an overwhelming urge to squeeze, pinch, or bite it, you are experiencing 'cute aggression'\u2014your brain's automatic defense mechanism that generates aggressive impulses to prevent you from being incapacitated by emotional overload.",
+        "hook": "Reddit ELI5",
+        "upload_time": "2026-11-15T06:21:18.121758+00:00",
+        "check_time": "2026-11-16T06:21:18.121758+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
