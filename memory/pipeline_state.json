@@ -1,14 +1,14 @@
 {
     "current_day": "2026-11-20",
-    "status": "pending",
+    "status": "running",
     "posted_formats": [
         "1"
     ],
     "exhausted_formats": [],
     "mode": "fresh",
-    "started_at": "2026-11-20T06:01:08.851208+00:00",
+    "started_at": "2026-11-20T06:45:37.889102+00:00",
     "posted_at": "2026-11-20T06:21:56.309200+00:00",
-    "last_updated": "2026-11-20T06:21:56.309210+00:00",
+    "last_updated": "2026-11-20T06:45:37.889108+00:00",
     "active_render": false,
     "last_error": null,
     "retry_counts": {}
