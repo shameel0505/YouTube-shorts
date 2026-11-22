@@ -2314,5 +2314,17 @@
         "views": 0,
         "likes": 0,
         "comments": 0
+    },
+    {
+        "video_id": "jrderqMGID4",
+        "format": 1,
+        "topic": "Teratoma tumors are rare, real-life body anomalies capable of growing fully formed human teeth, long locks of hair, complex brain tissue, and even functional eyes inside a person's body, occurring when stem cells mistakenly execute embryonic development programs without ever forming a child.",
+        "hook": "Medical History",
+        "upload_time": "2026-11-22T06:21:58.368489+00:00",
+        "check_time": "2026-11-23T06:21:58.368489+00:00",
+        "metrics_retrieved": false,
+        "views": 0,
+        "likes": 0,
+        "comments": 0
     }
 ]
